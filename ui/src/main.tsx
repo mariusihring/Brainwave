@@ -2,9 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import './App.css'
-import Login from './components/brainwave/misc/login'
-
-
 import { routeTree } from './routeTree.gen'
 
 // Create a new router instance
@@ -18,6 +15,8 @@ declare module '@tanstack/react-router' {
 }
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-     <RouterProvider router={router} />
+      
+      <RouterProvider router={router} />
+   
   </React.StrictMode>,
 )

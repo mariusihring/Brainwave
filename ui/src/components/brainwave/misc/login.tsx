@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import BrainwaveLogo from "./logo";
 import { Label } from "@/components/ui/label";
 import {Link} from "@tanstack/react-router"
+import { signup } from "@/lib/auth/functions";
 
 export default function Login() {
   return (
@@ -21,7 +22,7 @@ export default function Login() {
           <Label htmlFor="password">Password</Label>
           <Input id="password" className="w-full" />
         </div>
-        <Button className="w-full">Log in</Button>
+        <Button className="w-full" onClick={() => signup("marius", "password")}>Log in</Button>
         <p>Forgot password? <Link className="font-semibold">Reset it</Link></p>
       </form>
 

@@ -4,3 +4,8 @@ members = [ "crates/database", "crates/server",
 "crates/src-tauri"]
 
 [workspace.dependencies]
+sqlx = { version = "0.6", features = ["sqlite", "runtime-tokio-native-tls", "chrono", "migrate"] }
+tokio = { version = "1", features = ["full"] }
+chrono = "0.4"
+serde_json = "1.0"
+anyhow = "1.0"
