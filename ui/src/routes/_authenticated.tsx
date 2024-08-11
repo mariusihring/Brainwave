@@ -1,6 +1,11 @@
 import { useAuth } from "@/auth";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import Navigation from "@/components/brainwave/misc/navigation";
+import { createFileRoute, useNavigate, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
+
+  
+
+
 
 export const Route = createFileRoute("/_authenticated")({
 	component: () => {
@@ -17,6 +22,10 @@ export const Route = createFileRoute("/_authenticated")({
 			checkAuth();
 		}, []);
 
-		return <div>Hello /_authenticated!</div>;
+		return (
+			<Navigation>
+				<Outlet/>
+			</Navigation>
+		)
 	},
 });

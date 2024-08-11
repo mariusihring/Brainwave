@@ -15,6 +15,11 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTodosImport } from './routes/_authenticated/todos'
+import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes'
+import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
+import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
+import { Route as AuthenticatedCoursesImport } from './routes/_authenticated/courses'
 
 // Create/Update Routes
 
@@ -35,6 +40,31 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedTodosRoute = AuthenticatedTodosImport.update({
+  path: '/todos',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedNotesRoute = AuthenticatedNotesImport.update({
+  path: '/notes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedNotebooksRoute = AuthenticatedNotebooksImport.update({
+  path: '/notebooks',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedFlashcardsRoute = AuthenticatedFlashcardsImport.update({
+  path: '/flashcards',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedCoursesRoute = AuthenticatedCoursesImport.update({
+  path: '/courses',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -63,6 +93,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/courses': {
+      id: '/_authenticated/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof AuthenticatedCoursesImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/flashcards': {
+      id: '/_authenticated/flashcards'
+      path: '/flashcards'
+      fullPath: '/flashcards'
+      preLoaderRoute: typeof AuthenticatedFlashcardsImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/notebooks': {
+      id: '/_authenticated/notebooks'
+      path: '/notebooks'
+      fullPath: '/notebooks'
+      preLoaderRoute: typeof AuthenticatedNotebooksImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/notes': {
+      id: '/_authenticated/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof AuthenticatedNotesImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/todos': {
+      id: '/_authenticated/todos'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof AuthenticatedTodosImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
@@ -77,6 +142,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedCoursesRoute,
+    AuthenticatedFlashcardsRoute,
+    AuthenticatedNotebooksRoute,
+    AuthenticatedNotesRoute,
+    AuthenticatedTodosRoute,
     AuthenticatedIndexRoute,
   }),
   LoginRoute,
@@ -99,6 +169,11 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/courses",
+        "/_authenticated/flashcards",
+        "/_authenticated/notebooks",
+        "/_authenticated/notes",
+        "/_authenticated/todos",
         "/_authenticated/"
       ]
     },
@@ -107,6 +182,26 @@ export const routeTree = rootRoute.addChildren({
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/_authenticated/courses": {
+      "filePath": "_authenticated/courses.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/flashcards": {
+      "filePath": "_authenticated/flashcards.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/notebooks": {
+      "filePath": "_authenticated/notebooks.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/notes": {
+      "filePath": "_authenticated/notes.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/todos": {
+      "filePath": "_authenticated/todos.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
