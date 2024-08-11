@@ -25,9 +25,12 @@ export const Route = createFileRoute("/_authenticated")({
 		}, []);
 
 		return (
-			<Navigation>
+			<div className="">
+			<Navigation >
 				<Outlet/>
 			</Navigation>
+			</div>
+			
 		)
 	},
 });
