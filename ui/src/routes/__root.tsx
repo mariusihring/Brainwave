@@ -1,18 +1,18 @@
 import { createRootRoute,  Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { Session, User } from 'lucia'
+
+interface RouterContext {
+  auth: {
+    session: Session
+    user: User
+  }
+}
+
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      {/* <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{' '}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
-      </div>
-      <hr /> */}
       <Outlet />
       <TanStackRouterDevtools />
     </>
