@@ -1,20 +1,19 @@
-import { createRootRoute,  Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { Session, User } from 'lucia'
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import type { Session, User } from "lucia";
 
 interface RouterContext {
-  auth: {
-    session: Session
-    user: User
-  }
+	auth: {
+		session: Session;
+		user: User;
+	};
 }
 
-
 export const Route = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
+	component: () => (
+		<>
+			<Outlet />
+			<TanStackRouterDevtools />
+		</>
+	),
+});
