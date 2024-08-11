@@ -1,5 +1,6 @@
 import { useAuth } from "@/auth";
 import Navigation from "@/components/brainwave/misc/navigation";
+import { useUser } from "@/lib/stores/user";
 import { createFileRoute, useNavigate, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 
@@ -9,10 +10,11 @@ import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
 	component: () => {
+		const {setUser} = useUser()
 		const navigate = useNavigate();
 		async function checkAuth() {
 			const auth = await useAuth();
-			console.log(auth);
+			setUser(auth.user)
 			if (!auth.session || !auth.user) {
 				navigate({ to: "/login" });
 			}

@@ -2,6 +2,7 @@ import { Lucia, type Session, type User } from "lucia"
 
 import { brainwave_adapter } from "./lib/auth/adapter";
 import Cookies from "js-cookie";
+import { useUser } from "./lib/stores/user";
 
 
 export const auth = new Lucia(brainwave_adapter, {
@@ -35,6 +36,7 @@ interface DatabaseUserAttributes {
 
 export async function useAuth(): Promise<{ user: User; session: Session } | { user: null; session: null }> {
 	const sessionId = Cookies.get(auth.sessionCookieName) ?? null;
+
 	if (!sessionId) {
 		return {
 			user: null,
@@ -43,6 +45,7 @@ export async function useAuth(): Promise<{ user: User; session: Session } | { us
 	}
 
 	const result = await auth.validateSession(sessionId);
+
 	try {
 		
 		if (result.session?.fresh) {

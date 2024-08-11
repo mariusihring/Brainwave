@@ -48,7 +48,6 @@ const sideMenuStaticLinks = [
 export default function Navigation({ children }: { children: ReactNode }) {
 	const router = useRouterState();
 	const pathname = router.location.pathname;
-	console.log(pathname);
 	const [open, setOpen] = useState(true);
 	const isCurrentPath = (link: string) => {
 		if (pathname === link) {

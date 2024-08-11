@@ -292,8 +292,12 @@ pub struct UpdateExpiration {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DatabaseSession {
     pub id: String,
+    #[serde(rename = "userId")]
     pub user_id: String,
+    #[serde(rename = "expiresAt")]
     pub expires_at: DateTime<Utc>,
+    #[serde(default)]
+    pub attributes: HashMap<String, String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -312,6 +316,7 @@ fn transform_into_database_session(row: &sqlx::sqlite::SqliteRow) -> Result<Data
         user_id,
         expires_at: DateTime::from_timestamp(expires_at, 0)
             .ok_or_else(|| anyhow!("Invalid timestamp"))?,
+        attributes: HashMap::new()
     })
 }
 

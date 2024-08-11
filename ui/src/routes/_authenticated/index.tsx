@@ -1,4 +1,5 @@
-import DashboardIdea from "@/components/brainwave/misc/dashboard/idea";
+
+import { useUser } from "@/lib/stores/user";
 import { createFileRoute } from "@tanstack/react-router";
 
 
@@ -9,9 +10,10 @@ export const Route = createFileRoute("/_authenticated/")({
 
 
 function Dashboard() {
+	const {user} = useUser()
 	return (
 		<div className="antialiased">
-			<DashboardIdea />
+			<p>{user?.username}</p>
 		</div>
 	
 	)
