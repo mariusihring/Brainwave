@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { DatabaseUser, generateIdFromEntropySize } from "lucia";
+import { type DatabaseUser, generateIdFromEntropySize } from "lucia";
 import Cookies from "js-cookie"
 import { redirect } from "@tanstack/react-router"
 import api_client from "../axios_client";
@@ -33,14 +33,17 @@ export async function login(username: string, password: string) {
     if (!existingUser) {
         return "allready a user with this name"
     }
-    const validPassword = await Bun.password.verify(password, existingUser.attributes.password_hash);
-    if (!validPassword) {
+    let pw = existingUser.attributes.password_hash === password;
+    if (!pw) {
         return "wrong password"
     }
     const session = await auth.createSession(existingUser.id, {});
     const sessionCookie = auth.createSessionCookie(session.id);
-    Cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    // Cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    Cookies.set('name', 'value', { domain: 'your-domain.com', path: '/' });
     return redirect({ to: "/" });
+    
+
 }
 export async function signup(username: string, password: string) {
 
@@ -60,22 +63,29 @@ export async function signup(username: string, password: string) {
             error: "Invalid password"
         };
     }
-    const passwordHash = await Bun.password.hash(password);
+    // const passwordHash = await bcrypt.hash(password, 10);
     const userId = generateIdFromEntropySize(10);
     try {
         await api_client.post("/auth/create_user", {
             id: userId,
             username: username,
-            hash: passwordHash
+            hash: password
         })
-         
+
 
         const session = await auth.createSession(userId, {});
         const sessionCookie = auth.createSessionCookie(session.id)
-        Cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-        return redirect({ to: "/" });
+        //@ts-ignore
+        const maxAgeDays = sessionCookie.attributes.maxAge / (24 * 60 * 60);
+        Cookies.set(sessionCookie.name, sessionCookie.value, {
+            path: '/',
+            secure: true, // if using HTTPS
+            sameSite: 'strict',
+            expires: maxAgeDays
+          });
+       
     } catch (e) {
-        return "Username already used"
+        return Promise.reject("Username allready used")
 
     }
 

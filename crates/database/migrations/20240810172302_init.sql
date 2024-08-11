@@ -93,9 +93,9 @@ CREATE INDEX "assignments_course_id_index" ON "assignments" ("course_id");
 CREATE TABLE "user"
 (
     "id"         TEXT PRIMARY KEY NOT NULL,
-    "first_name" VARCHAR(255)     NOT NULL,
-    "last_name"  VARCHAR(255)     NOT NULL,
-    "image"      TEXT             NOT NULL,
+    "first_name" VARCHAR(255)     ,
+    "last_name"  VARCHAR(255)     ,
+    "image"      TEXT             ,
     "username" TEXT UNIQUE NOT NULL,
     "password_hash" TEXT NOT NULL
 );

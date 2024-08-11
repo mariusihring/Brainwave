@@ -19,19 +19,19 @@ export const brainwave_adapter: Adapter = {
         return await api_client.post("/auth/delete_sessions")
     },
     deleteSession: async function (sessionId: string): Promise<void> {
-        return await api_client.post(`/delete_session/${sessionId}`)
+        return await api_client.post(`/auth/delete_session/${sessionId}`)
     },
     deleteUserSessions: async function (userId: string): Promise<void> {
-        return await api_client.post(`/delete_user_session/${userId}`)
+        return await api_client.post(`/auth/delete_user_session/${userId}`)
     },
     getSessionAndUser: async function (sessionId: string): Promise<[session: DatabaseSession, user: DatabaseUser]> {
-        return await api_client.post(`/get_user_and_session/${sessionId}`)
+        return await api_client.post(`/auth/get_user_and_session/${sessionId}`)
     },
     getUserSessions: async function (userId: string): Promise<DatabaseSession[]> {
-        return await api_client.post(`/get_user_sessions/${userId}`)
+        return await api_client.post(`/auth/get_user_sessions/${userId}`)
     },
     setSession: async function (session: DatabaseSession): Promise<void> {
-        return await api_client.post(`/set_session`, {
+        return await api_client.post(`/auth/set_session`, {
             id: session.id,
             user_id: session.userId,
             expires_at:session.expiresAt,
@@ -39,7 +39,7 @@ export const brainwave_adapter: Adapter = {
         })
     },
     updateSessionExpiration: async function (sessionId: string, expiresAt: Date): Promise<void> {
-        return await api_client.post(`/update_session`, {
+        return await api_client.post(`/auth/update_session`, {
             session_id: sessionId,
             expires_at: expiresAt
         })

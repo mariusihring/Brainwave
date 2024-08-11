@@ -12,10 +12,80 @@ use std::collections::HashMap;
 
 use crate::state::AppState;
 
-
-
-const SESSION_TABLE_NAME: &'static str = "`sessions`";
+const SESSION_TABLE_NAME: &'static str = "`session`";
 const USER_TABLE_NAME: &'static str = "`user`";
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetUserBody {
+    pub username: String,
+}
+pub async fn get_user(
+    State(state): State<AppState>,
+    Json(user): Json<GetUserBody>,
+) -> (StatusCode, Json<Option<DatabaseUser>>) {
+    let mut db = state
+        .db
+        .acquire()
+        .await
+        .expect("failed to get db from state");
+    let row = sqlx::query(&format!(
+        "SELECT * FROM {} WHERE username = ?",
+        USER_TABLE_NAME
+    ))
+    .bind(user.username)
+    .fetch_optional(&mut *db)
+    .await
+    .expect("Failed to get user");
+
+    let temp = row
+        .map(|r| transform_into_database_user(&r))
+        .transpose()
+        .unwrap();
+
+    (StatusCode::OK, Json(temp))
+}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateUserBody {
+    pub id: String,
+    pub username: String,
+    pub hash: String,
+}
+pub async fn create_user(
+    State(state): State<AppState>,
+    Json(user): Json<CreateUserBody>,
+) -> (StatusCode, Json<Option<DatabaseUser>>) {
+    let mut db = state
+        .db
+        .acquire()
+        .await
+        .expect("failed to get db from state");
+
+    let row = sqlx::query(&format!(
+        "INSERT INTO {} (id, username, password_hash) VALUES(?, ?, ?)",
+        USER_TABLE_NAME
+    ))
+    .bind(user.id)
+    .bind(user.username.clone())
+    .bind(user.hash)
+    .execute(&mut *db)
+    .await;
+
+
+    let row = sqlx::query(&format!(
+        "SELECT * FROM {} WHERE username = ?",
+        USER_TABLE_NAME
+    ))
+    .bind(user.username)
+    .fetch_optional(&mut *db)
+    .await
+    .expect("Failed to get user");
+
+    let temp = row
+        .map(|r| transform_into_database_user(&r))
+        .transpose()
+        .unwrap();
+
+    (StatusCode::OK, Json(temp))
+}
 
 pub async fn delete_session(Path(id): Path<String>, State(state): State<AppState>) {
     let mut db = state
@@ -101,25 +171,25 @@ pub async fn get_user_sessions(
     (StatusCode::OK, Json(sessions))
 }
 
-pub async fn set_session(State(state): State<AppState>, Json(session): Json<DatabaseSession>) {
+pub async fn set_session(State(state): State<AppState>, Json(session): Json<DatabaseSession>) -> StatusCode{
     let expires_at = session.expires_at.timestamp();
-    let attributes_json = serde_json::to_value(&session.attributes).expect("failed to create json");
+   
     let mut db = state
         .db
         .acquire()
         .await
         .expect("failed to get db from state");
     sqlx::query(&format!(
-        "INSERT INTO {} (id, user_id, expires_at, attributes) VALUES (?, ?, ?, ?)",
+        "INSERT INTO {} (id, user_id, expires_at) VALUES (?, ?, ?)",
         SESSION_TABLE_NAME
     ))
     .bind(&session.id)
     .bind(&session.user_id)
     .bind(expires_at)
-    .bind(attributes_json.to_string())
     .execute(&mut *db)
     .await
     .expect("failed to set session");
+    StatusCode::OK
 }
 
 pub async fn update_session_expiration(
@@ -203,37 +273,35 @@ pub struct DatabaseSession {
     pub id: String,
     pub user_id: String,
     pub expires_at: DateTime<Utc>,
-    pub attributes: HashMap<String, Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DatabaseUser {
     pub id: String,
-    pub attributes: HashMap<String, Value>,
+    pub attributes: HashMap<String, String>,
 }
 
 fn transform_into_database_session(row: &sqlx::sqlite::SqliteRow) -> Result<DatabaseSession> {
     let id: String = row.try_get("id")?;
     let user_id: String = row.try_get("user_id")?;
     let expires_at: i64 = row.try_get("expires_at")?;
-    let attributes_json: String = row.try_get("attributes")?;
-
-    let attributes: HashMap<String, Value> = serde_json::from_str(&attributes_json)?;
 
     Ok(DatabaseSession {
         id,
         user_id,
         expires_at: DateTime::from_timestamp(expires_at, 0)
             .ok_or_else(|| anyhow!("Invalid timestamp"))?,
-        attributes,
     })
 }
 
 fn transform_into_database_user(row: &sqlx::sqlite::SqliteRow) -> Result<DatabaseUser> {
     let id: String = row.try_get("id")?;
-    let attributes_json: String = row.try_get("attributes")?;
+    let username: String = row.try_get("username")?;
+    let password_hash: String = row.try_get("password_hash")?;
 
-    let attributes: HashMap<String, Value> = serde_json::from_str(&attributes_json)?;
+    let mut attributes: HashMap<String, String> = HashMap::new();
+    attributes.insert(String::from("username"), username);
+    attributes.insert(String::from("password_hash"), password_hash);
 
     Ok(DatabaseUser { id, attributes })
 }

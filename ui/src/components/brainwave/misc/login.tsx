@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BrainwaveLogo from "./logo";
-import { Label } from "@/components/ui/label";
 import {Link} from "@tanstack/react-router"
 import { signup } from "@/lib/auth/functions";
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useNavigate} from "@tanstack/react-router"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,6 +22,7 @@ const loginSchema = z.object({
 })
 
 export default function Login() {
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -32,8 +32,13 @@ export default function Login() {
   })
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    let temp = await signup(values.username, values.password)
-    console.log(temp)
+   try {
+    await signup(values.username, values.password)
+    await navigate({to: "/"})
+   } catch (e) {
+    console.error(e)
+   }
+    
   }
 
 
