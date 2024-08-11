@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BrainwaveLogo from "./logo";
 import {Link} from "@tanstack/react-router"
-import { login } from "@/lib/auth/functions";
+import { signup } from "@/lib/auth/functions";
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -21,7 +21,7 @@ const loginSchema = z.object({
   password: z.string().min(5).max(50)
 })
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate()
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -33,7 +33,7 @@ export default function Login() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
    try {
-    await login(values.username, values.password)
+    await signup(values.username, values.password)
     await navigate({to: "/"})
    } catch (e) {
     console.error(e)
@@ -46,17 +46,16 @@ export default function Login() {
     <div className="w-full h-full flex items-center justify-center flex-col text-center space-y-5 max-w-96">
       <BrainwaveLogo className="h-44 w-44" />
       <div className="mt-5">
-        <h1 className="text-center text-3xl font-bold">Sign into your account</h1>
-        <p>or <Link className="font-semibold"  to="/signup">create an account</Link></p>
+        <h1 className="text-center text-3xl font-bold">Create your account</h1>
+        <p>or <Link to="/login" className="font-semibold">sign in</Link></p>
       </div>
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="text-left w-full space-y-4">
         <FormField
           control={form.control}
           name="username"
-          
           render={({ field }) => (
-            <FormItem className="w-full ">
+            <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder="username" {...field} />
@@ -81,7 +80,6 @@ export default function Login() {
           )}
         />
         <Button type="submit" className="w-full">Submit</Button>
-        <p>Forgot password? <Link className="font-semibold" disabled>Reset it</Link></p>
       </form>
     </Form>
     </div>
