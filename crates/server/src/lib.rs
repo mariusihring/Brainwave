@@ -38,7 +38,7 @@ pub async fn run_server() {
         .route("/set_session", post(set_session))
         .route("/update_session", post(update_session_expiration))
         .route("/delete_sessions", post(delete_expired_sessions))
-        .route("/get_user", get(get_user))
+        .route("/get_user", post(get_user))
         .route("/create_user", post(create_user));
 
     let app = Router::new()

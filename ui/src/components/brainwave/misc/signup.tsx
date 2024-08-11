@@ -64,7 +64,7 @@ export default function Signup() {
 							<FormItem>
 								<FormLabel>Username</FormLabel>
 								<FormControl>
-									<Input placeholder="username" {...field} />
+									<Input placeholder="Username" {...field} />
 								</FormControl>
 
 								<FormMessage />
@@ -78,7 +78,7 @@ export default function Signup() {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<Input placeholder="password" {...field} />
+									<Input placeholder="Password" {...field} />
 								</FormControl>
 
 								<FormMessage />

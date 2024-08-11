@@ -1,4 +1,4 @@
-import { Lucia, Session, User } from "lucia"
+import { Lucia, type Session, type User } from "lucia"
 
 import { brainwave_adapter } from "./lib/auth/adapter";
 import Cookies from "js-cookie";
@@ -44,7 +44,8 @@ export async function useAuth(): Promise<{ user: User; session: Session } | { us
 
 	const result = await auth.validateSession(sessionId);
 	try {
-		if (result.session && result.session.fresh) {
+		
+		if (result.session?.fresh) {
 			const sessionCookie = auth.createSessionCookie(result.session.id);
 
 			//@ts-ignore

@@ -69,7 +69,6 @@ pub async fn create_user(
     .execute(&mut *db)
     .await;
 
-
     let row = sqlx::query(&format!(
         "SELECT * FROM {} WHERE username = ?",
         USER_TABLE_NAME
@@ -124,24 +123,43 @@ pub async fn get_session_and_user(
     StatusCode,
     Json<(Option<DatabaseSession>, Option<DatabaseUser>)>,
 ) {
-    let mut db1 = state
+    let mut db = state
         .db
         .acquire()
         .await
         .expect("failed to get db from state");
+    let row = sqlx::query(&format!(
+        "SELECT * FROM {} WHERE id = ?",
+        SESSION_TABLE_NAME
+    ))
+    .bind(id.clone())
+    .fetch_optional(&mut *db)
+    .await
+    .expect("Failed to get session");
 
-    let mut db2 = state
-        .db
-        .acquire()
-        .await
-        .expect("failed to get db from state");
+    let session = row
+        .map(|r| transform_into_database_session(&r))
+        .transpose()
+        .unwrap();
+    let row = sqlx::query(&format!(
+        "SELECT {}.* FROM {} INNER JOIN {} ON {}.id = {}.user_id WHERE {}.id = ?",
+        USER_TABLE_NAME,
+        SESSION_TABLE_NAME,
+        USER_TABLE_NAME,
+        USER_TABLE_NAME,
+        SESSION_TABLE_NAME,
+        SESSION_TABLE_NAME
+    ))
+    .bind(id)
+    .fetch_optional(&mut *db)
+    .await
+    .expect("Failed to get user");
 
-    let (session, user) = tokio::join!(
-        get_session(id.as_str(), &mut db1),
-        get_user_from_session_id(id.as_str(), &mut db2)
-    );
-    let session = session.expect("failed to get session");
-    let user = user.expect("failed to get session");
+    let user = row
+        .map(|r| transform_into_database_user(&r))
+        .transpose()
+        .unwrap();
+
     (StatusCode::OK, Json((session, user)))
 }
 
@@ -171,9 +189,12 @@ pub async fn get_user_sessions(
     (StatusCode::OK, Json(sessions))
 }
 
-pub async fn set_session(State(state): State<AppState>, Json(session): Json<DatabaseSession>) -> StatusCode{
+pub async fn set_session(
+    State(state): State<AppState>,
+    Json(session): Json<DatabaseSession>,
+) -> StatusCode {
     let expires_at = session.expires_at.timestamp();
-   
+
     let mut db = state
         .db
         .acquire()

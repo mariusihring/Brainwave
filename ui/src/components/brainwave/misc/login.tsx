@@ -66,7 +66,7 @@ export default function Login() {
 							<FormItem className="w-full ">
 								<FormLabel>Username</FormLabel>
 								<FormControl>
-									<Input placeholder="username" {...field} />
+									<Input placeholder="Username" {...field} />
 								</FormControl>
 
 								<FormMessage />
@@ -80,7 +80,7 @@ export default function Login() {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<Input placeholder="password" {...field} />
+									<Input placeholder="Password" {...field} />
 								</FormControl>
 
 								<FormMessage />
@@ -90,7 +90,7 @@ export default function Login() {
 					<Button type="submit" className="w-full">
 						Submit
 					</Button>
-					<p>
+					<p className="w-full text-center">
 						Forgot password?{" "}
 						<Link className="font-semibold" disabled>
 							Reset it
