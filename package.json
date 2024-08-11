@@ -1,0 +1,9 @@
+{
+  "name": "brainwave",
+  "private": true,
+  "scripts": {
+    "start:frontend": "bun run --filter ui start",
+    "build:frontend": "bun run --filter ui build",
+    "dev:frontend": "bun run --filter ui dev"
+  }
+}
