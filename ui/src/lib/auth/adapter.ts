@@ -1,4 +1,6 @@
 import {DatabaseSession, DatabaseUser, UserId } from "lucia";
+import api_client from "../axios_client";
+
 
 interface Adapter {
 	deleteExpiredSessions(): Promise<void>;
@@ -12,26 +14,34 @@ interface Adapter {
 	updateSessionExpiration(sessionId: string, expiresAt: Date): Promise<void>;
 }
 
-export const adapter: Adapter = {
-    deleteExpiredSessions: function (): Promise<void> {
-        throw new Error("Function not implemented.");
+export const brainwave_adapter: Adapter = {
+    deleteExpiredSessions: async function (): Promise<void> {
+        return await api_client.post("/auth/delete_sessions")
     },
-    deleteSession: function (sessionId: string): Promise<void> {
-        throw new Error("Function not implemented.");
+    deleteSession: async function (sessionId: string): Promise<void> {
+        return await api_client.post(`/delete_session/${sessionId}`)
     },
-    deleteUserSessions: function (userId: string): Promise<void> {
-        throw new Error("Function not implemented.");
+    deleteUserSessions: async function (userId: string): Promise<void> {
+        return await api_client.post(`/delete_user_session/${userId}`)
     },
-    getSessionAndUser: function (sessionId: string): Promise<[session: DatabaseSession, user: DatabaseUser]> {
-        throw new Error("Function not implemented.");
+    getSessionAndUser: async function (sessionId: string): Promise<[session: DatabaseSession, user: DatabaseUser]> {
+        return await api_client.post(`/get_user_and_session/${sessionId}`)
     },
-    getUserSessions: function (userId: string): Promise<DatabaseSession[]> {
-        throw new Error("Function not implemented.");
+    getUserSessions: async function (userId: string): Promise<DatabaseSession[]> {
+        return await api_client.post(`/get_user_sessions/${userId}`)
     },
-    setSession: function (session: DatabaseSession): Promise<void> {
-        throw new Error("Function not implemented.");
+    setSession: async function (session: DatabaseSession): Promise<void> {
+        return await api_client.post(`/set_session`, {
+            id: session.id,
+            user_id: session.userId,
+            expires_at:session.expiresAt,
+            attributes: session.attributes, 
+        })
     },
-    updateSessionExpiration: function (sessionId: string, expiresAt: Date): Promise<void> {
-        throw new Error("Function not implemented.");
+    updateSessionExpiration: async function (sessionId: string, expiresAt: Date): Promise<void> {
+        return await api_client.post(`/update_session`, {
+            session_id: sessionId,
+            expires_at: expiresAt
+        })
     }
 } 

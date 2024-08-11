@@ -1,7 +1,8 @@
-import { auth, db } from "@/auth";
+import { auth } from "@/auth";
 import { DatabaseUser, generateIdFromEntropySize } from "lucia";
 import Cookies from "js-cookie"
 import { redirect } from "@tanstack/react-router"
+import api_client from "../axios_client";
 
 export async function login(username: string, password: string) {
 
@@ -22,7 +23,11 @@ export async function login(username: string, password: string) {
         };
     }
 
-    const existingUser = db.prepare("SELECT * FROM user WHERE username = ?").get(username) as
+    const existingUser = await api_client.get("/auth/get_user", {
+        params: {
+            username: username
+        }
+    }) as
         | DatabaseUser
         | undefined;
     if (!existingUser) {
@@ -58,11 +63,12 @@ export async function signup(username: string, password: string) {
     const passwordHash = await Bun.password.hash(password);
     const userId = generateIdFromEntropySize(10);
     try {
-        db.prepare("INSERT INTO user (id, username, password_hash) VALUES(?, ?, ?)").run(
-            userId,
-            username,
-            passwordHash
-        );
+        await api_client.post("/auth/create_user", {
+            id: userId,
+            username: username,
+            hash: passwordHash
+        })
+         
 
         const session = await auth.createSession(userId, {});
         const sessionCookie = auth.createSessionCookie(session.id)

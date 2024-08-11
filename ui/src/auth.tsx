@@ -1,16 +1,9 @@
 import { Lucia } from "lucia"
-import { BunSQLiteAdapter } from "@lucia-auth/adapter-sqlite";
-import { Database } from "bun:sqlite";
 
-export const db = new Database("file:://auth.db");
-
-const adapter = new BunSQLiteAdapter(db, {
-	user: "user",
-	session: "session"
-});
+import { brainwave_adapter } from "./lib/auth/adapter";
 
 
-export const auth = new Lucia(adapter, {
+export const auth = new Lucia(brainwave_adapter, {
 	sessionCookie: {
 		expires: false,
 		attributes: {
