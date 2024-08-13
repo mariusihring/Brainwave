@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedTodosImport } from './routes/_authenticated/todos'
+import { Route as AuthenticatedTestImport } from './routes/_authenticated/test'
 import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes'
 import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
 import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
@@ -45,6 +46,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
 
 const AuthenticatedTodosRoute = AuthenticatedTodosImport.update({
   path: '/todos',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedTestRoute = AuthenticatedTestImport.update({
+  path: '/test',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -121,6 +127,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotesImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/test': {
+      id: '/_authenticated/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof AuthenticatedTestImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/todos': {
       id: '/_authenticated/todos'
       path: '/todos'
@@ -146,6 +159,7 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedFlashcardsRoute,
     AuthenticatedNotebooksRoute,
     AuthenticatedNotesRoute,
+    AuthenticatedTestRoute,
     AuthenticatedTodosRoute,
     AuthenticatedIndexRoute,
   }),
@@ -173,6 +187,7 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/flashcards",
         "/_authenticated/notebooks",
         "/_authenticated/notes",
+        "/_authenticated/test",
         "/_authenticated/todos",
         "/_authenticated/"
       ]
@@ -197,6 +212,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_authenticated/notes": {
       "filePath": "_authenticated/notes.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/test": {
+      "filePath": "_authenticated/test.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/todos": {
