@@ -7,11 +7,7 @@ export const Route = createFileRoute("/_authenticated/")({
 	component: () => <Dashboard />,
 });
 
-const test: string[] = [
-	"rust",
-	"typescripto",
-	"boring stuff",
-];
+const test: string[] = ["rust", "typescripto", "boring stuff"];
 
 function Dashboard() {
 	const { user } = useUser();
@@ -40,13 +36,13 @@ function Dashboard() {
 								<ScrollBar orientation="horizontal" />
 							</ScrollArea> */}
 							{test.map((title) => (
-										<Card key={title}>
-											<CardHeader>
-												<CardTitle>{title}</CardTitle>
-											</CardHeader>
-											<CardContent>Content for {title}</CardContent>
-										</Card>
-									))}
+								<Card key={title}>
+									<CardHeader>
+										<CardTitle>{title}</CardTitle>
+									</CardHeader>
+									<CardContent>Content for {title}</CardContent>
+								</Card>
+							))}
 						</CardContent>
 					</Card>
 					<Card className=" h-[70%]">

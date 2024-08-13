@@ -13,11 +13,10 @@ interface RouterContext {
 export const Route = createRootRoute({
 	component: () => (
 		<>
-		<TooltipProvider>
-		<Outlet />
-		<TanStackRouterDevtools />
-		</TooltipProvider>
-			
+			<TooltipProvider>
+				<Outlet />
+				{/*<TanStackRouterDevtools />*/}
+			</TooltipProvider>
 		</>
 	),
 });

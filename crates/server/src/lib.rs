@@ -23,7 +23,7 @@ pub async fn run_server() {
     let db = database::init("auth.db")
         .await
         .expect("failed to connect to db");
-    let state = AppState { db: Arc::new(db) };
+    let state = AppState { db: db };
 
     let cors = CorsLayer::new()
         .allow_origin(Any)

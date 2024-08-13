@@ -1,3 +1,11 @@
+import BrainwaveLogo from "@/components/brainwave/misc/logo";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { useSettings } from "@/lib/stores/settings.ts";
+import { cn } from "@/lib/utils";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
 	DiamondIcon,
 	HomeIcon,
@@ -7,14 +15,7 @@ import {
 	PenLineIcon,
 	PuzzleIcon,
 } from "lucide-react";
-import BrainwaveLogo from "@/components/brainwave/misc/logo";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Outlet, useRouterState, Link } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { type ReactNode, useState } from "react";
 
 const iconSize = 20;
 const sideMenuStaticLinks = [
@@ -48,7 +49,7 @@ const sideMenuStaticLinks = [
 export default function Navigation({ children }: { children: ReactNode }) {
 	const router = useRouterState();
 	const pathname = router.location.pathname;
-	const [open, setOpen] = useState(true);
+	const settings = useSettings();
 	const isCurrentPath = (link: string) => {
 		if (pathname === link) {
 			return "default";
@@ -58,12 +59,14 @@ export default function Navigation({ children }: { children: ReactNode }) {
 	return (
 		<main className="flex min-h-dvh gap-4 p-2">
 			<aside className="flex flex-col items-center justify-between border-r p-2">
-                {open ? (
-                    <div className="flex my-5 gap-2 items-center justify-center pl-1">
-                    <BrainwaveLogo className="w-8 h-8" />
-                    <h1 className="font-bold text-xl">Brainwave</h1>
-                    </div>
-                ): <BrainwaveLogo className="w-8 h-8" />}
+				{settings.nav_open ? (
+					<div className="flex my-5 gap-2 items-center justify-center pl-1">
+						<BrainwaveLogo className="w-8 h-8" />
+						<h1 className="font-bold text-xl">Brainwave</h1>
+					</div>
+				) : (
+					<BrainwaveLogo className="w-8 h-8" />
+				)}
 				<div
 					data-collapsed={true}
 					className="group flex h-full flex-col gap-4 py-2 data-[collapsed=true]:py-2 w-full mt-5"
@@ -71,7 +74,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 				>
 					<nav className="grid  w-full gap-1  group-[data-collapsed=true]:justify-center group-[data-collapsed=true]:px-2">
 						{sideMenuStaticLinks.map((link, index) =>
-							!open ? (
+							!settings.nav_open ? (
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Tooltip key={index} delayDuration={0}>
 									<TooltipTrigger asChild>
@@ -129,9 +132,13 @@ export default function Navigation({ children }: { children: ReactNode }) {
 							variant="ghost"
 							size="icon"
 							className="-ml-2"
-							onClick={() => setOpen((open) => !open)}
+							onClick={() => settings.setNav(!settings.nav_open)}
 						>
-							{open ? <PanelLeftCloseIcon strokeWidth={1.5} size={18} /> : <PanelRightCloseIcon strokeWidth={1.5} size={18} />}
+							{settings.nav_open ? (
+								<PanelLeftCloseIcon strokeWidth={1.5} size={18} />
+							) : (
+								<PanelRightCloseIcon strokeWidth={1.5} size={18} />
+							)}
 						</Button>
 						<Input />
 					</div>

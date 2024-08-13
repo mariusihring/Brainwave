@@ -25,20 +25,21 @@ export const brainwave_adapter: Adapter = {
 	getSessionAndUser: async (
 		sessionId: string,
 	): Promise<[session: DatabaseSession, user: DatabaseUser]> => {
-		const response = await api_client.post<[session: DatabaseSession, user: DatabaseUser]>(`/auth/get_user_and_session/${sessionId}`);
-		
+		const response = await api_client.post<
+			[session: DatabaseSession, user: DatabaseUser]
+		>(`/auth/get_user_and_session/${sessionId}`);
+
 		const session: DatabaseSession = {
 			userId: response.data[0].userId,
 			expiresAt: new Date(response.data[0].expiresAt),
 			id: response.data[0].id,
-			attributes: response.data[0].attributes
-		}
+			attributes: response.data[0].attributes,
+		};
 		const user: DatabaseUser = {
 			id: response.data[1].id,
-			attributes: response.data[1].attributes
-		}
-		return [session, user]
-
+			attributes: response.data[1].attributes,
+		};
+		return [session, user];
 	},
 	getUserSessions: async (userId: string): Promise<DatabaseSession[]> => {
 		return (await api_client.post(`/auth/get_user_sessions/${userId}`)).data;

@@ -44,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@storybook/addon-actions": "^8.2.8",
     "@tanstack/react-query": "^5.51.23",
+    "@tanstack/react-router": "^1.47.1",
     "@tauri-apps/api": "^1.6.0",
     "@types/bun": "^1.1.6",
     "@types/js-cookie": "^3.0.6",
@@ -67,7 +68,6 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "ui": ".",
     "vaul": "^0.9.1",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"
