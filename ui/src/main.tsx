@@ -5,6 +5,8 @@ import './App.css'
 import { routeTree } from './routeTree.gen'
 import { useAuth } from './auth'
 
+import "./i18n"
+
 // Create a new router instance
 const router = createRouter({ routeTree, context:{ auth: undefined!} })
 
