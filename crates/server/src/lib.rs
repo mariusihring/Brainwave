@@ -1,39 +1,49 @@
-use std::{fs::File, sync::Arc, io::Write};
+use std::{fs::File, io::Write, sync::Arc};
 pub mod state;
-use async_graphql::{Schema, EmptySubscription};
+use async_graphql::{EmptySubscription, Schema};
 use axum::{
     http::Method,
     routing::{get, post},
     Router,
 };
-mod routers;
 mod graphql;
-use graphql::{Query, Mutation};
-use routers::{auth::{
-    create_user, delete_expired_sessions, delete_session, delete_user_sessions,
-    get_session_and_user, get_user, get_user_sessions, set_session, update_session_expiration,
-}, graphql::{graphiql, graphql_handler}};
+mod routers;
+use graphql::{Mutation, Query};
+use routers::{
+    auth::{
+        create_user, delete_expired_sessions, delete_session, delete_user_sessions,
+        get_session_and_user, get_user, get_user_sessions, set_session, update_session_expiration,
+    },
+    graphql::{graphiql, graphql_handler},
+};
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
 
 use state::AppState;
 
 //TODO: make database shut down gracefully when we stop the server. Maybe do this with an endpoint or smth
+//
 pub async fn run_server() {
     std::env::set_var("RUST_LOG", "async-graphql=info");
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
-    File::create("auth.db");
+
+    File::create("auth.db").expect("Failed to create database file");
     let db = database::init("auth.db")
         .await
         .expect("failed to connect to db");
 
     let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
         .extension(async_graphql::extensions::Logger)
+        .data(db.clone())
         .finish();
+
     let mut file = File::create("schema.graphqls").expect("failed to create schema file");
-    file.write_all(schema.sdl().as_bytes()).expect("failed to write schema");
-    let state = AppState { db: db, schema: schema };
+    file.write_all(schema.sdl().as_bytes())
+        .expect("failed to write schema");
+
+    let state = AppState { db, schema };
+
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
@@ -60,13 +70,8 @@ pub async fn run_server() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn root() -> &'static str {
-    "Hello, World!"
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn it_works() {}
