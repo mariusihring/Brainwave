@@ -6,22 +6,13 @@ mod notes;
 mod todos;
 
 use async_graphql::*;
+use todos::{TodoMutation, TodoQuery};
 
 #[derive(MergedObject, Default)]
-pub struct Query(PlaceHolderQuery);
+pub struct Query(TodoQuery);
 
 #[derive(MergedSubscription, Default)]
 pub struct Subscription();
 
 #[derive(MergedObject, Default)]
-pub struct Mutation();
-
-#[derive(Default)]
-struct PlaceHolderQuery;
-#[Object]
-impl PlaceHolderQuery {
-    async fn howdy(&self) -> &'static str {
-        "partner"
-    }
-}
-
+pub struct Mutation(TodoMutation);

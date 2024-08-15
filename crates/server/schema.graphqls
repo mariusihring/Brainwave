@@ -3,10 +3,11 @@
 
 
 type Mutation {
+	createTodo: String!
 }
 
 type Query {
-	howdy: String!
+	todo(id: Int!): String!
 }
 
 
