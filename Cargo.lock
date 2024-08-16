@@ -3184,6 +3184,7 @@ dependencies = [
  "chrono",
  "database",
  "env_logger",
+ "http 1.1.0",
  "log",
  "serde",
  "serde_json",

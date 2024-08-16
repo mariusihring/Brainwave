@@ -8,6 +8,7 @@ use axum::{
 };
 mod graphql;
 mod routers;
+mod auth;
 use graphql::{Mutation, Query};
 use routers::{
     auth::{
