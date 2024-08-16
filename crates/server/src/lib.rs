@@ -49,6 +49,7 @@ pub async fn run_server() {
         .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
         .allow_headers(Any);
 
+    //TODO: create auth middlware to protect endpoints
     let auth_router = Router::new()
         .route("/delete_session/:id", post(delete_session))
         .route("/delete_user_session/:id", post(delete_user_sessions))

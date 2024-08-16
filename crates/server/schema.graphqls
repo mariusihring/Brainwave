@@ -3,13 +3,37 @@
 
 
 type Mutation {
-	createTodo: String!
+	createTodo(input: NewTodo!): String!
+}
+
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+
+input NewTodo {
+	title: String!
+	dueOn: NaiveDateTime!
+	icon: String!
 }
 
 type Query {
-	todo(id: Int!): String!
+	todo(id: String!): Todo!
+	todos: [Todo!]!
 }
 
+
+type Todo {
+	id: String!
+	title: String!
+	dueOn: NaiveDateTime!
+	icon: String!
+	userId: String!
+}
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

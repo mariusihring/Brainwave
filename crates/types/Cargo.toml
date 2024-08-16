@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 serde = { workspace = true}
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["chrono"] }
 chrono = { workspace = true }
 serde_json = { workspace = true }
-async-graphql = { workspace = true }
+async-graphql = { workspace = true, features = ["chrono"] }

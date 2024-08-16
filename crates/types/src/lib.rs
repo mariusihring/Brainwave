@@ -1,3 +1,1 @@
-pub struct Todo {
-    pub title: String,
-}
+pub mod todo;
