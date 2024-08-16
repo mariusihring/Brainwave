@@ -1,7 +1,7 @@
 use super::TodoQuery;
 use ::types::todo::Todo;
 use async_graphql::*;
-use chrono::{NaiveDateTime, Utc};
+use chrono::{NaiveDate, NaiveDateTime};
 
 #[Object]
 impl TodoQuery {
@@ -35,5 +35,9 @@ impl TodoQuery {
                 user_id: "123".into(),
             },
         ]
+    }
+
+    async fn todos_by_date(&self, date: NaiveDate) -> Vec<Todo> {
+        vec![]
     }
 }
