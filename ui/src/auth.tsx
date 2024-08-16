@@ -36,6 +36,7 @@ interface DatabaseUserAttributes {
 
 export async function useAuth(): Promise<{ user: User; session: Session } | { user: null; session: null }> {
 	const sessionId = Cookies.get(auth.sessionCookieName) ?? null;
+  console.log(sessionId)
 
 	if (!sessionId) {
 		return {

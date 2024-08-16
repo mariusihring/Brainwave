@@ -1,14 +1,16 @@
+use axum::middleware;
 use std::{fs::File, io::Write, sync::Arc};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
+use auth::validate_session;
 use axum::{
     http::Method,
     routing::{get, post},
     Router,
 };
+mod auth;
 mod graphql;
 mod routers;
-mod auth;
 use graphql::{Mutation, Query};
 use routers::{
     auth::{
@@ -64,7 +66,14 @@ pub async fn run_server() {
 
     let app = Router::new()
         .nest("/auth", auth_router)
-        .route("/", get(graphiql).post(graphql_handler))
+        .route("/", get(graphiql))
+        .route(
+            "/",
+            post(graphql_handler).route_layer(middleware::from_fn_with_state(
+                state.clone(),
+                validate_session,
+            )),
+        )
         .with_state(state)
         .layer(ServiceBuilder::new().layer(cors));
 
