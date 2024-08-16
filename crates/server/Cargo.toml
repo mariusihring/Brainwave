@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio = {workspace = true}
-axum = { workspace= true }
+axum = { workspace= true, features = ["macros"]  }
 serde = { workspace = true}
 database = {path = "../database"}
 tracing-subscriber = { workspace = true}

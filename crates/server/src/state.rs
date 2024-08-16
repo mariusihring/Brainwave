@@ -10,6 +10,7 @@ use crate::{
 pub struct AppState {
     pub db: Pool<Sqlite>,
     pub schema: Schema<Query, Mutation, EmptySubscription>,
+
 }
 
 #[derive(Clone)]

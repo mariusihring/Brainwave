@@ -1,4 +1,4 @@
-use axum::middleware;
+use axum::{extract::State, middleware};
 use std::{fs::File, io::Write, sync::Arc};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
@@ -74,11 +74,19 @@ pub async fn run_server() {
                 validate_session,
             )),
         )
-        .with_state(state)
+        .with_state(state.clone())
         .layer(ServiceBuilder::new().layer(cors));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown(state))
+        .await
+        .unwrap();
+}
+
+async fn shutdown(state: AppState) {
+    println!("Gracefully closing db pool");
+    state.db.close().await;
 }
 
 #[cfg(test)]
