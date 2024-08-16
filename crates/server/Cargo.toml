@@ -21,3 +21,4 @@ anyhow = {workspace = true}
 env_logger = {workspace = true}
 types = {path = "../types"}
 http = {workspace = true}
+uuid = {workspace = true, features = [ "v4"]}

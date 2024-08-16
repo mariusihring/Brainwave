@@ -7,7 +7,6 @@ pub struct Todo {
     pub id: String,
     pub title: String,
     pub due_on: NaiveDateTime,
-    pub icon: String,
     pub user_id: String,
 }
 
@@ -17,4 +16,5 @@ pub struct NewTodo {
     pub due_on: NaiveDateTime,
     pub icon: String,
 }
+
 

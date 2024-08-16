@@ -1,5 +1,9 @@
 use axum::{extract::State, middleware};
-use std::{fs::{File, self}, io::Write, sync::Arc};
+use std::{
+    fs::{self, File},
+    io::Write,
+    sync::Arc,
+};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
 use auth::validate_session;
@@ -19,10 +23,10 @@ use routers::{
     },
     graphql::{graphiql, graphql_handler},
 };
+use state::AppState;
+use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
-use tokio::signal;
-use state::AppState;
 
 //TODO: make database shut down gracefully when we stop the server. Maybe do this with an endpoint or smth
 //

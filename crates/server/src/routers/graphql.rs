@@ -6,7 +6,7 @@ use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::body::Body;
 use axum::extract::FromRequest;
 use axum::{
-    extract::{State, Extension},
+    extract::{Extension, State},
     response::{Html, IntoResponse},
 };
 use http::Request;

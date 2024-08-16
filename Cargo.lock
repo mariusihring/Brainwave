@@ -3207,6 +3207,7 @@ dependencies = [
  "tower-http",
  "tracing-subscriber",
  "types",
+ "uuid",
 ]
 
 [[package]]

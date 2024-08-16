@@ -69,7 +69,7 @@ CREATE TABLE "modules"
 
 CREATE TABLE "todos"
 (
-    "id"      INTEGER PRIMARY KEY AUTOINCREMENT,
+    "id"      TEXT PRIMARY KEY,
     "title"   VARCHAR(255) NOT NULL,
     "due_on"  DATE         NOT NULL,
     "user_id" TEXT         NOT NULL,

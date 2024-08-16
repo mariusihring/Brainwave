@@ -43,7 +43,6 @@ type Todo {
 	id: String!
 	title: String!
 	dueOn: NaiveDateTime!
-	icon: String!
 	userId: String!
 }
 
