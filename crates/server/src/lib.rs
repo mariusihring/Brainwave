@@ -1,5 +1,5 @@
 use axum::{extract::State, middleware};
-use std::{fs::File, io::Write, sync::Arc};
+use std::{fs::{File, self}, io::Write, sync::Arc};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
 use auth::validate_session;
@@ -21,7 +21,7 @@ use routers::{
 };
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
-
+use tokio::signal;
 use state::AppState;
 
 //TODO: make database shut down gracefully when we stop the server. Maybe do this with an endpoint or smth
@@ -30,8 +30,9 @@ pub async fn run_server() {
     std::env::set_var("RUST_LOG", "async-graphql=info");
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
-
-    File::create("auth.db").expect("Failed to create database file");
+    if fs::metadata("auth.db").is_err() {
+        File::create("auth.db").expect("Failed to create database file");
+    }
     let db = database::init("auth.db")
         .await
         .expect("failed to connect to db");
@@ -85,6 +86,27 @@ pub async fn run_server() {
 }
 
 async fn shutdown(state: AppState) {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
     println!("Gracefully closing db pool");
     state.db.close().await;
 }
