@@ -11,7 +11,7 @@ pub struct Todo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub user_id: String,
-    pub course_id: Option<String>,
+    pub module_id: Option<String>,
     pub todo_type: TodoType,
 }
 
@@ -20,8 +20,8 @@ pub struct NewTodo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub icon: String,
-    pub course_id: Option<String>,
-    pub todo_type: TodoType,
+    pub module_id: Option<String>,
+    pub todo_type: Option<TodoType>,
 }
 
 #[derive(Enum, Copy, Clone, Eq, PartialEq, Debug, sqlx::Type, Serialize, Deserialize)]

@@ -31,7 +31,7 @@ input NewTodo {
 	dueOn: NaiveDateTime!
 	icon: String!
 	courseId: String
-	todoType: TodoType!
+	todoType: TodoType
 }
 
 type Query {

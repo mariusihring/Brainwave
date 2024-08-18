@@ -1,5 +1,5 @@
 ALTER TABLE todos 
-ADD COLUMN type TEXT CHECK(type IN ('assignment', 'exam', 'general'));
+ADD COLUMN type TEXT CHECK(type IN ('assignment', 'exam', 'general')) DEFAULT 'general';
 
 ALTER TABLE todos
-ADD COLUMN course_id TEXT REFERENCES courses(id);
+ADD COLUMN module_id TEXT REFERENCES module(id);
