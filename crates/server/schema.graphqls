@@ -30,6 +30,8 @@ input NewTodo {
 	title: String!
 	dueOn: NaiveDateTime!
 	icon: String!
+	courseId: String
+	todoType: TodoType!
 }
 
 type Query {
@@ -44,6 +46,14 @@ type Todo {
 	title: String!
 	dueOn: NaiveDateTime!
 	userId: String!
+	courseId: String
+	todoType: TodoType!
+}
+
+enum TodoType {
+	ASSIGNMENT
+	EXAM
+	GENERAL
 }
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

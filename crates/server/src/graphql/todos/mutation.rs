@@ -13,13 +13,15 @@ impl TodoMutation {
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
         let id = Uuid::new_v4();
         let query = format!(
-            r#"INSERT INTO todos (id, title, due_on, user_id) VALUES ("{}", "{}", "{}", "{}") RETURNING *;"#,
+            r#"INSERT INTO todos (id, title, due_on,todo_type, course_id, user_id) VALUES ("{}", "{}", "{}", "{}", ?, "{}") RETURNING *;"#,
             id,
             input.title.clone(),
             input.due_on.clone(),
+            input.todo_type.clone(),
             user.id.clone()
         );
         sqlx::query_as::<_, Todo>(query.as_str())
+            .bind(input.course_id)
             .fetch_one(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))

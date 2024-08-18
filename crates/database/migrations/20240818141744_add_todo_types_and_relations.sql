@@ -1,5 +1,5 @@
-ALTER TABLE 'todos' (
-  type TEXT CHECK(type in ('assignment', 'exam', 'general')) NOT NULL,
-  course_id TEXT,
-  FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
-);
+ALTER TABLE todos 
+ADD COLUMN type TEXT CHECK(type IN ('assignment', 'exam', 'general'));
+
+ALTER TABLE todos
+ADD COLUMN course_id TEXT REFERENCES courses(id);
