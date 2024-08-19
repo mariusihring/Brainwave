@@ -69,7 +69,7 @@ CREATE TABLE "modules"
 
 CREATE TABLE "todos"
 (
-    "id"      INTEGER PRIMARY KEY AUTOINCREMENT,
+    "id"      TEXT PRIMARY KEY,
     "title"   VARCHAR(255) NOT NULL,
     "due_on"  DATE         NOT NULL,
     "user_id" TEXT         NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE "assignments"
     "description"  TEXT         NOT NULL,
     "due_on"       DATE         NOT NULL,
     "grade"        REAL,
-    "course_id"    INTEGER      NOT NULL,
+    "course_id"    TEXT      NOT NULL,
     "weight_grade" REAL         NOT NULL,
     FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
 );
@@ -113,14 +113,14 @@ CREATE TABLE "notebooks"
 (
     "id"        INTEGER PRIMARY KEY AUTOINCREMENT,
     "name"      VARCHAR(255) NOT NULL,
-    "course_id" INTEGER      NOT NULL,
+    "course_id" TEXT      NOT NULL,
     FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
 );
 CREATE INDEX "notebooks_course_id_index" ON "notebooks" ("course_id");
 
 CREATE TABLE "courses"
 (
-    "id"        INTEGER PRIMARY KEY AUTOINCREMENT,
+    "id"        TEXT PRIMARY KEY,
     "name"      VARCHAR(255) NOT NULL,
     "module_id" INTEGER      NOT NULL,
     FOREIGN KEY ("module_id") REFERENCES "modules" ("id")

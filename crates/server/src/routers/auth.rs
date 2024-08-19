@@ -209,7 +209,7 @@ async fn get_session(
     .transpose()
 }
 
-async fn get_user_from_session_id(
+pub async fn get_user_from_session_id(
     session_id: &str,
     pool: &mut SqliteConnection,
 ) -> Result<Option<DatabaseUser>> {
@@ -245,7 +245,7 @@ pub struct DatabaseSession {
     pub attributes: HashMap<String, String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DatabaseUser {
     pub id: String,
     pub attributes: HashMap<String, String>,

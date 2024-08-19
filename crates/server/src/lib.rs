@@ -1,11 +1,18 @@
-use std::{fs::File, io::Write, sync::Arc};
+use axum::{extract::State, middleware};
+use std::{
+    fs::{self, File},
+    io::Write,
+    sync::Arc,
+};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
+use auth::validate_session;
 use axum::{
     http::Method,
     routing::{get, post},
     Router,
 };
+mod auth;
 mod graphql;
 mod routers;
 use graphql::{Mutation, Query};
@@ -16,10 +23,10 @@ use routers::{
     },
     graphql::{graphiql, graphql_handler},
 };
+use state::AppState;
+use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
-
-use state::AppState;
 
 //TODO: make database shut down gracefully when we stop the server. Maybe do this with an endpoint or smth
 //
@@ -27,8 +34,9 @@ pub async fn run_server() {
     std::env::set_var("RUST_LOG", "async-graphql=info");
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
-
-    File::create("auth.db").expect("Failed to create database file");
+    if fs::metadata("auth.db").is_err() {
+        File::create("auth.db").expect("Failed to create database file");
+    }
     let db = database::init("auth.db")
         .await
         .expect("failed to connect to db");
@@ -49,6 +57,7 @@ pub async fn run_server() {
         .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
         .allow_headers(Any);
 
+    //TODO: create auth middlware to protect endpoints
     let auth_router = Router::new()
         .route("/delete_session/:id", post(delete_session))
         .route("/delete_user_session/:id", post(delete_user_sessions))
@@ -62,12 +71,48 @@ pub async fn run_server() {
 
     let app = Router::new()
         .nest("/auth", auth_router)
-        .route("/", get(graphiql).post(graphql_handler))
-        .with_state(state)
+        .route("/", get(graphiql))
+        .route(
+            "/",
+            post(graphql_handler).route_layer(middleware::from_fn_with_state(
+                state.clone(),
+                validate_session,
+            )),
+        )
+        .with_state(state.clone())
         .layer(ServiceBuilder::new().layer(cors));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown(state))
+        .await
+        .unwrap();
+}
+
+async fn shutdown(state: AppState) {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
+    println!("Gracefully closing db pool");
+    state.db.close().await;
 }
 
 #[cfg(test)]

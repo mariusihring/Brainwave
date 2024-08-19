@@ -3,13 +3,58 @@
 
 
 type Mutation {
-	createTodo: String!
+	createTodo(input: NewTodo!): Todo!
+}
+
+"""
+ISO 8601 calendar date without timezone.
+Format: %Y-%m-%d
+
+# Examples
+
+* `1994-11-13`
+* `2000-02-24`
+"""
+scalar NaiveDate
+
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+
+input NewTodo {
+	title: String!
+	dueOn: NaiveDateTime!
+	icon: String!
+	courseId: String
+	todoType: TodoType
 }
 
 type Query {
-	todo(id: Int!): String!
+	todo(id: String!): Todo!
+	todos: [Todo!]!
+	todosByDate(date: NaiveDate!): [Todo!]!
 }
 
+
+type Todo {
+	id: String!
+	title: String!
+	dueOn: NaiveDateTime!
+	userId: String!
+	courseId: String
+	todoType: TodoType!
+}
+
+enum TodoType {
+	ASSIGNMENT
+	EXAM
+	GENERAL
+}
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
