@@ -4,7 +4,7 @@
 
 type Mutation {
 	createTodo(input: NewTodo!): Todo!
-	createSemester(id: String!): Semester
+	createSemester(input: NewSemester!): Semester!
 }
 
 """
@@ -26,6 +26,13 @@ ISO 8601 combined date and time without timezone.
 * `2015-07-01T08:59:60.123`,
 """
 scalar NaiveDateTime
+
+input NewSemester {
+	semester: Int!
+	startDate: NaiveDate!
+	endDate: NaiveDate!
+	totalEcts: Int!
+}
 
 input NewTodo {
 	title: String!

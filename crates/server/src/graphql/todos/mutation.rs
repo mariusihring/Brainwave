@@ -12,10 +12,9 @@ impl TodoMutation {
         let user = ctx.data::<DatabaseUser>().unwrap();
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
         let id = Uuid::new_v4();
-        println!("{:?}", input.todo_type.clone());
         sqlx::query_as::<_, Todo>(
-            r#"INSERT INTO todos (id, title, due_on, type, course_id, user_id)
-    VALUES (?, ?, ?, ?, ?, ?) RETURNING *;"#,
+            "INSERT INTO todos (id, title, due_on, type, course_id, user_id)
+    VALUES (?, ?, ?, ?, ?, ?) RETURNING *;",
         )
         .bind(id.to_string())
         .bind(input.title)
