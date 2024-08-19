@@ -45,7 +45,7 @@ CREATE TABLE "calendar_entries"
     "start_date" DATE         NOT NULL,
     "end_date"   DATE         NOT NULL,
     "user_id"    TEXT         NOT NULL,
-   FOREIGN KEY ("user_id") REFERENCES "user" ("id")
+    FOREIGN KEY ("user_id") REFERENCES "user" ("id")
 );
 CREATE INDEX "calendar_entries_user_id_index" ON "calendar_entries" ("user_id");
 
@@ -84,7 +84,7 @@ CREATE TABLE "assignments"
     "description"  TEXT         NOT NULL,
     "due_on"       DATE         NOT NULL,
     "grade"        REAL,
-    "course_id"    TEXT      NOT NULL,
+    "course_id"    TEXT         NOT NULL,
     "weight_grade" REAL         NOT NULL,
     FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
 );
@@ -92,12 +92,12 @@ CREATE INDEX "assignments_course_id_index" ON "assignments" ("course_id");
 
 CREATE TABLE "user"
 (
-    "id"         TEXT PRIMARY KEY NOT NULL,
-    "first_name" VARCHAR(255)     ,
-    "last_name"  VARCHAR(255)     ,
-    "image"      TEXT             ,
-    "username" TEXT UNIQUE NOT NULL,
-    "password_hash" TEXT NOT NULL
+    "id"            TEXT PRIMARY KEY NOT NULL,
+    "first_name"    VARCHAR(255),
+    "last_name"     VARCHAR(255),
+    "image"         TEXT,
+    "username"      TEXT UNIQUE      NOT NULL,
+    "password_hash" TEXT             NOT NULL
 );
 
 CREATE TABLE "todo_references"
@@ -113,7 +113,7 @@ CREATE TABLE "notebooks"
 (
     "id"        INTEGER PRIMARY KEY AUTOINCREMENT,
     "name"      VARCHAR(255) NOT NULL,
-    "course_id" TEXT      NOT NULL,
+    "course_id" TEXT         NOT NULL,
     FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
 );
 CREATE INDEX "notebooks_course_id_index" ON "notebooks" ("course_id");
