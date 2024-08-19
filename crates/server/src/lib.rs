@@ -12,6 +12,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use env_logger::{Builder, Env};
+
 mod auth;
 mod graphql;
 mod routers;
@@ -27,9 +29,11 @@ use state::AppState;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
+use tracing::Event;
+use tracing_subscriber::fmt::format::FmtSpan;
+use tracing_subscriber::fmt::FormatFields;
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
-//TODO: make database shut down gracefully when we stop the server. Maybe do this with an endpoint or smth
-//
 pub async fn run_server() {
     std::env::set_var("RUST_LOG", "async-graphql=info");
     std::env::set_var("RUST_LOG", "debug");

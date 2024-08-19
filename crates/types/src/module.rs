@@ -4,18 +4,18 @@ use sqlx::prelude::FromRow;
 #[derive(SimpleObject, FromRow, Debug)]
 pub struct Module {
     pub id: String,
-    pub title: String,
+    pub name: String,
     pub ects: i32,
-    pub grade: f32,
-    pub start_semester: String, //TODO: make foreign key
+    pub grade: Option<f32>,
+    pub start_semester: String,
     pub end_semester: String,
 }
 
 #[derive(InputObject)]
 pub struct NewModule {
-    pub title: String,
+    pub name: String,
     pub ects: i32,
-    pub grade: f32,
-    pub start_semester: String, //TODO: make foreign key
+    pub grade: Option<f32>,
+    pub start_semester: String,
     pub end_semester: String,
 }
