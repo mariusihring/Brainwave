@@ -20,8 +20,8 @@ impl TodoMutation {
             user.id.clone()
         );
         sqlx::query_as::<_, Todo>(query.as_str())
-        .bind(input.todo_type.clone())
-            .bind(input.module_id)
+            .bind(input.todo_type.clone())
+            .bind(input.course_id)
             .fetch_one(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))
