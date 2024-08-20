@@ -1,8 +1,10 @@
-import { useAuth } from "@/auth";
+import {auth, useAuth} from "@/auth";
 import Navigation from "@/components/brainwave/misc/navigation";
 import { useUser } from "@/lib/stores/user";
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import Cookies from "js-cookie";
 
 export const Route = createFileRoute("/_authenticated")({
 	component: () => {
@@ -19,12 +21,23 @@ export const Route = createFileRoute("/_authenticated")({
 		useEffect(() => {
 			checkAuth();
 		}, []);
+		const sessionId = Cookies.get(auth.sessionCookieName) ?? null;
+
+		const client = new ApolloClient({
+			uri: 'http://127.0.0.1:3000',
+			cache: new InMemoryCache(),
+			headers: {
+				Authorization: `Bearer ${sessionId}`
+			}
+		});
 
 		return (
 			<div className="">
-				<Navigation>
-					<Outlet />
-				</Navigation>
+				<ApolloProvider client={client}>
+					<Navigation>
+						<Outlet />
+					</Navigation>
+				</ApolloProvider>
 			</div>
 		);
 	},
