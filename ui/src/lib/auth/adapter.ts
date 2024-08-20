@@ -28,7 +28,9 @@ export const brainwave_adapter: Adapter = {
 		const response = await api_client.post<
 			[session: DatabaseSession, user: DatabaseUser]
 		>(`/auth/get_user_and_session/${sessionId}`);
-
+		if (response.data[0] === null || response.data[1] === null ) {
+			Promise.reject()
+		}
 		const session: DatabaseSession = {
 			userId: response.data[0].userId,
 			expiresAt: new Date(response.data[0].expiresAt),
