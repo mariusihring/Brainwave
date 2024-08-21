@@ -128,7 +128,9 @@ CREATE TABLE courses
     id        TEXT PRIMARY KEY,
     name      VARCHAR(255) NOT NULL,
     module_id TEXT         NOT NULL,
-    FOREIGN KEY (module_id) REFERENCES modules (id)
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (module_id) REFERENCES modules (id),
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 CREATE TABLE IF NOT EXISTS session
 (

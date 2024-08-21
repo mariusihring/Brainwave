@@ -34,6 +34,15 @@ export type Scalars = {
   NaiveDateTime: { input: any; output: any; }
 };
 
+export type Course = {
+  __typename?: 'Course';
+  academicDepartment?: Maybe<Scalars['String']['output']>;
+  grade?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  teacher?: Maybe<Scalars['String']['output']>;
+};
+
 export type Module = {
   __typename?: 'Module';
   ects: Scalars['Int']['output'];
@@ -122,8 +131,10 @@ export type QueryTodosByDateArgs = {
 
 export type Semester = {
   __typename?: 'Semester';
+  courses: Array<Course>;
   endDate: Scalars['NaiveDate']['output'];
   id: Scalars['String']['output'];
+  modules: Array<Module>;
   semester: Scalars['Int']['output'];
   startDate: Scalars['NaiveDate']['output'];
   totalEcts: Scalars['Int']['output'];
@@ -148,7 +159,7 @@ export enum TodoType {
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, startDate: any, endDate: any, totalEcts: number }> };
+export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester: string }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
 
 
-export const GetAllSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"semesters"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"semester"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"totalEcts"}}]}}]}}]} as unknown as DocumentNode<GetAllSemesterQuery, GetAllSemesterQueryVariables>;
+export const GetAllSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"semesters"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"semester"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"totalEcts"}},{"kind":"Field","name":{"kind":"Name","value":"modules"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"ects"}},{"kind":"Field","name":{"kind":"Name","value":"grade"}},{"kind":"Field","name":{"kind":"Name","value":"startSemester"}},{"kind":"Field","name":{"kind":"Name","value":"endSemester"}}]}},{"kind":"Field","name":{"kind":"Name","value":"courses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"grade"}},{"kind":"Field","name":{"kind":"Name","value":"teacher"}},{"kind":"Field","name":{"kind":"Name","value":"academicDepartment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}}]}}]}}]} as unknown as DocumentNode<GetAllSemesterQuery, GetAllSemesterQueryVariables>;

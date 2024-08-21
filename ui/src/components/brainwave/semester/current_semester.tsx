@@ -34,11 +34,11 @@ export default function CurrentSemesterView({ semester }: { semester: Semester }
             </div>
             <div className="flex items-center">
               <BookOpenIcon className="mr-2 h-5 w-5 opacity-70" />
-              <span className="text-muted-foreground">{semester.coursesCount} Courses</span>
+              <span className="text-muted-foreground">{semester.courses.length} Courses</span>
             </div>
             <div className="flex items-center">
               <PenToolIcon className="mr-2 h-5 w-5 opacity-70" />
-              <span className="text-muted-foreground">{semester.examsCount} Exams</span>
+              <span className="text-muted-foreground">{semester.examsCount || 0} Exams</span>
             </div>
             <div className="space-y-2">
               <span className="font-medium flex items-center">
@@ -61,7 +61,7 @@ export default function CurrentSemesterView({ semester }: { semester: Semester }
                 {semester.courses.map((course, index) => (
                   <li key={index} className="flex justify-between items-center">
                     <span>{course.name}</span>
-                    <span className="text-muted-foreground">{course.ects} ECTS</span>
+                    <span className="text-muted-foreground">{course.ects || 0} ECTS</span>
                   </li>
                 ))}
               </ul>

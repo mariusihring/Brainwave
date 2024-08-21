@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        startDate\n        endDate\n        totalEcts\n      }\n    }\n": types.GetAllSemesterDocument,
+    "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        endDate\n        totalEcts\n        modules {\n          id\n          name\n          ects\n          grade\n          startSemester\n          endSemester\n        }\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n        startDate\n      }\n    }\n": types.GetAllSemesterDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        startDate\n        endDate\n        totalEcts\n      }\n    }\n"): (typeof documents)["\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        startDate\n        endDate\n        totalEcts\n      }\n    }\n"];
+export function graphql(source: "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        endDate\n        totalEcts\n        modules {\n          id\n          name\n          ects\n          grade\n          startSemester\n          endSemester\n        }\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n        startDate\n      }\n    }\n"): (typeof documents)["\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        endDate\n        totalEcts\n        modules {\n          id\n          name\n          ects\n          grade\n          startSemester\n          endSemester\n        }\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n        startDate\n      }\n    }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

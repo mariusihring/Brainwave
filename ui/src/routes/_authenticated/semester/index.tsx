@@ -15,9 +15,24 @@ const SEMESTER_QUERY = graphql(`
       semesters {
         id
         semester
-        startDate
         endDate
         totalEcts
+        modules {
+          id
+          name
+          ects
+          grade
+          startSemester
+          endSemester
+        }
+        courses {
+          id
+          name
+          grade
+          teacher
+          academicDepartment
+        }
+        startDate
       }
     }
 `)

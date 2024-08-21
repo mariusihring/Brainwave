@@ -2,6 +2,7 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx
 import {Badge} from "@/components/ui/badge.tsx";
 import {AwardIcon, BookOpenIcon, CalendarIcon, GraduationCapIcon, PenToolIcon} from "lucide-react";
 import { Semester } from "@/__generated__/graphql";
+import {getDifficultyColor} from "@/lib/semester/functions.ts";
 
 export default function SemesterCard({ semester }: { semester: Semester }) {
   return (
@@ -29,16 +30,17 @@ export default function SemesterCard({ semester }: { semester: Semester }) {
           </div>
           <div className="flex items-center">
             <BookOpenIcon className="mr-2 h-4 w-4 opacity-70" />
-            <span className="text-sm text-muted-foreground">{semester.coursesCount} Courses</span>
+            <span className="text-sm text-muted-foreground">{semester.courses.length} Courses</span>
           </div>
           <div className="flex items-center">
             <PenToolIcon className="mr-2 h-4 w-4 opacity-70" />
-            <span className="text-sm text-muted-foreground">{semester.examsCount} Exams</span>
+            <span className="text-sm text-muted-foreground">{semester.courses.length} Exams</span>
           </div>
           {semester.averageGrade !== null && (
             <div className="flex items-center">
               <AwardIcon className="mr-2 h-4 w-4 opacity-70" />
-              <span className="text-sm text-muted-foreground">Average Grade: {semester.averageGrade.toFixed(2)}</span>
+              {/*semester.averageGrade.toFixed(2) ||*/}
+              <span className="text-sm text-muted-foreground">Average Grade: { 0}</span>
             </div>
           )}
         </div>
