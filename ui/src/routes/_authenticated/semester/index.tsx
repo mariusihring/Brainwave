@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {graphql} from "@/__generated__";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, GraduationCapIcon, BookOpenIcon, PenToolIcon, AwardIcon, ClockIcon, BarChartIcon, CheckCircleIcon } from "lucide-react"
+import {useQuery} from "@apollo/client";
+import CurrentSemesterView from '@/components/brainwave/semester/current_semester';
+import SemesterCard from '@/components/brainwave/semester/semester_card';
 
 export const Route = createFileRoute('/_authenticated/semester/')({
   component: () => <Component />
 })
 
+//TODO: move fetching in loader function
 
 const SEMESTER_QUERY = graphql(`
     query getAllSemester {
@@ -112,151 +112,10 @@ const semesters: Semester[] = [
     ],
   },
 ]
-
-function calculateProgress(startDate: string, endDate: string): number {
-  const start = new Date(startDate).getTime()
-  const end = new Date(endDate).getTime()
-  const now = new Date().getTime()
-
-  if (now < start) return 0
-  if (now > end) return 100
-
-  const total = end - start
-  const elapsed = now - start
-  return Math.round((elapsed / total) * 100)
-}
-
-function getDifficultyColor(difficulty: Semester['difficulty']) {
-  switch (difficulty) {
-    case 'Easy': return 'bg-green-500'
-    case 'Moderate': return 'bg-yellow-500'
-    case 'Challenging': return 'bg-red-500'
-    default: return 'bg-gray-500'
-  }
-}
-
-function CurrentSemesterView({ semester }: { semester: Semester }) {
-  const progress = calculateProgress(semester.startDate, semester.endDate)
-
-  return (
-    <Card className="w-full mb-8">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="text-2xl">Current Semester: {semester.semester}</span>
-          <Badge variant="outline" className="text-lg">{semester.mainSubjectArea}</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <CalendarIcon className="mr-2 h-5 w-5 opacity-70" />
-                <span className="text-muted-foreground">
-                  {new Date(semester.startDate).toLocaleDateString()} - {new Date(semester.endDate).toLocaleDateString()}
-                </span>
-              </div>
-              <div className={`w-4 h-4 rounded-full ${getDifficultyColor(semester.difficulty)}`} title={`Difficulty: ${semester.difficulty}`} />
-            </div>
-            <div className="flex items-center">
-              <GraduationCapIcon className="mr-2 h-5 w-5 opacity-70" />
-              <span className="text-muted-foreground">{semester.totalEcts} ECTS</span>
-            </div>
-            <div className="flex items-center">
-              <BookOpenIcon className="mr-2 h-5 w-5 opacity-70" />
-              <span className="text-muted-foreground">{semester.coursesCount} Courses</span>
-            </div>
-            <div className="flex items-center">
-              <PenToolIcon className="mr-2 h-5 w-5 opacity-70" />
-              <span className="text-muted-foreground">{semester.examsCount} Exams</span>
-            </div>
-            <div className="space-y-2">
-              <span className="font-medium flex items-center">
-                <ClockIcon className="mr-2 h-5 w-5 opacity-70" />
-                Key Deadlines
-              </span>
-              <ul className="text-muted-foreground space-y-1">
-                {semester.keyDeadlines.map((deadline, index) => (
-                  <li key={index}>
-                    {new Date(deadline.date).toLocaleDateString()}: {deadline.event}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <span className="font-medium">Courses</span>
-              <ul className="space-y-2">
-                {semester.courses.map((course, index) => (
-                  <li key={index} className="flex justify-between items-center">
-                    <span>{course.name}</span>
-                    <span className="text-muted-foreground">{course.ects} ECTS</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Progress</span>
-                <span className="text-muted-foreground">{progress}%</span>
-              </div>
-              <Progress value={progress} className="w-full" />
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function SemesterCard({ semester }: { semester: Semester }) {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Semester {semester.semester}</span>
-          <Badge variant="outline">{semester.mainSubjectArea}</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
-              <span className="text-sm text-muted-foreground">
-                {new Date(semester.startDate).toLocaleDateString()} - {new Date(semester.endDate).toLocaleDateString()}
-              </span>
-            </div>
-            <div className={`w-3 h-3 rounded-full ${getDifficultyColor(semester.difficulty)}`} title={`Difficulty: ${semester.difficulty}`} />
-          </div>
-          <div className="flex items-center">
-            <GraduationCapIcon className="mr-2 h-4 w-4 opacity-70" />
-            <span className="text-sm text-muted-foreground">{semester.totalEcts} ECTS</span>
-          </div>
-          <div className="flex items-center">
-            <BookOpenIcon className="mr-2 h-4 w-4 opacity-70" />
-            <span className="text-sm text-muted-foreground">{semester.coursesCount} Courses</span>
-          </div>
-          <div className="flex items-center">
-            <PenToolIcon className="mr-2 h-4 w-4 opacity-70" />
-            <span className="text-sm text-muted-foreground">{semester.examsCount} Exams</span>
-          </div>
-          {semester.averageGrade !== null && (
-            <div className="flex items-center">
-              <AwardIcon className="mr-2 h-4 w-4 opacity-70" />
-              <span className="text-sm text-muted-foreground">Average Grade: {semester.averageGrade.toFixed(2)}</span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 function Component() {
+  const {loading, error, data} = useQuery(SEMESTER_QUERY)
   const currentDate = new Date()
-  const currentSemester = semesters.find(sem =>
+  const currentSemester = data?.semesters.find(sem =>
     new Date(sem.startDate) <= currentDate && currentDate <= new Date(sem.endDate)
   ) || semesters[0] // Default to first semester if no current semester found
 
@@ -266,7 +125,7 @@ function Component() {
       <CurrentSemesterView semester={currentSemester} />
       <h2 className="text-2xl font-bold mb-6">All Semesters</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {semesters.map((semester) => (
+        {data?.semesters.map((semester) => (
           <SemesterCard key={semester.semester} semester={semester} />
         ))}
       </div>

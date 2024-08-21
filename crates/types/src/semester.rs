@@ -2,6 +2,8 @@ use async_graphql::{InputObject, SimpleObject};
 use chrono::NaiveDate;
 use sqlx::prelude::FromRow;
 
+//TODO: https://async-graphql.github.io/async-graphql/en/define_simple_object.html#user-defined-resolvers
+
 #[derive(SimpleObject, FromRow, Debug)]
 pub struct Semester {
     pub id: String,
