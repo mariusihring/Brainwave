@@ -41,4 +41,8 @@ impl Semester {
         }
         response
     }
+    //TODO: make return courses
+    async fn courses(&self, ctx: &Context<'_>) -> Vec<String> {
+        vec![]
+    }
 }
