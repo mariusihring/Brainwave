@@ -21,6 +21,8 @@ import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes
 import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
 import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedCoursesImport } from './routes/_authenticated/courses'
+import { Route as AuthenticatedSemesterIndexImport } from './routes/_authenticated/semester/index'
+import { Route as AuthenticatedSemesterSemesterImport } from './routes/_authenticated/semester/$semester'
 
 // Create/Update Routes
 
@@ -73,6 +75,19 @@ const AuthenticatedCoursesRoute = AuthenticatedCoursesImport.update({
   path: '/courses',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedSemesterIndexRoute = AuthenticatedSemesterIndexImport.update(
+  {
+    path: '/semester/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
+const AuthenticatedSemesterSemesterRoute =
+  AuthenticatedSemesterSemesterImport.update({
+    path: '/semester/$semester',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -148,6 +163,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/semester/$semester': {
+      id: '/_authenticated/semester/$semester'
+      path: '/semester/$semester'
+      fullPath: '/semester/$semester'
+      preLoaderRoute: typeof AuthenticatedSemesterSemesterImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/semester/': {
+      id: '/_authenticated/semester/'
+      path: '/semester'
+      fullPath: '/semester'
+      preLoaderRoute: typeof AuthenticatedSemesterIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
@@ -162,6 +191,8 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedTestRoute,
     AuthenticatedTodosRoute,
     AuthenticatedIndexRoute,
+    AuthenticatedSemesterSemesterRoute,
+    AuthenticatedSemesterIndexRoute,
   }),
   LoginRoute,
   SignupRoute,
@@ -189,7 +220,9 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/notes",
         "/_authenticated/test",
         "/_authenticated/todos",
-        "/_authenticated/"
+        "/_authenticated/",
+        "/_authenticated/semester/$semester",
+        "/_authenticated/semester/"
       ]
     },
     "/login": {
@@ -224,6 +257,14 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/semester/$semester": {
+      "filePath": "_authenticated/semester/$semester.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/semester/": {
+      "filePath": "_authenticated/semester/index.tsx",
       "parent": "/_authenticated"
     }
   }
