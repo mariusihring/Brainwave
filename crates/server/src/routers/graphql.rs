@@ -1,17 +1,11 @@
-use crate::graphql::{Mutation, Query};
 use crate::state::AppState;
 use async_graphql::http::GraphiQLSource;
-use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
-use axum::body::Body;
-use axum::extract::FromRequest;
 use axum::{
     extract::{Extension, State},
     response::{Html, IntoResponse},
 };
-use http::Request;
-
-use super::auth::DatabaseUser;
+use types::user::DatabaseUser;
 
 pub async fn graphiql(State(_state): State<AppState>) -> impl IntoResponse {
     Html(GraphiQLSource::build().endpoint("/").finish())

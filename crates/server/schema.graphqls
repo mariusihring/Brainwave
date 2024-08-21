@@ -76,6 +76,7 @@ type Semester {
 	startDate: NaiveDate!
 	endDate: NaiveDate!
 	totalEcts: Int!
+	modules: [Module!]!
 }
 
 

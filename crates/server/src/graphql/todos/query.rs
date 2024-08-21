@@ -1,4 +1,4 @@
-use crate::routers::auth::DatabaseUser;
+use types::user::DatabaseUser;
 
 use super::TodoQuery;
 use ::types::todo::Todo;

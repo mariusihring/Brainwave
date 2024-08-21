@@ -12,7 +12,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-mod auth;
+pub mod auth;
 mod graphql;
 mod routers;
 use graphql::{Mutation, Query};
@@ -72,10 +72,10 @@ pub async fn run_server() {
         .route("/", get(graphiql))
         .route(
             "/",
-             post(graphql_handler).route_layer(middleware::from_fn_with_state(
-                 state.clone(),
-                 validate_session,
-             )),
+            post(graphql_handler).route_layer(middleware::from_fn_with_state(
+                state.clone(),
+                validate_session,
+            )),
         )
         .with_state(state.clone())
         .layer(ServiceBuilder::new().layer(cors));

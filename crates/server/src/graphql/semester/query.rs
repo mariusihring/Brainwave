@@ -1,8 +1,8 @@
 use crate::graphql::semester::SemesterQuery;
-use crate::routers::auth::DatabaseUser;
-use async_graphql::{Context, Object};
+use async_graphql::{ComplexObject, Context, Object};
 use sqlx::{Pool, Sqlite};
 use types::semester::Semester;
+use types::user::DatabaseUser;
 
 #[Object]
 impl SemesterQuery {

@@ -1,8 +1,8 @@
 use crate::graphql::modules::ModuleQuery;
-use crate::routers::auth::DatabaseUser;
 use async_graphql::{Context, Object};
 use sqlx::{Pool, Sqlite};
 use types::module::Module;
+use types::user::DatabaseUser;
 
 #[Object]
 impl ModuleQuery {
