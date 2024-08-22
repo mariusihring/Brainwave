@@ -1,8 +1,8 @@
 use crate::graphql::semester::SemesterMutation;
-use crate::routers::auth::DatabaseUser;
 use async_graphql::{Context, Object};
 use sqlx::{Pool, Sqlite};
 use types::semester::{NewSemester, Semester};
+use types::user::DatabaseUser;
 use uuid::Uuid;
 
 #[Object]

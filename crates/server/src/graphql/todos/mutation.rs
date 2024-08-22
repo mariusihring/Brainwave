@@ -1,7 +1,6 @@
-use crate::routers::auth::DatabaseUser;
-
 use super::TodoMutation;
 use ::types::todo::{NewTodo, Todo};
+use ::types::user::DatabaseUser;
 use async_graphql::*;
 use sqlx::{Pool, Sqlite};
 use uuid::Uuid;

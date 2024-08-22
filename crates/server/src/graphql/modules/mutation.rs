@@ -1,8 +1,9 @@
 use crate::graphql::modules::ModuleMutation;
-use crate::routers::auth::DatabaseUser;
+
 use async_graphql::{Context, Object};
 use sqlx::{Pool, Sqlite};
 use types::module::{Module, NewModule};
+use types::user::DatabaseUser;
 use uuid::Uuid;
 
 #[Object]

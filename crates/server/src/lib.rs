@@ -12,7 +12,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-mod auth;
+pub mod auth;
 mod graphql;
 mod routers;
 use graphql::{Mutation, Query};

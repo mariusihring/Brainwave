@@ -1,10 +1,7 @@
+use crate::graphql::{Mutation, Query};
 use async_graphql::{EmptySubscription, Schema};
 use sqlx::{Pool, Sqlite};
-
-use crate::{
-    graphql::{Mutation, Query},
-    routers::auth::DatabaseUser,
-};
+use types::user::DatabaseUser;
 
 #[derive(Clone)]
 pub struct AppState {

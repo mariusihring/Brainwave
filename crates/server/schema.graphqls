@@ -1,4 +1,12 @@
 
+type Course {
+	id: String!
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
+
 
 
 
@@ -76,6 +84,8 @@ type Semester {
 	startDate: NaiveDate!
 	endDate: NaiveDate!
 	totalEcts: Int!
+	modules: [Module!]!
+	courses: [Course!]!
 }
 
 

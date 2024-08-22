@@ -1,8 +1,8 @@
 use crate::graphql::semester::SemesterQuery;
-use crate::routers::auth::DatabaseUser;
-use async_graphql::{Context, Object};
+use async_graphql::{ComplexObject, Context, Object};
 use sqlx::{Pool, Sqlite};
 use types::semester::Semester;
+use types::user::DatabaseUser;
 
 #[Object]
 impl SemesterQuery {
@@ -13,6 +13,7 @@ impl SemesterQuery {
     ) -> Result<Semester, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>()?;
         let db = ctx.data::<Pool<Sqlite>>()?;
+
         sqlx::query_as::<_, Semester>(
             "SELECT * FROM semester WHERE user_id = ? AND semester = ? LIMIT 1;",
         )

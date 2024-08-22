@@ -6,9 +6,9 @@ use axum::{
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use sqlx::{pool::PoolConnection, Acquire, Row, Sqlite, SqliteConnection};
 use std::collections::HashMap;
+use types::user::DatabaseUser;
 
 use crate::state::AppState;
 
@@ -243,12 +243,6 @@ pub struct DatabaseSession {
     #[serde(rename = "expiresAt")]
     pub expires_at: DateTime<Utc>,
     #[serde(default)]
-    pub attributes: HashMap<String, String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DatabaseUser {
-    pub id: String,
     pub attributes: HashMap<String, String>,
 }
 

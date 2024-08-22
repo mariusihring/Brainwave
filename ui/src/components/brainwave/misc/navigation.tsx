@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
-	DiamondIcon,
+	DiamondIcon, GraduationCapIcon,
 	HomeIcon,
 	ListChecksIcon,
 	PanelLeftCloseIcon,
@@ -23,6 +23,11 @@ const sideMenuStaticLinks = [
 		icon: <HomeIcon size={iconSize} />,
 		label: "Dashboard",
 		href: "/",
+	},
+	{
+		icon: <GraduationCapIcon size={iconSize} />,
+		label: "Semesters",
+		href: "/semester",
 	},
 	{
 		icon: <PuzzleIcon size={iconSize} />,

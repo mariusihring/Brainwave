@@ -10,6 +10,3 @@ CREATE TABLE semester
     user_id       TEXT             NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
-
-ALTER TABLE modules
-    ADD COLUMN semester_id TEXT REFERENCES semester (id);

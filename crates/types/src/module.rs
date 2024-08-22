@@ -9,6 +9,7 @@ pub struct Module {
     pub grade: Option<f32>,
     pub start_semester: String,
     pub end_semester: String,
+    //TODO: make courses queryable with the complex query
 }
 
 #[derive(InputObject)]
