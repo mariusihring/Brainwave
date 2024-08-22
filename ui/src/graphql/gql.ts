@@ -14,13 +14,13 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        endDate\n        totalEcts\n        modules {\n          id\n          name\n          ects\n          grade\n          startSemester\n          endSemester\n        }\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n        startDate\n      }\n    }\n": types.GetAllSemesterDocument,
+    "\n\tquery getAllSemester {\n\t\tsemesters {\n\t\t\tid\n\t\t\tsemester\n\t\t\tendDate\n\t\t\ttotalEcts\n\t\t\tmodules {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tects\n\t\t\t\tgrade\n\t\t\t\tstartSemester\n\t\t\t\tendSemester\n\t\t\t}\n\t\t\tcourses {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tgrade\n\t\t\t\tteacher\n\t\t\t\tacademicDepartment\n\t\t\t}\n\t\t\tstartDate\n\t\t}\n\t}\n": types.GetAllSemesterDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query getAllSemester {\n      semesters {\n        id\n        semester\n        endDate\n        totalEcts\n        modules {\n          id\n          name\n          ects\n          grade\n          startSemester\n          endSemester\n        }\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n        startDate\n      }\n    }\n"): typeof import('./graphql').GetAllSemesterDocument;
+export function graphql(source: "\n\tquery getAllSemester {\n\t\tsemesters {\n\t\t\tid\n\t\t\tsemester\n\t\t\tendDate\n\t\t\ttotalEcts\n\t\t\tmodules {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tects\n\t\t\t\tgrade\n\t\t\t\tstartSemester\n\t\t\t\tendSemester\n\t\t\t}\n\t\t\tcourses {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tgrade\n\t\t\t\tteacher\n\t\t\t\tacademicDepartment\n\t\t\t}\n\t\t\tstartDate\n\t\t}\n\t}\n"): typeof import('./graphql').GetAllSemesterDocument;
 
 
 export function graphql(source: string) {

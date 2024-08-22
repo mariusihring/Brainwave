@@ -25,16 +25,13 @@ export const Route = createFileRoute("/_authenticated")({
 			checkAuth();
 		}, []);
 
-		const client = new QueryClient();
 
 		return (
 			<div className="">
-				<QueryClientProvider client={client}>
 					<Navigation>
 						<Outlet />
 					</Navigation>
 					<ReactQueryDevtools />
-				</QueryClientProvider>
 			</div>
 		);
 	},

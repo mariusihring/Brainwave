@@ -1,59 +1,54 @@
 import { createFileRoute } from "@tanstack/react-router";
-
 import CurrentSemesterView from "@/components/brainwave/semester/current_semester";
 import SemesterCard from "@/components/brainwave/semester/semester_card";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
-import { useQuery } from "@tanstack/react-query";
+import type {Semester} from "@/graphql/graphql.ts";
+import {queryOptions} from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/semester/")({
 	component: () => <Component />,
-	loader: async () => {
-		await new Promise((resolve) => setTimeout(resolve, 5000));
-		console.log("Loader finished after 30 seconds");
-	},
+	loader: ({context: {queryClient}}) => queryClient.ensureQueryData(queryOptions({
+		queryKey: ['semesters'],
+		queryFn: () => execute(SEMESTER_QUERY)
+	})),
 	pendingComponent: () => <PendingComponent />,
 });
 
-//TODO: move fetching in loader function
-
 const SEMESTER_QUERY = graphql(`
-    query getAllSemester {
-      semesters {
-        id
-        semester
-        endDate
-        totalEcts
-        modules {
-          id
-          name
-          ects
-          grade
-          startSemester
-          endSemester
-        }
-        courses {
-          id
-          name
-          grade
-          teacher
-          academicDepartment
-        }
-        startDate
-      }
-    }
+	query getAllSemester {
+		semesters {
+			id
+			semester
+			endDate
+			totalEcts
+			modules {
+				id
+				name
+				ects
+				grade
+				startSemester
+				endSemester
+			}
+			courses {
+				id
+				name
+				grade
+				teacher
+				academicDepartment
+			}
+			startDate
+		}
+	}
 `);
+
 function Component() {
-	const { data, error } = useQuery({
-		queryKey: ["semesters"],
-		queryFn: () => execute(SEMESTER_QUERY),
-	});
-	console.log(error)
+	const data = Route.useLoaderData()
 	const currentDate = new Date();
 	const currentSemester =
 		data?.semesters.find(
-			(sem) =>
+			(sem: Semester) =>
 				new Date(sem.startDate) <= currentDate &&
 				currentDate <= new Date(sem.endDate),
 		) || null;
