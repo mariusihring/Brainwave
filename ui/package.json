@@ -107,6 +107,7 @@
     "@storybook/react": "^8.2.8",
     "@storybook/react-vite": "^8.2.8",
     "@storybook/test": "^8.2.8",
+    "@tanstack/react-query-devtools": "^5.52.0",
     "@tanstack/router-devtools": "^1.47.1",
     "@tanstack/router-plugin": "^1.47.0",
     "@tauri-apps/cli": "^1.6.0",

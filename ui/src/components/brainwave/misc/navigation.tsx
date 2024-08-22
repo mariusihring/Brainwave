@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
-	DiamondIcon, GraduationCapIcon,
+	DiamondIcon,
+	GraduationCapIcon,
 	HomeIcon,
 	ListChecksIcon,
 	PanelLeftCloseIcon,
