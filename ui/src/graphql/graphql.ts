@@ -156,6 +156,13 @@ export enum TodoType {
   General = 'GENERAL'
 }
 
+export type CreateSemesterMutationMutationVariables = Exact<{
+  input: NewSemester;
+}>;
+
+
+export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
+
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -176,6 +183,13 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const CreateSemesterMutationDocument = new TypedDocumentString(`
+    mutation createSemesterMutation($input: NewSemester!) {
+  createSemester(input: $input) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateSemesterMutationMutation, CreateSemesterMutationMutationVariables>;
 export const GetAllSemesterDocument = new TypedDocumentString(`
     query getAllSemester {
   semesters {

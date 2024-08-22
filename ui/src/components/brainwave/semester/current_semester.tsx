@@ -1,4 +1,4 @@
-import type { Semester } from "@/__generated__/graphql";
+
 import { Badge } from "@/components/ui/badge.tsx";
 import {
 	Card,
@@ -18,10 +18,12 @@ import {
 	GraduationCapIcon,
 	PenToolIcon,
 } from "lucide-react";
+import {Semester} from "@/graphql/graphql.ts";
 
 export default function CurrentSemesterView({
 	semester,
 }: { semester: Semester | null }) {
+
 	if (!semester) {
 		return (
 			<Card className="w-full mb-8">
@@ -91,12 +93,12 @@ export default function CurrentSemesterView({
 								Key Deadlines
 							</span>
 							<ul className="text-muted-foreground space-y-1">
-								{semester.keyDeadlines.map((deadline, index) => (
-									<li key={index}>
-										{new Date(deadline.date).toLocaleDateString()}:{" "}
-										{deadline.event}
-									</li>
-								))}
+								{/*{semester.keyDeadlines.map((deadline, index) => (*/}
+								{/*	<li key={index}>*/}
+								{/*		{new Date(deadline.date).toLocaleDateString()}:{" "}*/}
+								{/*		{deadline.event}*/}
+								{/*	</li>*/}
+								{/*))}*/}
 							</ul>
 						</div>
 					</div>

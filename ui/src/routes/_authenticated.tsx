@@ -1,11 +1,10 @@
 import { useAuth } from "@/auth";
 import Navigation from "@/components/brainwave/misc/navigation";
+import QuickActions from "@/components/brainwave/misc/quick_actions.tsx";
 import { useUser } from "@/lib/stores/user";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
 	component: () => {
@@ -25,13 +24,14 @@ export const Route = createFileRoute("/_authenticated")({
 			checkAuth();
 		}, []);
 
-
 		return (
 			<div className="">
+				<QuickActions>
 					<Navigation>
 						<Outlet />
 					</Navigation>
-					<ReactQueryDevtools />
+				</QuickActions>
+				<ReactQueryDevtools />
 			</div>
 		);
 	},
