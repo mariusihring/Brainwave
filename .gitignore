@@ -5,8 +5,8 @@ node_modules
 */node_modules
 .env
 */.env
-.vscode
 .env*
 */.env*
-.idea
 *.idea
+.idea/*
+!.idea/compiler.xml

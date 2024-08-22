@@ -11,11 +11,10 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "biome": "biome check --write src/routes && biome check --write src/components && biome check --write src/lib",
-    "compile": "graphql-codegen",
-    "watch": "graphql-codegen -w"
+    "compile": "graphql-codegen --config codegen.ts",
+    "watch": "graphql-codegen --config codegen.ts -w"
   },
   "dependencies": {
-    "@apollo/client": "^3.11.4",
     "@hookform/resolvers": "^3.9.0",
     "@lucia-auth/adapter-sqlite": "^3.0.2",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -69,7 +68,6 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.1.8",
-    "graphql": "^16.9.0",
     "highlight.js": "^11.10.0",
     "i18next": "^23.12.3",
     "i18next-browser-languagedetector": "^8.0.0",
@@ -95,11 +93,12 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.13",
     "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.6.1",
     "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/client-preset": "^4.3.3",
-    "@graphql-typed-document-node/core": "^3.2.0",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@parcel/watcher": "^2.4.1",
     "@storybook/addon-essentials": "^8.2.8",
     "@storybook/addon-interactions": "^8.2.8",
     "@storybook/addon-links": "^8.2.8",
