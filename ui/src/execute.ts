@@ -1,36 +1,62 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import {auth} from "@/auth.tsx";
-import {TypedDocumentString} from "@/graphql/graphql.ts";
+import { auth } from "@/auth.tsx";
+import { TypedDocumentString } from "@/graphql/graphql.ts";
 
+interface GraphQLError {
+  message: string;
+  locations: Array<{ line: number; column: number }>;
+  path: string[];
+}
+
+interface GraphQLResponse<T> {
+  data?: T;
+  errors?: GraphQLError[];
+}
+
+class GraphQLErrorsError extends Error {
+  constructor(public errors: GraphQLError[]) {
+    super(errors.map(e => e.message).join(', '));
+    this.name = "GraphQLErrorsError";
+  }
+}
 
 export async function execute<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
-) {
-  const sessionId = Cookies.get(auth.sessionCookieName) ?? null
-  //TODO: make some type magic
-// : {
-//     data: TResult,
-//       errors: { message: string, locations: { line: number, column: number }[], path: string[] }[]
-//   }
-  const response = await axios({
-    url: 'http://127.0.0.1:3000',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${sessionId}`,
-      Accept: 'application/graphql-response+json'
-    },
-    data: {
-      query: query,
-      variables
+): Promise<TResult> {
+  const sessionId = Cookies.get(auth.sessionCookieName) ?? null;
+
+  try {
+    const response = await axios<GraphQLResponse<TResult>>({
+      url: 'http://127.0.0.1:3000',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionId}`,
+        Accept: 'application/graphql-response+json'
+      },
+      data: {
+        query: query,
+        variables
+      }
+    });
+
+    if (response.data.errors) {
+      throw new GraphQLErrorsError(response.data.errors);
     }
-  });
-  console.log(response)
-  if (response.status !== 200) {
-    throw new Error(response.data.errors);
+
+    return response.data.data!;
+  } catch (error) {
+    if (error instanceof GraphQLErrorsError) {
+      throw error;
+    }
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<GraphQLResponse<TResult>>;
+      if (axiosError.response?.data.errors) {
+        throw new GraphQLErrorsError(axiosError.response.data.errors);
+      }
+    }
+    throw error;
   }
-  // graphql has a data in the data
-  return response.data.data as TResult;
 }

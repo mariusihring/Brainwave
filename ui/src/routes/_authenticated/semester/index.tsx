@@ -45,11 +45,11 @@ const SEMESTER_QUERY = graphql(`
     }
 `);
 function Component() {
-	const { data } = useQuery({
+	const { data, error } = useQuery({
 		queryKey: ["semesters"],
 		queryFn: () => execute(SEMESTER_QUERY),
 	});
-
+	console.log(error)
 	const currentDate = new Date();
 	const currentSemester =
 		data?.semesters.find(
