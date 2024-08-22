@@ -13,6 +13,7 @@ impl SemesterQuery {
     ) -> Result<Semester, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>()?;
         let db = ctx.data::<Pool<Sqlite>>()?;
+
         sqlx::query_as::<_, Semester>(
             "SELECT * FROM semester WHERE user_id = ? AND semester = ? LIMIT 1;",
         )

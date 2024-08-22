@@ -5,7 +5,21 @@ import {Progress} from "@/components/ui/progress.tsx";
 import { Semester } from "@/__generated__/graphql";
 import { calculateProgress, getDifficultyColor } from "@/lib/semester/functions";
 
-export default function CurrentSemesterView({ semester }: { semester: Semester }) {
+export default function CurrentSemesterView({ semester }: { semester: Semester | null }) {
+  if (!semester) {
+    return (
+      <Card className="w-full mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="text-2xl">No current semester found</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          Please check if you have semesters added / or you are currently not in the timespan of one of them
+        </CardContent>
+      </Card>
+    )
+  }
   const progress = calculateProgress(semester.startDate, semester.endDate)
 
   return (
