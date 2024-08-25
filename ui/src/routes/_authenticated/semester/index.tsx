@@ -1,22 +1,24 @@
 import CurrentSemesterView from "@/components/brainwave/semester/current_semester";
 import SemesterCard from "@/components/brainwave/semester/semester_card";
 
+import CreateSemesterDialog from "@/components/brainwave/semester/create_semester_dialog.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
 import type { Semester } from "@/graphql/graphql.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import CreateSemesterDialog from "@/components/brainwave/semester/create_semester_dialog.tsx";
 
 export const Route = createFileRoute("/_authenticated/semester/")({
-	component: () => <Component />,
-	loader: async ({ context: { queryClient } }) => queryClient.ensureQueryData(
+	component: () => <SemesterIndex />,
+	loader: async ({ context: { queryClient } }) =>
+		queryClient.ensureQueryData(
 			queryOptions({
 				queryKey: ["semesters"],
-				 queryFn: () => execute(SEMESTER_QUERY),
-			})),
-	pendingComponent: () => <PendingComponent />,
+				queryFn: () => execute(SEMESTER_QUERY),
+			}),
+		),
+	pendingComponent: () => <PendingSemesterIndex />,
 });
 
 const SEMESTER_QUERY = graphql(`
@@ -46,13 +48,16 @@ const SEMESTER_QUERY = graphql(`
 	}
 `);
 
-function Component() {
-	const { data: { semesters }, error  } = useQuery({
+function SemesterIndex() {
+	const {
+		data: { semesters },
+		error,
+	} = useQuery({
 		queryKey: ["semesters"],
 		queryFn: () => execute(SEMESTER_QUERY),
-		initialData: Route.useLoaderData()
-	})
-	if (error) console.log(error)
+		initialData: Route.useLoaderData(),
+	});
+	if (error) console.log(error);
 	const currentDate = new Date();
 	const currentSemester =
 		semesters.find(
@@ -79,7 +84,7 @@ function Component() {
 	);
 }
 
-function PendingComponent() {
+function PendingSemesterIndex() {
 	return (
 		<div className="container mx-auto w-full">
 			<h1 className="text-3xl font-bold mb-8">Semester Overview</h1>

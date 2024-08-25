@@ -62,7 +62,7 @@ CREATE TABLE modules
 (
     id             TEXT PRIMARY KEY,
     name           VARCHAR(255) NOT NULL,
-    ects          INTEGER      NOT NULL,
+    ects           INTEGER      NOT NULL,
     grade          FLOAT,
     start_semester TEXT         NOT NULL,
     end_semester   TEXT         NOT NULL,
@@ -74,26 +74,15 @@ CREATE TABLE modules
 
 CREATE TABLE todos
 (
-    id      TEXT PRIMARY KEY,
-    title   VARCHAR(255) NOT NULL,
-    due_on  DATE         NOT NULL,
-    user_id TEXT         NOT NULL,
+    id        TEXT PRIMARY KEY,
+    title     VARCHAR(255) NOT NULL,
+    due_on    DATE         NOT NULL,
+    user_id   TEXT         NOT NULL,
+    course_id TEXT,
+    FOREIGN KEY (course_id) REFERENCES courses (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 CREATE INDEX todos_user_id_index ON todos (user_id);
-
-CREATE TABLE assignments
-(
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    name         VARCHAR(255) NOT NULL,
-    description  TEXT         NOT NULL,
-    due_on       DATE         NOT NULL,
-    grade        REAL,
-    course_id    TEXT         NOT NULL,
-    weight_grade REAL         NOT NULL,
-    FOREIGN KEY (course_id) REFERENCES courses (id)
-);
-CREATE INDEX assignments_course_id_index ON assignments (course_id);
 
 CREATE TABLE user
 (
@@ -128,9 +117,9 @@ CREATE TABLE courses
     id        TEXT PRIMARY KEY,
     name      VARCHAR(255) NOT NULL,
     module_id TEXT         NOT NULL,
-    user_id TEXT NOT NULL,
+    user_id   TEXT         NOT NULL,
     FOREIGN KEY (module_id) REFERENCES modules (id),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
 CREATE TABLE IF NOT EXISTS session
 (

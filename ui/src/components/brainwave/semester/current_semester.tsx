@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge.tsx";
 import {
 	Card,
@@ -7,6 +6,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card.tsx";
 import { Progress } from "@/components/ui/progress.tsx";
+import type { Semester } from "@/graphql/graphql.ts";
 import {
 	calculateProgress,
 	getDifficultyColor,
@@ -18,12 +18,10 @@ import {
 	GraduationCapIcon,
 	PenToolIcon,
 } from "lucide-react";
-import {Semester} from "@/graphql/graphql.ts";
 
 export default function CurrentSemesterView({
 	semester,
 }: { semester: Semester | null }) {
-
 	if (!semester) {
 		return (
 			<Card className="w-full mb-8">
