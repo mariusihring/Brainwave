@@ -13,8 +13,10 @@ use axum::{
     Router,
 };
 pub mod auth;
+mod dir;
 mod graphql;
 mod routers;
+use crate::dir::database_path;
 use graphql::{Mutation, Query};
 use routers::{
     auth::{
@@ -32,10 +34,8 @@ pub async fn run_server() {
     std::env::set_var("RUST_LOG", "async-graphql=info");
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
-    if fs::metadata("auth.db").is_err() {
-        File::create("auth.db").expect("Failed to create database file");
-    }
-    let db = database::init("auth.db")
+
+    let db = database::init(&database_path().await.unwrap())
         .await
         .expect("failed to connect to db");
 
