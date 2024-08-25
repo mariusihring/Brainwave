@@ -156,8 +156,10 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
+ "server",
  "tauri",
  "tauri-build",
+ "tokio",
 ]
 
 [[package]]
