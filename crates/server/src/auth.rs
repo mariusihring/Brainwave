@@ -38,11 +38,9 @@ pub async fn validate_session(
             req.extensions_mut().insert(user);
             Ok(next.run(req).await)
         }
-        None => {
-            return Err((
-                StatusCode::UNAUTHORIZED,
-                String::from("User could not be found"),
-            ))
-        }
+        None => Err((
+            StatusCode::UNAUTHORIZED,
+            String::from("User could not be found"),
+        )),
     }
 }

@@ -35,8 +35,13 @@ export default function Login() {
 		try {
 			await login(values.username, values.password);
 			await navigate({ to: "/" });
-		} catch (e) {
-			console.error(e);
+		} catch (e: string) {
+			if (e.includes("Username")) {
+				form.setError("username", {message: e as string})
+			} else {
+				form.setError("password", {message: e as string})
+			}
+
 		}
 	};
 
@@ -96,6 +101,7 @@ export default function Login() {
 							Reset it
 						</Link>
 					</p>
+					<FormMessage />
 				</form>
 			</Form>
 		</div>

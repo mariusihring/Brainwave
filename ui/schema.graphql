@@ -1,0 +1,105 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Course {
+  academicDepartment: String
+  grade: Float
+  id: String!
+  name: String!
+  teacher: String
+}
+
+type Module {
+  ects: Int!
+  endSemester: String!
+  grade: Float
+  id: String!
+  name: String!
+  startSemester: String!
+}
+
+type Mutation {
+  createModule(input: NewModule!): Module!
+  createSemester(input: NewSemester!): Semester!
+  createTodo(input: NewTodo!): Todo!
+}
+
+"""
+ISO 8601 calendar date without timezone.
+Format: %Y-%m-%d
+
+# Examples
+
+* `1994-11-13`
+* `2000-02-24`
+"""
+scalar NaiveDate
+
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+
+input NewModule {
+  ects: Int!
+  endSemester: String!
+  grade: Float
+  name: String!
+  startSemester: String!
+}
+
+input NewSemester {
+  endDate: NaiveDate!
+  semester: Int!
+  startDate: NaiveDate!
+  totalEcts: Int!
+}
+
+input NewTodo {
+  courseId: String
+  dueOn: NaiveDateTime!
+  icon: String!
+  title: String!
+  todoType: TodoType
+}
+
+type Query {
+  module(id: String!): Module!
+  modules: [Module!]!
+  semester(semester: Int!): Semester!
+  semesters: [Semester!]!
+  todo(id: String!): Todo!
+  todos: [Todo!]!
+  todosByDate(date: NaiveDate!): [Todo!]!
+}
+
+type Semester {
+  courses: [Course!]!
+  endDate: NaiveDate!
+  id: String!
+  modules: [Module!]!
+  semester: Int!
+  startDate: NaiveDate!
+  totalEcts: Int!
+}
+
+type Todo {
+  courseId: String
+  dueOn: NaiveDateTime!
+  id: String!
+  title: String!
+  todoType: TodoType!
+  userId: String!
+}
+
+enum TodoType {
+  ASSIGNMENT
+  EXAM
+  GENERAL
+}

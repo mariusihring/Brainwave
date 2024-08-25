@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "biome": "biome check --write src/routes && biome check --write src/components && biome check --write src/lib"
+    "biome": "biome check --write src/routes && biome check --write src/components && biome check --write src/lib",
+    "compile": "graphql-codegen --config codegen.ts",
+    "watch": "graphql-codegen --config codegen.ts -w"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -91,8 +93,12 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.13",
     "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.6.1",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@parcel/watcher": "^2.4.1",
     "@storybook/addon-essentials": "^8.2.8",
     "@storybook/addon-interactions": "^8.2.8",
     "@storybook/addon-links": "^8.2.8",
@@ -101,6 +107,7 @@
     "@storybook/react": "^8.2.8",
     "@storybook/react-vite": "^8.2.8",
     "@storybook/test": "^8.2.8",
+    "@tanstack/react-query-devtools": "^5.52.0",
     "@tanstack/router-devtools": "^1.47.1",
     "@tanstack/router-plugin": "^1.47.0",
     "@tauri-apps/cli": "^1.6.0",

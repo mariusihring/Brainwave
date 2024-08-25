@@ -1,6 +1,6 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import type { QueryClient } from "@tanstack/react-query";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Session, User } from "lucia";
 
 interface RouterContext {
@@ -8,9 +8,10 @@ interface RouterContext {
 		session: Session;
 		user: User;
 	};
+	queryClient: QueryClient;
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
 	component: () => (
 		<>
 			<TooltipProvider>

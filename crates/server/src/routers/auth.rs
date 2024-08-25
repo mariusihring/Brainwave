@@ -6,9 +6,9 @@ use axum::{
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use sqlx::{pool::PoolConnection, Row, Sqlite, SqliteConnection};
+use sqlx::{pool::PoolConnection, Acquire, Row, Sqlite, SqliteConnection};
 use std::collections::HashMap;
+use types::user::DatabaseUser;
 
 use crate::state::AppState;
 
@@ -197,12 +197,13 @@ async fn get_session(
     session_id: &str,
     pool: &mut PoolConnection<Sqlite>,
 ) -> Result<Option<DatabaseSession>> {
+    let db = pool.acquire().await?;
     sqlx::query(&format!(
         "SELECT * FROM {} WHERE id = ?",
         SESSION_TABLE_NAME
     ))
-    .bind(session_id)
-    .fetch_optional(&mut *pool)
+    .bind(session_id.to_string())
+    .fetch_optional(db)
     .await
     .expect("failed to get session")
     .map(|r| transform_into_database_session(&r))
@@ -242,12 +243,6 @@ pub struct DatabaseSession {
     #[serde(rename = "expiresAt")]
     pub expires_at: DateTime<Utc>,
     #[serde(default)]
-    pub attributes: HashMap<String, String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DatabaseUser {
-    pub id: String,
     pub attributes: HashMap<String, String>,
 }
 

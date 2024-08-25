@@ -4,7 +4,7 @@ members = [ "crates/database", "crates/server", "crates/types",
 "ui/src-tauri"]
 
 [workspace.dependencies]
-sqlx = { version = "0.6", features = ["sqlite", "runtime-tokio-native-tls", "chrono", "migrate"] }
+sqlx = { version = "0.6.0", features = ["sqlite", "runtime-tokio-native-tls", "chrono", "migrate", "macros", "uuid"] }
 tokio = { version = "1", features = ["full"] }
 chrono = {version = "0.4", features = ["serde"]}
 serde_json = "1.0"

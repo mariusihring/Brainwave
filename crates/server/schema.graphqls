@@ -1,9 +1,28 @@
 
+type Course {
+	id: String!
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
 
 
+
+
+type Module {
+	id: String!
+	name: String!
+	ects: Int!
+	grade: Float
+	startSemester: String!
+	endSemester: String!
+}
 
 type Mutation {
 	createTodo(input: NewTodo!): Todo!
+	createSemester(input: NewSemester!): Semester!
+	createModule(input: NewModule!): Module!
 }
 
 """
@@ -26,6 +45,21 @@ ISO 8601 combined date and time without timezone.
 """
 scalar NaiveDateTime
 
+input NewModule {
+	name: String!
+	ects: Int!
+	grade: Float
+	startSemester: String!
+	endSemester: String!
+}
+
+input NewSemester {
+	semester: Int!
+	startDate: NaiveDate!
+	endDate: NaiveDate!
+	totalEcts: Int!
+}
+
 input NewTodo {
 	title: String!
 	dueOn: NaiveDateTime!
@@ -38,6 +72,20 @@ type Query {
 	todo(id: String!): Todo!
 	todos: [Todo!]!
 	todosByDate(date: NaiveDate!): [Todo!]!
+	semester(semester: Int!): Semester!
+	semesters: [Semester!]!
+	module(id: String!): Module!
+	modules: [Module!]!
+}
+
+type Semester {
+	id: String!
+	semester: Int!
+	startDate: NaiveDate!
+	endDate: NaiveDate!
+	totalEcts: Int!
+	modules: [Module!]!
+	courses: [Course!]!
 }
 
 

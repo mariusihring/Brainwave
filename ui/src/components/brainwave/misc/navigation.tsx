@@ -8,6 +8,7 @@ import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
 	DiamondIcon,
+	GraduationCapIcon,
 	HomeIcon,
 	ListChecksIcon,
 	PanelLeftCloseIcon,
@@ -23,6 +24,11 @@ const sideMenuStaticLinks = [
 		icon: <HomeIcon size={iconSize} />,
 		label: "Dashboard",
 		href: "/",
+	},
+	{
+		icon: <GraduationCapIcon size={iconSize} />,
+		label: "Semesters",
+		href: "/semester",
 	},
 	{
 		icon: <PuzzleIcon size={iconSize} />,
@@ -57,8 +63,8 @@ export default function Navigation({ children }: { children: ReactNode }) {
 		return "ghost";
 	};
 	return (
-		<main className="flex min-h-dvh gap-4 p-2">
-			<aside className="flex flex-col items-center justify-between border-r p-2">
+		<main className="flex min-h-dvh gap-4 ">
+			<aside className="flex flex-col items-center justify-between border-r p-2 ">
 				{settings.nav_open ? (
 					<div className="flex my-5 gap-2 items-center justify-center pl-1">
 						<BrainwaveLogo className="w-8 h-8" />
@@ -125,7 +131,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 				</div>
 			</aside>
 
-			<div className="flex flex-1 flex-col ">
+			<div className="flex flex-1 flex-col  p-2">
 				<nav className="mb-6 flex items-center justify-between">
 					<div className="flex gap-4">
 						<Button
