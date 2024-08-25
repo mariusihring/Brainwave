@@ -15,6 +15,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BrainwaveLogo from "./logo";
+import bcrypt from "bcryptjs"
 
 const loginSchema = z.object({
 	username: z.string().min(2).max(50),
@@ -32,8 +33,9 @@ export default function Signup() {
 	});
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+		const hashed_password = bcrypt.hashSync(values.password, 10)
 		try {
-			await signup(values.username, values.password);
+			await signup(values.username, hashed_password);
 			await navigate({ to: "/" });
 		} catch (e) {
 			console.error(e);
@@ -78,7 +80,7 @@ export default function Signup() {
 							<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<Input placeholder="Password" {...field} />
+									<Input type="password" placeholder="Password" {...field} />
 								</FormControl>
 
 								<FormMessage />
