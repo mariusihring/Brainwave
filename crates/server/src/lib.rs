@@ -1,9 +1,5 @@
-use axum::{extract::State, middleware};
-use std::{
-    fs::{self, File},
-    io::Write,
-    sync::Arc,
-};
+use axum::middleware;
+use std::{fs::File, io::Write};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
 use auth::validate_session;
