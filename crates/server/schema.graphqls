@@ -94,8 +94,15 @@ type Todo {
 	title: String!
 	dueOn: NaiveDateTime!
 	userId: String!
-	courseId: String
 	todoType: TodoType!
+	status: TodoStatus!
+	course: Course
+}
+
+enum TodoStatus {
+	PENDING
+	IN_PROGRESS
+	COMPLETED
 }
 
 enum TodoType {

@@ -90,12 +90,19 @@ type Semester {
 }
 
 type Todo {
-  courseId: String
+  course: Course
   dueOn: NaiveDateTime!
   id: String!
+  status: TodoStatus!
   title: String!
   todoType: TodoType!
   userId: String!
+}
+
+enum TodoStatus {
+  COMPLETED
+  IN_PROGRESS
+  PENDING
 }
 
 enum TodoType {

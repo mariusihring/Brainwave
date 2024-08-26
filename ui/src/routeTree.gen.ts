@@ -15,13 +15,14 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedTodosImport } from './routes/_authenticated/todos'
 import { Route as AuthenticatedTestImport } from './routes/_authenticated/test'
 import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes'
 import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
 import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedCoursesImport } from './routes/_authenticated/courses'
+import { Route as AuthenticatedTodosIndexImport } from './routes/_authenticated/todos/index'
 import { Route as AuthenticatedSemesterIndexImport } from './routes/_authenticated/semester/index'
+import { Route as AuthenticatedTodosTodoImport } from './routes/_authenticated/todos/$todo'
 import { Route as AuthenticatedSemesterSemesterImport } from './routes/_authenticated/semester/$semester'
 
 // Create/Update Routes
@@ -43,11 +44,6 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   path: '/',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedTodosRoute = AuthenticatedTodosImport.update({
-  path: '/todos',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -76,12 +72,22 @@ const AuthenticatedCoursesRoute = AuthenticatedCoursesImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedTodosIndexRoute = AuthenticatedTodosIndexImport.update({
+  path: '/todos/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedSemesterIndexRoute = AuthenticatedSemesterIndexImport.update(
   {
     path: '/semester/',
     getParentRoute: () => AuthenticatedRoute,
   } as any,
 )
+
+const AuthenticatedTodosTodoRoute = AuthenticatedTodosTodoImport.update({
+  path: '/todos/$todo',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 const AuthenticatedSemesterSemesterRoute =
   AuthenticatedSemesterSemesterImport.update({
@@ -149,13 +155,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTestImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/todos': {
-      id: '/_authenticated/todos'
-      path: '/todos'
-      fullPath: '/todos'
-      preLoaderRoute: typeof AuthenticatedTodosImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
@@ -170,11 +169,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSemesterSemesterImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/todos/$todo': {
+      id: '/_authenticated/todos/$todo'
+      path: '/todos/$todo'
+      fullPath: '/todos/$todo'
+      preLoaderRoute: typeof AuthenticatedTodosTodoImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/semester/': {
       id: '/_authenticated/semester/'
       path: '/semester'
       fullPath: '/semester'
       preLoaderRoute: typeof AuthenticatedSemesterIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/todos/': {
+      id: '/_authenticated/todos/'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof AuthenticatedTodosIndexImport
       parentRoute: typeof AuthenticatedImport
     }
   }
@@ -189,10 +202,11 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedNotebooksRoute,
     AuthenticatedNotesRoute,
     AuthenticatedTestRoute,
-    AuthenticatedTodosRoute,
     AuthenticatedIndexRoute,
     AuthenticatedSemesterSemesterRoute,
+    AuthenticatedTodosTodoRoute,
     AuthenticatedSemesterIndexRoute,
+    AuthenticatedTodosIndexRoute,
   }),
   LoginRoute,
   SignupRoute,
@@ -219,10 +233,11 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/notebooks",
         "/_authenticated/notes",
         "/_authenticated/test",
-        "/_authenticated/todos",
         "/_authenticated/",
         "/_authenticated/semester/$semester",
-        "/_authenticated/semester/"
+        "/_authenticated/todos/$todo",
+        "/_authenticated/semester/",
+        "/_authenticated/todos/"
       ]
     },
     "/login": {
@@ -251,10 +266,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authenticated/test.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/todos": {
-      "filePath": "_authenticated/todos.tsx",
-      "parent": "/_authenticated"
-    },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
@@ -263,8 +274,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authenticated/semester/$semester.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/todos/$todo": {
+      "filePath": "_authenticated/todos/$todo.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/semester/": {
       "filePath": "_authenticated/semester/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/todos/": {
+      "filePath": "_authenticated/todos/index.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -142,13 +142,20 @@ export type Semester = {
 
 export type Todo = {
   __typename?: 'Todo';
-  courseId?: Maybe<Scalars['String']['output']>;
+  course?: Maybe<Course>;
   dueOn: Scalars['NaiveDateTime']['output'];
   id: Scalars['String']['output'];
+  status: TodoStatus;
   title: Scalars['String']['output'];
   todoType: TodoType;
   userId: Scalars['String']['output'];
 };
+
+export enum TodoStatus {
+  Completed = 'COMPLETED',
+  InProgress = 'IN_PROGRESS',
+  Pending = 'PENDING'
+}
 
 export enum TodoType {
   Assignment = 'ASSIGNMENT',
@@ -172,6 +179,11 @@ export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester: string }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
+
+export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -231,3 +243,22 @@ export const GetAllSemesterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetAllSemesterQuery, GetAllSemesterQueryVariables>;
+export const TodoIndexQueryDocument = new TypedDocumentString(`
+    query TodoIndexQuery {
+  todos {
+    id
+    title
+    dueOn
+    userId
+    todoType
+    status
+    course {
+      id
+      name
+      grade
+      teacher
+      academicDepartment
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;
