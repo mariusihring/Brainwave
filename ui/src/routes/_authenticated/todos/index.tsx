@@ -4,7 +4,6 @@ import {queryOptions, useQuery} from "@tanstack/react-query";
 import {execute} from "@/execute.ts";
 import {useState} from "react";
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -34,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import CreateTodoDialog from "@/components/brainwave/todos/create_todo_dialog.tsx";
 
 export const Route = createFileRoute('/_authenticated/todos/')({
   component: () =>  <TodosIndex />,
@@ -47,7 +47,6 @@ export const Route = createFileRoute('/_authenticated/todos/')({
   }
 })
 
-// TODO: expand the todo query so we can fetch the course with it :)
 
 const TODO_INDEX_QUERY = graphql(`
   query TodoIndexQuery{
@@ -104,7 +103,8 @@ function TodosIndex () {
 
   return (
       <div className="w-full">
-        <div className="flex items-center py-4">
+        <div className="flex items-center py-4 justify-between">
+          <div className="flex gap-2">
           <Input
               placeholder="Filter todos..."
               value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
@@ -127,32 +127,37 @@ function TodosIndex () {
               <SelectItem value="EXAM">Exam</SelectItem>
             </SelectContent>
           </Select>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4"/>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
+          </div>
+          <div className="flex gap-2">
+           <CreateTodoDialog />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDown className="ml-2 h-4 w-4"/>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
                   .getAllColumns()
                   .filter((column) => column.getCanHide())
                   .map((column) => {
                     return (
-                        <DropdownMenuCheckboxItem
-                            key={column.id}
-                            className="capitalize"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                                column.toggleVisibility(!!value)
-                            }
-                        >
-                          {column.id}
-                        </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
                     )
                   })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
         </div>
         <div className="rounded-md border">
           <Table>

@@ -170,6 +170,13 @@ export type CreateSemesterMutationMutationVariables = Exact<{
 
 export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
 
+export type CreateTodoMutationMutationVariables = Exact<{
+  input: NewTodo;
+}>;
+
+
+export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'Todo', id: string } };
+
 export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -207,6 +214,13 @@ export const CreateSemesterMutationDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateSemesterMutationMutation, CreateSemesterMutationMutationVariables>;
+export const CreateTodoMutationDocument = new TypedDocumentString(`
+    mutation createTodoMutation($input: NewTodo!) {
+  createTodo(input: $input) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateTodoMutationMutation, CreateTodoMutationMutationVariables>;
 export const TodoDashboardQueryDocument = new TypedDocumentString(`
     query TodoDashboardQuery {
   todos {
