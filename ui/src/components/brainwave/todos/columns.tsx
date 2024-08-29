@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {Link} from "@tanstack/react-router";
+import {useUpdateTodoMutation} from "@/components/brainwave/todos/graphql_todo.ts";
 
 export const columns: ColumnDef<Todo>[] = [
     {
@@ -42,10 +43,19 @@ export const columns: ColumnDef<Todo>[] = [
     {
         accessorKey: "status",
         header: "Status",
-        cell: ({ row }) => (
+        cell: ({ row }) => {
+            const mutation = useUpdateTodoMutation()
+            const current_todo = row.original
+            return (
             <Select
                 value={row.getValue("status")}
                 onValueChange={(value) => {
+                    mutation.mutate({id: current_todo.id, input: {
+                            courseId: current_todo.course?.id,
+                            dueOn: current_todo.dueOn,
+                            title: current_todo.title,
+                            status: value
+                        }})
                     // const updatedTodos = todos.map((todo) =>
                     //     todo.id === row.original.id ? { ...todo, status: value as Todo["status"] } : todo
                     // )
@@ -61,7 +71,7 @@ export const columns: ColumnDef<Todo>[] = [
                     <SelectItem value="COMPLETED">Completed</SelectItem>
                 </SelectContent>
             </Select>
-        ),
+        )},
     },
     {
         id: "actions",

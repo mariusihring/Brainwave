@@ -47,7 +47,6 @@ export default function CreateTodoDialog() {
           dueOn: todo.dueOn,
           title: todo.title as string,
           todoType: todo.todoType,
-          icon: ""
         },
       }),
     onSuccess: () => {

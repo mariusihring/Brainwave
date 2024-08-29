@@ -21,6 +21,7 @@ type Module {
 
 type Mutation {
 	createTodo(input: NewTodo!): Todo!
+	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
 }
@@ -63,7 +64,6 @@ input NewSemester {
 input NewTodo {
 	title: String!
 	dueOn: NaiveDateTime!
-	icon: String!
 	courseId: String
 	todoType: TodoType
 }
@@ -109,6 +109,14 @@ enum TodoType {
 	ASSIGNMENT
 	EXAM
 	GENERAL
+}
+
+input UpdateTodo {
+	title: String!
+	dueOn: NaiveDateTime!
+	courseId: String
+	todoType: TodoType
+	status: TodoStatus!
 }
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

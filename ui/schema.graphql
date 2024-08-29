@@ -24,6 +24,7 @@ type Mutation {
   createModule(input: NewModule!): Module!
   createSemester(input: NewSemester!): Semester!
   createTodo(input: NewTodo!): Todo!
+  updateTodo(id: String!, input: NewTodo!): Todo!
 }
 
 """
@@ -64,7 +65,6 @@ input NewSemester {
 input NewTodo {
   courseId: String
   dueOn: NaiveDateTime!
-  icon: String!
   title: String!
   todoType: TodoType
 }

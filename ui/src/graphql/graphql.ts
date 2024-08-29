@@ -58,6 +58,7 @@ export type Mutation = {
   createModule: Module;
   createSemester: Semester;
   createTodo: Todo;
+  updateTodo: Todo;
 };
 
 
@@ -72,6 +73,12 @@ export type MutationCreateSemesterArgs = {
 
 
 export type MutationCreateTodoArgs = {
+  input: NewTodo;
+};
+
+
+export type MutationUpdateTodoArgs = {
+  id: Scalars['String']['input'];
   input: NewTodo;
 };
 
@@ -93,7 +100,6 @@ export type NewSemester = {
 export type NewTodo = {
   courseId?: InputMaybe<Scalars['String']['input']>;
   dueOn: Scalars['NaiveDateTime']['input'];
-  icon: Scalars['String']['input'];
   title: Scalars['String']['input'];
   todoType?: InputMaybe<TodoType>;
 };
@@ -177,6 +183,19 @@ export type CreateTodoMutationMutationVariables = Exact<{
 
 export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'Todo', id: string } };
 
+export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null }> };
+
+export type UpdateTodoStatusMutationMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  input: NewTodo;
+}>;
+
+
+export type UpdateTodoStatusMutationMutation = { __typename?: 'Mutation', updateTodo: { __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null } };
+
 export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -186,11 +205,6 @@ export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester: string }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
-
-export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -221,6 +235,44 @@ export const CreateTodoMutationDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateTodoMutationMutation, CreateTodoMutationMutationVariables>;
+export const TodoIndexQueryDocument = new TypedDocumentString(`
+    query TodoIndexQuery {
+  todos {
+    id
+    title
+    dueOn
+    userId
+    todoType
+    status
+    course {
+      id
+      name
+      grade
+      teacher
+      academicDepartment
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;
+export const UpdateTodoStatusMutationDocument = new TypedDocumentString(`
+    mutation UpdateTodoStatusMutation($id: String!, $input: NewTodo!) {
+  updateTodo(id: $id, input: $input) {
+    id
+    title
+    dueOn
+    userId
+    todoType
+    status
+    course {
+      id
+      name
+      grade
+      teacher
+      academicDepartment
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<UpdateTodoStatusMutationMutation, UpdateTodoStatusMutationMutationVariables>;
 export const TodoDashboardQueryDocument = new TypedDocumentString(`
     query TodoDashboardQuery {
   todos {
@@ -257,22 +309,3 @@ export const GetAllSemesterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetAllSemesterQuery, GetAllSemesterQueryVariables>;
-export const TodoIndexQueryDocument = new TypedDocumentString(`
-    query TodoIndexQuery {
-  todos {
-    id
-    title
-    dueOn
-    userId
-    todoType
-    status
-    course {
-      id
-      name
-      grade
-      teacher
-      academicDepartment
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;

@@ -26,10 +26,18 @@ pub struct Todo {
 pub struct NewTodo {
     pub title: String,
     pub due_on: NaiveDateTime,
-    pub icon: String,
     pub course_id: Option<String>,
     #[sqlx(rename = "type")]
     pub todo_type: Option<TodoType>,
+}
+#[derive(InputObject, FromRow)]
+pub struct UpdateTodo {
+    pub title: String,
+    pub due_on: NaiveDateTime,
+    pub course_id: Option<String>,
+    #[sqlx(rename = "type")]
+    pub todo_type: Option<TodoType>,
+    pub status: TodoStatus,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Type, Serialize, Deserialize, Enum, Copy)]

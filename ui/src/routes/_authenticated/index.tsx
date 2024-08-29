@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -18,20 +17,17 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { execute } from "@/execute.ts";
+import { graphql } from "@/graphql";
+import { format_date_time } from "@/lib/date.ts";
 import { useUser } from "@/lib/stores/user";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-	CalendarIcon,
-	ChevronRightIcon,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { CalendarIcon, ChevronRightIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import {graphql} from "@/graphql";
-import {execute} from "@/execute.ts";
-import {  useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/")({
 	component: () => <Dashboard />,
-
 });
 const TODO_DASHBOARD_QUERY = graphql(`
 	query TodoDashboardQuery{
@@ -42,16 +38,16 @@ const TODO_DASHBOARD_QUERY = graphql(`
 			todoType
 		}
 	}
-`)
+`);
 
 function Dashboard() {
 	const { user } = useUser();
 	const { t } = useTranslation(["global"]);
 
-	const {data} = useQuery({
+	const { data } = useQuery({
 		queryKey: ["dashboard_todos"],
 		queryFn: () => execute(TODO_DASHBOARD_QUERY),
-	})
+	});
 	return (
 		<div className="flex flex-col space-y-6 w-full h-full">
 			<h1 className="font-bold text-3xl px-6">
@@ -68,8 +64,7 @@ function Dashboard() {
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
-
-								{data?.todos.slice(0,3).map(todo => (
+								{data?.todos.slice(0, 3).map((todo) => (
 									<div className="grid gap-4" key={todo.id}>
 										<div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
 											<div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -78,25 +73,22 @@ function Dashboard() {
 											<div>
 												<div className="font-medium">{todo.title}</div>
 												<div className="text-sm text-muted-foreground">
-													{todo.dueOn}
+													{format_date_time(todo.dueOn)}
 												</div>
 											</div>
-											<Link to={`/todos/$todo`} params={{todo: todo.id}}>
-											<Button variant="ghost" size="icon" className="h-8 w-8">
+											<Link to={`/todos/$todo`} params={{ todo: todo.id }}>
+												<Button variant="ghost" size="icon" className="h-8 w-8">
 													<ChevronRightIcon className="h-4 w-4" />
-											</Button>
+												</Button>
 											</Link>
 										</div>
 									</div>
 								))}
-
-
 							</CardContent>
 							<CardFooter>
 								<Link to={"/todos"}>
 									<Button>View Full Agenda</Button>
 								</Link>
-
 							</CardFooter>
 						</Card>
 						<Card x-chunk="dashboard-05-chunk-1">
