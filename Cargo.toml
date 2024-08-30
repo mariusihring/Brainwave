@@ -22,3 +22,6 @@ http = "1.1.0"
 uuid = {version = "1.10.0", features = ["v4"]}
 tracing = "0.1.40"
 dirs = "5.0.1"
+reqwest = "0.12.7"
+regex = "1.5.4"
+scraper = "0.20.0"

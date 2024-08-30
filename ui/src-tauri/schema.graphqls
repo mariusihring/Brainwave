@@ -24,7 +24,6 @@ type Mutation {
 	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
-	fetchCalendarFromDhbw(fetchLink: String!): [String!]!
 }
 
 """
