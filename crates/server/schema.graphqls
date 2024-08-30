@@ -1,3 +1,12 @@
+type Appointment {
+	id: String!
+	date: NaiveDate!
+	name: String!
+	startTime: NaiveDateTime!
+	endTime: NaiveDateTime!
+	location: String!
+}
+
 
 type Course {
 	id: String!
@@ -24,7 +33,7 @@ type Mutation {
 	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
-	fetchCalendarFromDhbw(fetchLink: String!): [String!]!
+	fetchCalendarFromDhbw(fetchLink: String!): [Appointment!]!
 }
 
 """
