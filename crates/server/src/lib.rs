@@ -1,44 +1,57 @@
-use axum::middleware;
-use log::LevelFilter;
-use std::{fs::File, io::Write};
-pub mod state;
+use std::fs::File;
+use std::io::Write;
+
 use async_graphql::{EmptySubscription, Schema};
-use auth::validate_session;
 use axum::{
     http::Method,
+    middleware,
     routing::{get, post},
     Router,
 };
-pub mod auth;
-mod dir;
-mod graphql;
-mod routers;
-use crate::dir::database_path;
-use graphql::{Mutation, Query};
-use routers::{
-    auth::{
-        create_user, delete_expired_sessions, delete_session, delete_user_sessions,
-        get_session_and_user, get_user, get_user_sessions, set_session, update_session_expiration,
-    },
-    graphql::{graphiql, graphql_handler},
-};
-use state::AppState;
+use log::LevelFilter;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
-use env_logger::Builder;
+
+mod auth;
+mod dir;
+mod graphql;
+mod routers;
+mod state;
+
+use crate::{
+    auth::validate_session,
+    dir::database_path,
+    graphql::{Mutation, Query},
+    routers::{
+        auth::{
+            create_user, delete_expired_sessions, delete_session, delete_user_sessions,
+            get_session_and_user, get_user, get_user_sessions, set_session, update_session_expiration,
+        },
+        graphql::{graphiql, graphql_handler},
+    },
+    state::AppState,
+};
 
 pub async fn run_server() {
-    unsafe {
-        std::env::remove_var("RUST_LOG");
-    }
-    Builder::new()
+    setup_logging();
+    let state = setup_app_state().await;
+    let app = build_router(state.clone());
+
+    start_server(app, state).await;
+}
+
+fn setup_logging() {
+    unsafe { std::env::remove_var("RUST_LOG") };
+    env_logger::Builder::new()
         .filter_level(LevelFilter::Info)
         .filter_module("scraper", LevelFilter::Off)
         .filter_module("async_graphql", LevelFilter::Info)
         .parse_default_env()
         .init();
+}
 
+async fn setup_app_state() -> AppState {
     let db = database::init(&database_path().await.unwrap())
         .await
         .expect("failed to connect to db");
@@ -48,18 +61,23 @@ pub async fn run_server() {
         .data(db.clone())
         .finish();
 
+    write_schema_to_file(&schema);
+
+    AppState { db, schema }
+}
+
+fn write_schema_to_file(schema: &Schema<Query, Mutation, EmptySubscription>) {
     let mut file = File::create("schema.graphqls").expect("failed to create schema file");
     file.write_all(schema.sdl().as_bytes())
         .expect("failed to write schema");
+}
 
-    let state = AppState { db, schema };
-
+fn build_router(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
         .allow_headers(Any);
 
-    //TODO: create auth middlware to protect endpoints
     let auth_router = Router::new()
         .route("/delete_session/:id", post(delete_session))
         .route("/delete_user_session/:id", post(delete_user_sessions))
@@ -71,7 +89,7 @@ pub async fn run_server() {
         .route("/get_user", post(get_user))
         .route("/create_user", post(create_user));
 
-    let app = Router::new()
+    Router::new()
         .nest("/auth", auth_router)
         .route("/", get(graphiql))
         .route(
@@ -81,9 +99,11 @@ pub async fn run_server() {
                 validate_session,
             )),
         )
-        .with_state(state.clone())
-        .layer(ServiceBuilder::new().layer(cors));
+        .with_state(state)
+        .layer(ServiceBuilder::new().layer(cors))
+}
 
+async fn start_server(app: Router, state: AppState) {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown(state))
@@ -113,13 +133,13 @@ async fn shutdown(state: AppState) {
         _ = ctrl_c => {},
         _ = terminate => {},
     }
+
     println!("Gracefully closing db pool");
     state.db.close().await;
 }
 
 #[cfg(test)]
 mod tests {
-
     #[test]
     fn it_works() {}
 }
