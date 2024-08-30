@@ -1,7 +1,6 @@
 CREATE TABLE semester
 (
     id            TEXT PRIMARY KEY NOT NULL,
-    --     semester hash is userid_semester and can happen only once
     semester_hash TEXT             NOT NULL UNIQUE,
     semester      INT              NOT NULL,
     start_date    DATE             NOT NULL,

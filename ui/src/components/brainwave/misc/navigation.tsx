@@ -15,6 +15,7 @@ import {
 	PanelRightCloseIcon,
 	PenLineIcon,
 	PuzzleIcon,
+	CalendarIcon
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
@@ -24,6 +25,11 @@ const sideMenuStaticLinks = [
 		icon: <HomeIcon size={iconSize} />,
 		label: "Dashboard",
 		href: "/",
+	},
+	{
+		icon: <CalendarIcon size={iconSize} />,
+		label: "Calendar",
+		href: "/calendar",
 	},
 	{
 		icon: <GraduationCapIcon size={iconSize} />,
@@ -133,20 +139,25 @@ export default function Navigation({ children }: { children: ReactNode }) {
 
 			<div className="flex flex-1 flex-col  p-2">
 				<nav className="mb-6 flex items-center justify-between">
-					<div className="flex gap-4">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="-ml-2"
-							onClick={() => settings.setNav(!settings.nav_open)}
-						>
-							{settings.nav_open ? (
-								<PanelLeftCloseIcon strokeWidth={1.5} size={18} />
-							) : (
-								<PanelRightCloseIcon strokeWidth={1.5} size={18} />
-							)}
-						</Button>
-						<Input />
+					<div className="flex gap-4 w-full justify-between">
+						<div className="flex gap-4">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="-ml-2"
+								onClick={() => settings.setNav(!settings.nav_open)}
+							>
+								{settings.nav_open ? (
+									<PanelLeftCloseIcon strokeWidth={1.5} size={18} />
+								) : (
+									<PanelRightCloseIcon strokeWidth={1.5} size={18} />
+								)}
+							</Button>
+							<Input />
+						</div>
+
+						<div className="px-5 pt-1">{isCurrentPath("/calendar") && <Button variant="outline" onClick={() => alert("TODO: open popup to insert link? or do that in some usersettings table or smth")}>Import current Semester Calendar</Button>}</div>
+
 					</div>
 					<div className="flex items-center gap-4" />
 				</nav>

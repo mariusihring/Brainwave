@@ -20,6 +20,7 @@ import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes
 import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
 import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedCoursesImport } from './routes/_authenticated/courses'
+import { Route as AuthenticatedCalendarImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedTodosIndexImport } from './routes/_authenticated/todos/index'
 import { Route as AuthenticatedSemesterIndexImport } from './routes/_authenticated/semester/index'
 import { Route as AuthenticatedTodosTodoImport } from './routes/_authenticated/todos/$todo'
@@ -72,6 +73,11 @@ const AuthenticatedCoursesRoute = AuthenticatedCoursesImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedCalendarRoute = AuthenticatedCalendarImport.update({
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedTodosIndexRoute = AuthenticatedTodosIndexImport.update({
   path: '/todos/',
   getParentRoute: () => AuthenticatedRoute,
@@ -119,6 +125,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/courses': {
       id: '/_authenticated/courses'
@@ -197,6 +210,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedCalendarRoute,
     AuthenticatedCoursesRoute,
     AuthenticatedFlashcardsRoute,
     AuthenticatedNotebooksRoute,
@@ -228,6 +242,7 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/calendar",
         "/_authenticated/courses",
         "/_authenticated/flashcards",
         "/_authenticated/notebooks",
@@ -245,6 +260,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/_authenticated/calendar": {
+      "filePath": "_authenticated/calendar.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/courses": {
       "filePath": "_authenticated/courses.tsx",
