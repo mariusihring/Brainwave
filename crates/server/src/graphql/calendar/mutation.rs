@@ -1,10 +1,12 @@
 use async_graphql::*;
 use chrono::NaiveDate;
+use log::{LevelFilter, debug};
 use regex::Regex;
 use reqwest::Client;
 use scraper::{Html, Selector};
 use sqlx::{Pool, Sqlite};
 use ::types::user::DatabaseUser;
+use env_logger::Builder;
 
 use crate::graphql::calendar::CalendarMutation;
 
@@ -15,6 +17,9 @@ impl CalendarMutation {
         let user = ctx.data::<DatabaseUser>().unwrap();
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
         
+
+        debug!("Starting fetch_calendar_from_dhbw");
+
         let client = Client::new();
         let res = client.get(&fetch_link)  
             .send()

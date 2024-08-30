@@ -1,4 +1,5 @@
 use axum::middleware;
+use log::LevelFilter;
 use std::{fs::File, io::Write};
 pub mod state;
 use async_graphql::{EmptySubscription, Schema};
@@ -25,11 +26,18 @@ use state::AppState;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
+use env_logger::Builder;
 
 pub async fn run_server() {
-    std::env::set_var("RUST_LOG", "async-graphql=info");
-    std::env::set_var("RUST_LOG", "debug");
-    env_logger::init();
+    unsafe {
+        std::env::remove_var("RUST_LOG");
+    }
+    Builder::new()
+        .filter_level(LevelFilter::Info)
+        .filter_module("scraper", LevelFilter::Off)
+        .filter_module("async_graphql", LevelFilter::Info)
+        .parse_default_env()
+        .init();
 
     let db = database::init(&database_path().await.unwrap())
         .await
