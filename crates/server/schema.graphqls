@@ -1,3 +1,12 @@
+type Appointment {
+	id: String!
+	date: NaiveDate!
+	name: String!
+	startTime: NaiveDateTime!
+	endTime: NaiveDateTime!
+	location: String!
+}
+
 
 type Course {
 	id: String!
@@ -48,6 +57,17 @@ ISO 8601 combined date and time without timezone.
 """
 scalar NaiveDateTime
 
+"""
+ISO 8601 time without timezone.
+Allows for the nanosecond precision and optional leap second representation.
+Format: %H:%M:%S%.f
+
+# Examples
+
+* `08:59:60.123`
+"""
+scalar NaiveTime
+
 input NewModule {
 	name: String!
 	ects: Int!
@@ -79,13 +99,14 @@ type Query {
 	module(id: String!): Module!
 	modules: [Module!]!
 	calendarLink: String
+	appointments: [Appointment!]!
 }
 
 type RecurringAppointment {
 	name: String!
 	weekday: WeekdayEnum!
-	startTime: NaiveDateTime!
-	endTime: NaiveDateTime!
+	startTime: NaiveTime!
+	endTime: NaiveTime!
 	location: String!
 }
 

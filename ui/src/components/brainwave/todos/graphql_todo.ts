@@ -1,6 +1,6 @@
 import { execute } from "@/execute";
 import {graphql} from "@/graphql";
-import { UpdateTodoStatusMutationMutationVariables } from "@/graphql/graphql";
+import type { UpdateTodoStatusMutationMutationVariables } from "@/graphql/graphql";
 import { useMutation } from "@tanstack/react-query";
 
 export const TODO_INDEX_QUERY = graphql(`
@@ -24,7 +24,7 @@ export const TODO_INDEX_QUERY = graphql(`
 `)
 
 export const UPDATE_TODO_STATUS_MUTATION = graphql(`
-    mutation UpdateTodoStatusMutation($id: String!, $input: NewTodo!) {
+    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {
         updateTodo(id: $id, input: $input) {
             id
             title

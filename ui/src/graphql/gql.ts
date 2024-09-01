@@ -17,7 +17,8 @@ const documents = {
     "\n    mutation createSemesterMutation($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterMutationDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.TodoIndexQueryDocument,
-    "\n    mutation UpdateTodoStatusMutation($id: String!, $input: NewTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
+    "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
+    "\n    query AppointmentQuery {\n      appointments{\n        id\n        date\n        endTime\n        startTime\n        location\n        name\n      }\n    }\n": types.AppointmentQueryDocument,
     "\n\tquery TodoDashboardQuery{\n\t\ttodos {\n\t\t\tid\n\t\t\ttitle\n\t\t\tdueOn\n\t\t\ttodoType\n\t\t}\n\t}\n": types.TodoDashboardQueryDocument,
     "\n\tquery getAllSemester {\n\t\tsemesters {\n\t\t\tid\n\t\t\tsemester\n\t\t\tendDate\n\t\t\ttotalEcts\n\t\t\tmodules {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tects\n\t\t\t\tgrade\n\t\t\t\tstartSemester\n\t\t\t\tendSemester\n\t\t\t}\n\t\t\tcourses {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tgrade\n\t\t\t\tteacher\n\t\t\t\tacademicDepartment\n\t\t\t}\n\t\t\tstartDate\n\t\t}\n\t}\n": types.GetAllSemesterDocument,
 };
@@ -37,7 +38,11 @@ export function graphql(source: "\n    query TodoIndexQuery{\n        todos {\n 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation UpdateTodoStatusMutation($id: String!, $input: NewTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n"): typeof import('./graphql').UpdateTodoStatusMutationDocument;
+export function graphql(source: "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n"): typeof import('./graphql').UpdateTodoStatusMutationDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query AppointmentQuery {\n      appointments{\n        id\n        date\n        endTime\n        startTime\n        location\n        name\n      }\n    }\n"): typeof import('./graphql').AppointmentQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

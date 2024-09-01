@@ -3,6 +3,15 @@ schema {
   mutation: Mutation
 }
 
+type Appointment {
+  date: NaiveDate!
+  endTime: NaiveDateTime!
+  id: String!
+  location: String!
+  name: String!
+  startTime: NaiveDateTime!
+}
+
 type Course {
   academicDepartment: String
   grade: Float
@@ -24,7 +33,9 @@ type Mutation {
   createModule(input: NewModule!): Module!
   createSemester(input: NewSemester!): Semester!
   createTodo(input: NewTodo!): Todo!
-  updateTodo(id: String!, input: NewTodo!): Todo!
+  processSemesterCalendar(semesterId: ID!): [RecurringAppointment!]!
+  updateTodo(id: String!, input: UpdateTodo!): Todo!
+  upsertCalendarLink(calendarLink: String): Settings!
 }
 
 """
@@ -46,6 +57,17 @@ ISO 8601 combined date and time without timezone.
 * `2015-07-01T08:59:60.123`,
 """
 scalar NaiveDateTime
+
+"""
+ISO 8601 time without timezone.
+Allows for the nanosecond precision and optional leap second representation.
+Format: %H:%M:%S%.f
+
+# Examples
+
+* `08:59:60.123`
+"""
+scalar NaiveTime
 
 input NewModule {
   ects: Int!
@@ -70,6 +92,8 @@ input NewTodo {
 }
 
 type Query {
+  appointments: [Appointment!]!
+  calendarLink: String
   module(id: String!): Module!
   modules: [Module!]!
   semester(semester: Int!): Semester!
@@ -77,6 +101,14 @@ type Query {
   todo(id: String!): Todo!
   todos: [Todo!]!
   todosByDate(date: NaiveDate!): [Todo!]!
+}
+
+type RecurringAppointment {
+  endTime: NaiveTime!
+  location: String!
+  name: String!
+  startTime: NaiveTime!
+  weekday: WeekdayEnum!
 }
 
 type Semester {
@@ -87,6 +119,12 @@ type Semester {
   semester: Int!
   startDate: NaiveDate!
   totalEcts: Int!
+}
+
+type Settings {
+  calendarLink: String
+  id: String!
+  userId: String!
 }
 
 type Todo {
@@ -109,4 +147,22 @@ enum TodoType {
   ASSIGNMENT
   EXAM
   GENERAL
+}
+
+input UpdateTodo {
+  courseId: String
+  dueOn: NaiveDateTime!
+  status: TodoStatus!
+  title: String!
+  todoType: TodoType
+}
+
+enum WeekdayEnum {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
 }

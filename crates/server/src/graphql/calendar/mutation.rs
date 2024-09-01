@@ -93,7 +93,7 @@ impl CalendarMutation {
         insert_appointments(db, user.clone(), &all_appointments).await?;
 
         update_semester_import_status(db, &semester_id).await?;
-
+        //TODO: this is fucked somehow xD
         let recurring_appointments = process_recurring_appointments(all_appointments);
 
         Ok(recurring_appointments)
@@ -348,8 +348,8 @@ fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Recurri
                 recurring_appointments.push(RecurringAppointment {
                     name,
                     weekday: new_weekday,
-                    start_time,
-                    end_time,
+                    start_time: start_time.time(),
+                    end_time: end_time.time(),
                     location: first_event.location.clone(),
                 });
             }
