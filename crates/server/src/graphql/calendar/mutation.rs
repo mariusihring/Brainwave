@@ -238,9 +238,11 @@ async fn fetch_calendar_from_dhbw(fetch_link: &str) -> Result<Vec<Appointment>> 
     let resource_selector = Selector::parse("span.resource").unwrap();
 
     let table = document.select(&table_selector).next().unwrap();
-    let mut current_date = None;
+
 
     let re = Regex::new(r"(\d{2}:\d{2})\s*-(\d{2}:\d{2})(.+)").unwrap();
+    let mut current_date = None;
+    let mut current_day = 0; // 0 = Monday, 1 = Tuesday, etc.
 
     for row in table.select(&row_selector) {
         let cells: Vec<_> = row.select(&cell_selector).collect();
@@ -262,38 +264,44 @@ async fn fetch_calendar_from_dhbw(fetch_link: &str) -> Result<Vec<Appointment>> 
                             .unwrap_or_else(|_| get_month_number(date_parts[1]).unwrap_or(1));
 
                         current_date = NaiveDate::from_ymd_opt(2024, month, day);
+                        current_day = 0; // Reset to Monday
                     }
                 }
             }
         } else {
-            for cell in cells {
+            for (cell_index, cell) in cells.iter().enumerate() {
                 if let Some(class) = cell.value().attr("class") {
                     if class.contains("week_block") {
-                        if let Some(link) = cell.select(&link_selector).next() {
-                            let text = link.text().collect::<String>();
+                        // Update current_date based on the cell's position
+                        if let Some(base_date) = current_date {
+                            let days_to_add = (cell_index / 3) as i64; // Assuming 3 cells per day
+                            let appointment_date = base_date + Duration::days(days_to_add);
 
-                            if let Some(captures) = re.captures(&text) {
-                                let start_time = captures.get(1).unwrap().as_str();
-                                let end_time = captures.get(2).unwrap().as_str();
-                                let name = captures.get(3).unwrap().as_str().trim();
+                            // Rest of the code for parsing appointment details...
+                            if let Some(link) = cell.select(&link_selector).next() {
+                                let text = link.text().collect::<String>();
 
-                                let location = cell
-                                    .select(&resource_selector)
-                                    .map(|span| span.text().collect::<String>())
-                                    .collect::<Vec<String>>()
-                                    .join(", ");
+                                if let Some(captures) = re.captures(&text) {
+                                    let start_time = captures.get(1).unwrap().as_str();
+                                    let end_time = captures.get(2).unwrap().as_str();
+                                    let name = captures.get(3).unwrap().as_str().trim();
 
-                                if let Some(date) = current_date {
+                                    let location = cell
+                                        .select(&resource_selector)
+                                        .map(|span| span.text().collect::<String>())
+                                        .collect::<Vec<String>>()
+                                        .join(", ");
+
                                     if let (Ok(start), Ok(end)) = (
                                         NaiveTime::parse_from_str(start_time, "%H:%M"),
                                         NaiveTime::parse_from_str(end_time, "%H:%M"),
                                     ) {
                                         let appointment = Appointment {
                                             id: Uuid::new_v4().to_string(),
-                                            date,
+                                            date: appointment_date,
                                             name: name.to_string(),
-                                            start_time: date.and_time(start),
-                                            end_time: date.and_time(end),
+                                            start_time: appointment_date.and_time(start),
+                                            end_time: appointment_date.and_time(end),
                                             location,
                                         };
                                         appointments.push(appointment);
@@ -301,20 +309,19 @@ async fn fetch_calendar_from_dhbw(fetch_link: &str) -> Result<Vec<Appointment>> 
                                         warn!("Failed to parse time for appointment: {}", name);
                                     }
                                 } else {
-                                    warn!("No current date set for appointment: {}", name);
+                                    warn!("Could not parse appointment text: {}", text);
                                 }
                             } else {
-                                warn!("Could not parse appointment text: {}", text);
+                                warn!("No link found in week_block");
                             }
                         } else {
-                            warn!("No link found in week_block");
+                            warn!("No current date set for appointment");
                         }
                     }
                 }
             }
         }
     }
-
     debug!(
         "Finished parsing calendar. Found {} appointments.",
         appointments.len()
