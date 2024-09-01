@@ -26,7 +26,8 @@ use crate::{
     routers::{
         auth::{
             create_user, delete_expired_sessions, delete_session, delete_user_sessions,
-            get_session_and_user, get_user, get_user_sessions, set_session, update_session_expiration,
+            get_session_and_user, get_user, get_user_sessions, set_session,
+            update_session_expiration,
         },
         graphql::{graphiql, graphql_handler},
     },
