@@ -14,6 +14,7 @@ pub struct Semester {
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
     pub total_ects: i32,
+    pub imported_appointments: bool,
 }
 
 #[derive(InputObject)]

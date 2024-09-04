@@ -79,6 +79,11 @@ impl CalendarMutation {
         let user = ctx.data::<DatabaseUser>()?;
 
         let semester = fetch_semester(db, &semester_id).await?;
+        if semester.imported_appointments {
+            return Err(Error::from(
+                "The calendar for this semester has already been imported".to_string(),
+            ));
+        }
         let calendar_link = fetch_calendar_link(db, &user.id).await?;
         let weeks = generate_weeks(semester.start_date, semester.end_date);
         let mut all_appointments = Vec::new();
@@ -239,7 +244,6 @@ async fn fetch_calendar_from_dhbw(fetch_link: &str) -> Result<Vec<Appointment>> 
 
     let table = document.select(&table_selector).next().unwrap();
 
-
     let re = Regex::new(r"(\d{2}:\d{2})\s*-(\d{2}:\d{2})(.+)").unwrap();
     let mut current_date = None;
     let mut current_day = 0; // 0 = Monday, 1 = Tuesday, etc.
@@ -348,9 +352,10 @@ fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Recurri
             let start_time = first_event.start_time;
             let end_time = first_event.end_time;
 
-            if events.iter().all(|e| {
-                e.date.weekday() == weekday && e.start_time == start_time && e.end_time == end_time
-            }) {
+            if events
+                .iter()
+                .all(|e| e.name == name && !e.name.contains("Klausur"))
+            {
                 let new_weekday: WeekdayEnum = weekday.into();
                 recurring_appointments.push(RecurringAppointment {
                     name,

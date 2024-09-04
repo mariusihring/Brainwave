@@ -10,7 +10,7 @@ pub struct Appointment {
     pub name: String,
     pub start_time: NaiveDateTime,
     pub end_time: NaiveDateTime,
-    pub location: String
+    pub location: String,
 }
 
 //#[derive(InputObject)]

@@ -116,6 +116,7 @@ type Semester {
 	startDate: NaiveDate!
 	endDate: NaiveDate!
 	totalEcts: Int!
+	importedAppointments: Boolean!
 	modules: [Module!]!
 	courses: [Course!]!
 }

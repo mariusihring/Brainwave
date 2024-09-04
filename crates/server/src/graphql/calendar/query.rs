@@ -1,9 +1,9 @@
+use super::CalendarQuery;
+use ::types::calendar::Appointment;
+use ::types::todo::Todo;
 use ::types::{settings::Settings, user::DatabaseUser};
 use async_graphql::*;
 use sqlx::{Pool, Sqlite};
-use ::types::calendar::Appointment;
-use ::types::todo::Todo;
-use super::CalendarQuery;
 
 #[Object]
 impl CalendarQuery {
@@ -24,16 +24,16 @@ impl CalendarQuery {
         .map_err(|err| async_graphql::Error::from(err))
     }
     pub async fn appointments(&self, ctx: &Context<'_>) -> Vec<Appointment> {
-
         let user = ctx.data::<DatabaseUser>().unwrap();
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
 
-        let appointments: Vec<Appointment> = sqlx::query_as("SELECT * from appointment WHERE user_id = ?;")
-            .bind(user.id.clone())
-            .fetch_all(db)
-            .await
-            .map_err(|err| async_graphql::Error::from(err))
-            .unwrap();
-        return appointments
+        let appointments: Vec<Appointment> =
+            sqlx::query_as("SELECT * from appointment WHERE user_id = ?;")
+                .bind(user.id.clone())
+                .fetch_all(db)
+                .await
+                .map_err(|err| async_graphql::Error::from(err))
+                .unwrap();
+        return appointments;
     }
 }

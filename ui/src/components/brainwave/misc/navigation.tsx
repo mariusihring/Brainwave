@@ -18,6 +18,7 @@ import {
 	CalendarIcon
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import ImportCalendarAppointmentsDialog from "../calendar/import_dialog";
 
 const iconSize = 20;
 const sideMenuStaticLinks = [
@@ -99,7 +100,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 												}),
 												"h-9 w-9",
 												isCurrentPath(link.href) === "default" &&
-													"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
+												"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
 											)}
 										>
 											{link.icon}
@@ -124,7 +125,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 											size: "sm",
 										}),
 										isCurrentPath(link.href) === "default" &&
-											"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
+										"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
 										"justify-start gap-3 w-full",
 									)}
 								>
@@ -156,7 +157,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 							<Input />
 						</div>
 
-						<div className="px-5 pt-1">{isCurrentPath("/calendar") && <Button variant="outline" onClick={() => alert("TODO: open popup to insert link? or do that in some usersettings table or smth")}>Import current Semester Calendar</Button>}</div>
+						<div className="px-5 pt-1">{pathname === "/calendar" && <ImportCalendarAppointmentsDialog />}</div>
 
 					</div>
 					<div className="flex items-center gap-4" />
