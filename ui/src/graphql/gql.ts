@@ -14,6 +14,8 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query getCalendarLink {\n    calendarLink\n  }\n  ": types.GetCalendarLinkDocument,
+    "mutation ProcessCalendar{\n    processSemesterCalendar {\n        name\n        weekday\n        startTime\n        endTime\n        location\n    }\n  }": types.ProcessCalendarDocument,
     "\n    mutation createSemesterMutation($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterMutationDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.TodoIndexQueryDocument,
@@ -23,6 +25,14 @@ const documents = {
     "\n\tquery getAllSemester {\n\t\tsemesters {\n\t\t\tid\n\t\t\tsemester\n\t\t\tendDate\n\t\t\ttotalEcts\n\t\t\tmodules {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tects\n\t\t\t\tgrade\n\t\t\t\tstartSemester\n\t\t\t\tendSemester\n\t\t\t}\n\t\t\tcourses {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tgrade\n\t\t\t\tteacher\n\t\t\t\tacademicDepartment\n\t\t\t}\n\t\t\tstartDate\n\t\t}\n\t}\n": types.GetAllSemesterDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getCalendarLink {\n    calendarLink\n  }\n  "): typeof import('./graphql').GetCalendarLinkDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation ProcessCalendar{\n    processSemesterCalendar {\n        name\n        weekday\n        startTime\n        endTime\n        location\n    }\n  }"): typeof import('./graphql').ProcessCalendarDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

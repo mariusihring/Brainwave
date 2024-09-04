@@ -34,7 +34,7 @@ type Mutation {
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
 	upsertCalendarLink(calendarLink: String): Settings!
-	processSemesterCalendar(semesterId: ID!): [RecurringAppointment!]!
+	processSemesterCalendar: [RecurringAppointment!]!
 }
 
 """

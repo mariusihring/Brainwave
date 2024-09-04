@@ -33,7 +33,7 @@ type Mutation {
   createModule(input: NewModule!): Module!
   createSemester(input: NewSemester!): Semester!
   createTodo(input: NewTodo!): Todo!
-  processSemesterCalendar(semesterId: ID!): [RecurringAppointment!]!
+  processSemesterCalendar: [RecurringAppointment!]!
   updateTodo(id: String!, input: UpdateTodo!): Todo!
   upsertCalendarLink(calendarLink: String): Settings!
 }
@@ -115,6 +115,7 @@ type Semester {
   courses: [Course!]!
   endDate: NaiveDate!
   id: String!
+  importedAppointments: Boolean!
   modules: [Module!]!
   semester: Int!
   startDate: NaiveDate!

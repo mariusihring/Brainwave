@@ -73,32 +73,45 @@ impl CalendarMutation {
     pub async fn process_semester_calendar(
         &self,
         ctx: &Context<'_>,
-        semester_id: ID,
     ) -> Result<Vec<RecurringAppointment>> {
         let db = ctx.data::<Pool<Sqlite>>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
-        let semester = fetch_semester(db, &semester_id).await?;
+        let current_date = chrono::Local::now().naive_local().date();
+        let semesters = fetch_all_semesters(db).await?;
+
+        let current_semester = semesters.into_iter().find(|semester| {
+            current_date >= semester.start_date && current_date <= semester.end_date
+        });
+
+        let semester = match current_semester {
+            Some(semester) => semester,
+            None => {
+                return Err(Error::from(
+                    "You are not currently in a semester timeframe".to_string(),
+                ))
+            }
+        };
+
         if semester.imported_appointments {
             return Err(Error::from(
                 "The calendar for this semester has already been imported".to_string(),
             ));
         }
+
         let calendar_link = fetch_calendar_link(db, &user.id).await?;
         let weeks = generate_weeks(semester.start_date, semester.end_date);
         let mut all_appointments = Vec::new();
 
         for week_start in weeks {
             let fetch_link = generate_fetch_link(&calendar_link, week_start);
-
             let appointments = fetch_calendar_from_dhbw(&fetch_link).await?;
             all_appointments.extend(appointments);
         }
 
         insert_appointments(db, user.clone(), &all_appointments).await?;
+        update_semester_import_status(db, &semester.id.into()).await?;
 
-        update_semester_import_status(db, &semester_id).await?;
-        //TODO: this is fucked somehow xD
         let recurring_appointments = process_recurring_appointments(all_appointments);
 
         Ok(recurring_appointments)
@@ -369,4 +382,12 @@ fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Recurri
     }
 
     recurring_appointments
+}
+
+async fn fetch_all_semesters(db: &Pool<Sqlite>) -> Result<Vec<Semester>> {
+    let semesters = sqlx::query_as::<_, Semester>("SELECT * FROM semester")
+        .fetch_all(db)
+        .await?;
+
+    Ok(semesters)
 }
