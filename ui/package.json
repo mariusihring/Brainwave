@@ -15,6 +15,8 @@
     "watch": "graphql-codegen --config codegen.ts -w"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.5",
+    "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
     "@lucia-auth/adapter-sqlite": "^3.0.2",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -83,6 +85,7 @@
     "lucide-react": "^0.427.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
     "react-day-picker": "^9.0.8",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.2",
@@ -116,6 +119,7 @@
     "@tauri-apps/cli": "^1.6.0",
     "@types/node": "^22.2.0",
     "@types/react": "^18.3.3",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",

@@ -14,8 +14,9 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query getCalendarLink {\n    calendarLink\n  }\n  ": types.GetCalendarLinkDocument,
-    "mutation ProcessCalendar{\n    processSemesterCalendar {\n        name\n        weekday\n        startTime\n        endTime\n        location\n    }\n  }": types.ProcessCalendarDocument,
+    "\n  query getCalendarLink {\n    calendarLink\n  }\n": types.GetCalendarLinkDocument,
+    "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n": types.SaveCalendarLinkDocument,
+    "\n  mutation ProcessCalendar {\n    processSemesterCalendar {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n": types.ProcessCalendarDocument,
     "\n    mutation createSemesterMutation($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterMutationDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.TodoIndexQueryDocument,
@@ -28,11 +29,15 @@ const documents = {
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCalendarLink {\n    calendarLink\n  }\n  "): typeof import('./graphql').GetCalendarLinkDocument;
+export function graphql(source: "\n  query getCalendarLink {\n    calendarLink\n  }\n"): typeof import('./graphql').GetCalendarLinkDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "mutation ProcessCalendar{\n    processSemesterCalendar {\n        name\n        weekday\n        startTime\n        endTime\n        location\n    }\n  }"): typeof import('./graphql').ProcessCalendarDocument;
+export function graphql(source: "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n"): typeof import('./graphql').SaveCalendarLinkDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ProcessCalendar {\n    processSemesterCalendar {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n"): typeof import('./graphql').ProcessCalendarDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

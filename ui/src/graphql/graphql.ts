@@ -238,6 +238,13 @@ export type GetCalendarLinkQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCalendarLinkQuery = { __typename?: 'Query', calendarLink?: string | null };
 
+export type SaveCalendarLinkMutationVariables = Exact<{
+  link: Scalars['String']['input'];
+}>;
+
+
+export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: string } };
+
 export type ProcessCalendarMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -305,6 +312,13 @@ export const GetCalendarLinkDocument = new TypedDocumentString(`
   calendarLink
 }
     `) as unknown as TypedDocumentString<GetCalendarLinkQuery, GetCalendarLinkQueryVariables>;
+export const SaveCalendarLinkDocument = new TypedDocumentString(`
+    mutation SaveCalendarLink($link: String!) {
+  upsertCalendarLink(calendarLink: $link) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<SaveCalendarLinkMutation, SaveCalendarLinkMutationVariables>;
 export const ProcessCalendarDocument = new TypedDocumentString(`
     mutation ProcessCalendar {
   processSemesterCalendar {
