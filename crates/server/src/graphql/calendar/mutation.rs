@@ -78,7 +78,7 @@ impl CalendarMutation {
         let user = ctx.data::<DatabaseUser>()?;
 
         let current_date = chrono::Local::now().naive_local().date();
-        let semesters = fetch_all_semesters(db).await?;
+        let semesters = fetch_all_semesters(db, &user.id).await?;
 
         let current_semester = semesters.into_iter().find(|semester| {
             current_date >= semester.start_date && current_date <= semester.end_date
@@ -384,8 +384,9 @@ fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Recurri
     recurring_appointments
 }
 
-async fn fetch_all_semesters(db: &Pool<Sqlite>) -> Result<Vec<Semester>> {
-    let semesters = sqlx::query_as::<_, Semester>("SELECT * FROM semester")
+async fn fetch_all_semesters(db: &Pool<Sqlite>, user_id: &str) -> Result<Vec<Semester>> {
+    let semesters = sqlx::query_as::<_, Semester>("SELECT * FROM semester WHERE user_id = ?")
+        .bind(user_id)
         .fetch_all(db)
         .await?;
 
