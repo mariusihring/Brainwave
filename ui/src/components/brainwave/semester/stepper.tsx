@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar"
 import { CheckIcon, Trash2Icon } from 'lucide-react'
 
+// Hi there my love, im adding comments here so i help u a bit with what to do <3
 export default function SemesterStepper() {
   const [activeStep, setActiveStep] = useState<number>(0) // Specify type for activeStep
   const [formData, setFormData] = useState<{
@@ -24,14 +25,17 @@ export default function SemesterStepper() {
     calendarLink: '',
     useExistingLink: false,
   })
-
+  // Ich weis nicht wie viel Sinn die hier ergeben muessen wir nachdenken, ob wir noch andere steps etc brauchen.
   const steps = [
     { id: 'semester', title: 'Semester' },
     { id: 'modules', title: 'Modules' },
     { id: 'calendar', title: 'Calendar' },
     { id: 'review', title: 'Review' },
   ]
-
+  /*
+  hier muessen wir einen neuen state machen, der trackt was wir maximal schon waren, damit wenn wir bei schritt 1 was changen wollen wir nicht nochmal durch alles klicken muessen.
+  Dabei muessen wir auch schauen wo es sinn ergibt das wir das nochmal machen koennen, des semester neu zu machen ergibt nicht wirklich sinn, aber bei modules vielleicht schon.
+  */
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1)
   }
