@@ -17,6 +17,7 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedTestImport } from './routes/_authenticated/test'
 import { Route as AuthenticatedSwappyImport } from './routes/_authenticated/swappy'
+import { Route as AuthenticatedSemesterstepperImport } from './routes/_authenticated/semester_stepper'
 import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes'
 import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
 import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
@@ -58,6 +59,12 @@ const AuthenticatedSwappyRoute = AuthenticatedSwappyImport.update({
   path: '/swappy',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedSemesterstepperRoute =
+  AuthenticatedSemesterstepperImport.update({
+    path: '/semester_stepper',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 const AuthenticatedNotesRoute = AuthenticatedNotesImport.update({
   path: '/notes',
@@ -167,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotesImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/semester_stepper': {
+      id: '/_authenticated/semester_stepper'
+      path: '/semester_stepper'
+      fullPath: '/semester_stepper'
+      preLoaderRoute: typeof AuthenticatedSemesterstepperImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/swappy': {
       id: '/_authenticated/swappy'
       path: '/swappy'
@@ -228,6 +242,7 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedFlashcardsRoute,
     AuthenticatedNotebooksRoute,
     AuthenticatedNotesRoute,
+    AuthenticatedSemesterstepperRoute,
     AuthenticatedSwappyRoute,
     AuthenticatedTestRoute,
     AuthenticatedIndexRoute,
@@ -261,6 +276,7 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/flashcards",
         "/_authenticated/notebooks",
         "/_authenticated/notes",
+        "/_authenticated/semester_stepper",
         "/_authenticated/swappy",
         "/_authenticated/test",
         "/_authenticated/",
@@ -294,6 +310,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_authenticated/notes": {
       "filePath": "_authenticated/notes.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/semester_stepper": {
+      "filePath": "_authenticated/semester_stepper.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/swappy": {

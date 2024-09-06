@@ -60,7 +60,7 @@ const getAppointmentColor = (name: string): string => {
 };
 
 const hourHeight = 60; // Height for each hour in pixels
-const startHour = 5; // Calendar starts at 5 AM
+const startHour = 8; // Calendar starts at 5 AM
 const endHour = 22; // Calendar ends at 10 PM
 const totalHours = endHour - startHour;
 
