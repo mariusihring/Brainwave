@@ -15,7 +15,7 @@ import {
 	differenceInMinutes,
 	addMinutes,
 } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, GripVertical } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/calendar")({
 	component: () => <CalendarIndex />,
@@ -82,53 +82,69 @@ function CalendarIndex() {
 
 	const [events, setEvents] = useState<Appointment[]>(appointments);
 	const containerRef = useRef<HTMLDivElement>(null);
-	const draggedEventRef = useRef<{ id: string, initialX: number, initialY: number } | null>(null);
+	const placeholderRef = useRef<HTMLDivElement>(null);
+	const draggedEventRef = useRef<{ id: string, element: HTMLElement, duration: number } | null>(null);
 
 	const handleDragStart = useCallback((e: React.MouseEvent, eventId: string) => {
-		const element = e.target as HTMLElement;
-		const rect = element.getBoundingClientRect();
+		e.preventDefault();
+		const element = e.currentTarget.closest('[data-event-id]') as HTMLElement;
+		if (!element) return;
+
+		const event = events.find(event => event.id === eventId);
+		if (!event) return;
+
+		const duration = differenceInMinutes(parseISO(event.endTime), parseISO(event.startTime)) / 60;
+
 		draggedEventRef.current = {
 			id: eventId,
-			initialX: e.clientX - rect.left,
-			initialY: e.clientY - rect.top
+			element,
+			duration
 		};
-	}, []);
 
-	const handleDrag = useCallback((e: MouseEvent) => {
-		if (!draggedEventRef.current) return;
+		element.style.visibility = 'hidden'; // Hide the original element
+		document.body.style.userSelect = 'none'; // Prevent text selection
 
-		const container = containerRef.current;
-		if (!container) return;
+		if (placeholderRef.current) {
+			placeholderRef.current.style.display = 'block'; // Show the placeholder
+			placeholderRef.current.style.height = `${duration * hourHeight}px`; // Set the height based on duration
+		}
 
-		const { id, initialX, initialY } = draggedEventRef.current;
-		const element = container.querySelector(`[data-event-id="${id}"]`) as HTMLElement;
-		if (!element) return;
+		updatePlaceholderPosition(e); // Update placeholder position
+	}, [events]);
 
-		const containerRect = container.getBoundingClientRect();
-		const x = e.clientX - containerRect.left - initialX;
-		const y = e.clientY - containerRect.top - initialY;
+	const updatePlaceholderPosition = useCallback((e: MouseEvent | React.MouseEvent) => {
+		if (!containerRef.current || !placeholderRef.current || !draggedEventRef.current) return;
 
-		element.style.transform = `translate(${x}px, ${y}px)`;
-	}, []);
-
-	const handleDragEnd = useCallback((e: MouseEvent) => {
-		if (!draggedEventRef.current) return;
-
-		const container = containerRef.current;
-		if (!container) return;
-
-		const { id } = draggedEventRef.current;
-		const element = container.querySelector(`[data-event-id="${id}"]`) as HTMLElement;
-		if (!element) return;
-
-		element.style.transform = '';
-
-		const containerRect = container.getBoundingClientRect();
+		const containerRect = containerRef.current.getBoundingClientRect();
 		const x = e.clientX - containerRect.left;
 		const y = e.clientY - containerRect.top;
 
 		const dayWidth = containerRect.width / 5;
 		const dayIndex = Math.floor(x / dayWidth);
+		const hour = Math.floor(y / hourHeight);
+
+		// Adjust placeholder position
+		placeholderRef.current.style.left = `${dayIndex * dayWidth + dayIndex * 8 + 64}px`; // Adjust for gap and time column
+		placeholderRef.current.style.top = `${hour * hourHeight + 54}px`; // Adjust for header height
+	}, []);
+
+	const handleDrag = useCallback((e: MouseEvent) => {
+		updatePlaceholderPosition(e); // Update placeholder position during drag
+	}, [updatePlaceholderPosition]);
+
+	const handleDragEnd = useCallback((e: MouseEvent) => {
+		if (!draggedEventRef.current || !containerRef.current || !placeholderRef.current) return;
+
+		const { id, element } = draggedEventRef.current;
+		element.style.visibility = 'visible'; // Show the original element
+		document.body.style.userSelect = 'auto'; // Restore text selection
+
+		const containerRect = containerRef.current.getBoundingClientRect();
+		const x = e.clientX - containerRect.left;
+		const y = e.clientY - containerRect.top - 54; // Adjust for header height
+
+		const dayWidth = containerRect.width / 5;
+		const dayIndex = Math.floor((x - 64) / (dayWidth + 8)); // Adjust for time column and gaps
 		const hour = Math.floor(y / hourHeight) + startHour;
 
 		setEvents(prevEvents => {
@@ -144,7 +160,8 @@ function CalendarIndex() {
 			});
 		});
 
-		draggedEventRef.current = null;
+		placeholderRef.current.style.display = 'none'; // Hide the placeholder
+		draggedEventRef.current = null; // Clear the dragged event reference
 	}, [currentDate]);
 
 	useEffect(() => {
@@ -182,7 +199,7 @@ function CalendarIndex() {
 					<ChevronRight className="h-4 w-4" />
 				</Button>
 			</div>
-			<div ref={containerRef} className="grid grid-cols-[auto_1fr_1fr_1fr_1fr_1fr] gap-2 overflow-x-auto">
+			<div ref={containerRef} className="relative grid grid-cols-[auto_1fr_1fr_1fr_1fr_1fr] gap-2 overflow-x-auto">
 				<div className="sticky left-0 z-10 bg-background w-16">
 					<div className="h-14"></div>
 					{Array.from({ length: totalHours }, (_, i) => i + startHour).map((hour) => (
@@ -201,6 +218,11 @@ function CalendarIndex() {
 						onDragStart={handleDragStart}
 					/>
 				))}
+				<div
+					ref={placeholderRef}
+					className="absolute bg-blue-200 opacity-50 rounded pointer-events-none"
+					style={{ display: 'none', width: `calc(20% - 8px)` }}
+				></div>
 			</div>
 		</div>
 	);
@@ -243,15 +265,22 @@ function Appointment({ event, day, onDragStart }: { event: Appointment, day: Dat
 	return (
 		<div
 			data-event-id={event.id}
-			className="absolute left-0 right-0 overflow-hidden rounded px-1 text-xs cursor-move"
+			className="absolute left-0 right-0 overflow-hidden rounded px-1 text-xs"
 			style={{
 				top: `${top}px`,
 				height: `${height}px`,
 				backgroundColor: getAppointmentColor(event.name),
 			}}
-			onMouseDown={(e) => onDragStart(e, event.id)}
 		>
-			<div className="font-medium truncate">{event.name}</div>
+			<div className="flex justify-between items-center">
+				<div className="font-medium truncate">{event.name}</div>
+				<div
+					className="cursor-move p-1"
+					onMouseDown={(e) => onDragStart(e, event.id)}
+				>
+					<GripVertical size={14} />
+				</div>
+			</div>
 			<div>{format(startTime, "HH:mm")} - {format(endTime, "HH:mm")}</div>
 			<div className="text-muted-foreground truncate">{event.location}</div>
 		</div>
