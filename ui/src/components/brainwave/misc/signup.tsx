@@ -33,7 +33,7 @@ export default function Signup() {
 	});
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-		const hashed_password = bcrypt.hashSync(values.password, 10)
+		const hashed_password = bcrypt.hashSync(values.password)
 		try {
 			await signup(values.username, hashed_password);
 			await navigate({ to: "/" });

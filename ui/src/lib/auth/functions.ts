@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import Cookies from "js-cookie";
 import { type DatabaseUser, generateIdFromEntropySize } from "lucia";
 import api_client from "../axios_client";
+import bcrypt from "bcryptjs"
 
 export async function login(username: string, password: string) {
 	const existingUser = (
@@ -12,8 +13,7 @@ export async function login(username: string, password: string) {
 	if (!existingUser) {
 		return Promise.reject("Username invalid");
 	}
-
-	const pw = existingUser.attributes.password_hash === password;
+	const pw = await bcrypt.compare(password, existingUser.attributes.password_hash)
 	if (!pw) {
 		return Promise.reject("Password invalid");
 	}
