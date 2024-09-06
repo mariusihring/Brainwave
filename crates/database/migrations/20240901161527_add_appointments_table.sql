@@ -1,4 +1,3 @@
--- Add migration script here
 CREATE TABLE appointment (
                              id TEXT PRIMARY KEY,
                              date DATE NOT NULL,

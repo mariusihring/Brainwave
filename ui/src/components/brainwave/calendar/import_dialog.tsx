@@ -48,6 +48,7 @@ export default function ImportCalendarAppointmentsDialog() {
   const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { data: linkData, refetch: refetchLink } = useQuery({
     queryKey: ["calendarLink"],
@@ -66,6 +67,12 @@ export default function ImportCalendarAppointmentsDialog() {
       setAppointments(data.processSemesterCalendar)
       setIsLoading(false)
       setProgress(100)
+      setErrorMessage(null)
+    },
+    onError: (error) => {
+      setIsLoading(false)
+      setProgress(0)
+      setErrorMessage(error.message || "An error occurred while processing the calendar.")
     },
   })
 
@@ -124,13 +131,16 @@ export default function ImportCalendarAppointmentsDialog() {
         <DialogHeader>
           <DialogTitle>Import Calendar</DialogTitle>
           <DialogDescription>
-            {!linkData?.calendarLink
-              ? "Please insert the link to your calendar."
-              : "Select the appointments you want to import."}
+            {errorMessage ? errorMessage : // Display error message if exists
+              !linkData?.calendarLink
+                ? "Please insert the link to your calendar."
+                : "Select the appointments you want to import."}
           </DialogDescription>
         </DialogHeader>
 
-        {!linkData?.calendarLink ? (
+        {errorMessage ? ( // Show error message instead of other content
+          <div className="text-red-500">{errorMessage}</div>
+        ) : !linkData?.calendarLink ? (
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="link" className="text-right">
