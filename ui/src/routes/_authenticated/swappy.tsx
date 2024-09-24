@@ -1,61 +1,148 @@
-import React, { useEffect, useState } from 'react';
+
 import { createFileRoute } from '@tanstack/react-router';
-import { createSwapy } from "swapy";
+import {useState} from "react";
+import {
+  DragDropContext,
+  Draggable,
+  DraggableProvided, DraggableStateSnapshot,
+  Droppable,
+  DroppableProvided,
+  DropResult
+} from "@hello-pangea/dnd";
+
+
 
 export const Route = createFileRoute('/_authenticated/swappy')({
   component: () => <SwappyTest />
 });
 
-const SLOTS_PER_DAY = 24; // Assuming 1-hour slots for a day
-const DAYS = 7; // A week view
+interface Item {
+  id: string;
+  title: string;
+  content: string;
+}
 
-function SwappyTest() {
-  const [appointments, setAppointments] = useState([
-    { id: 'a', slot: 2, duration: 3, title: 'Meeting A' },
-    { id: 'b', slot: 26, duration: 2, title: 'Call B' },
-    { id: 'c', slot: 50, duration: 4, title: 'Workshop C' },
-  ]);
+const initial_items: Item[] = [{id: 1, title: "first", content: "content"}, {id: 2, title: "second", content: "content"}, {id: 3, title: "third", content: "content"}]
 
-  useEffect(() => {
-    const container = document.querySelector('.container');
-    if (container) {
-      const swapy = createSwapy(container);
-      swapy.onSwap(({ data }) => {
-        console.log(data);
-        // Update appointment position based on the swap
-        setAppointments(prevAppointments => {
-          return prevAppointments.map(app =>
-            app.id === data.object.id ? { ...app, slot: parseInt(data.slot) } : app
-          );
-        });
-      });
+
+const reorder = (list: Item[], startIndex: number, endIndex: number): Item[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
+const move = (source: Item[], destination: Item[], droppableSource: { index: number }, droppableDestination: { index: number }): { [key: string]: Item[] } => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+  destClone.splice(droppableDestination.index, 0, removed);
+
+  return {
+    source: sourceClone,
+    destination: destClone
+  };
+};
+
+const SwappyTest = () => {
+  const [items, setItems] = useState<Item[]>(initial_items);
+  const [selected, setSelected] = useState<Item[]>([]);
+
+  const onDragEnd = (result: DropResult): void => {
+    const { source, destination } = result;
+
+    if (!destination) {
+      return;
     }
-  }, []);
 
-  const renderSlots = () => {
-    const slots = [];
-    for (let i = 0; i < DAYS * SLOTS_PER_DAY; i++) {
-      const appointment = appointments.find(app => app.slot === i);
-      slots.push(
-        <div key={i} className="slot border border-gray-200 h-8 relative" data-swapy-slot={i}>
-          {appointment && (
-            <div
-              className="appointment bg-blue-200 p-1 absolute top-0 left-0 right-0"
-              style={{ height: `${appointment.duration * 32}px` }}
-              data-swapy-item={appointment.id}
-            >
-              {appointment.title}
-            </div>
-          )}
-        </div>
+    if (source.droppableId === destination.droppableId) {
+      const list = source.droppableId === 'droppable' ? items : selected;
+      const reorderedList = reorder(
+          list,
+          source.index,
+          destination.index
       );
+
+      if (source.droppableId === 'droppable') {
+        setItems(reorderedList);
+      } else {
+        setSelected(reorderedList);
+      }
+    } else {
+      const sourceList = source.droppableId === 'droppable' ? items : selected;
+      const destList = destination.droppableId === 'droppable' ? items : selected;
+      const result = move(
+          sourceList,
+          destList,
+          source,
+          destination
+      );
+
+      setItems(source.droppableId === 'droppable' ? result.source : result.destination);
+      setSelected(source.droppableId === 'droppable' ? result.destination : result.source);
     }
-    return slots;
   };
 
   return (
-    <div className="container grid grid-cols-7 gap-0">
-      {renderSlots()}
-    </div>
+      <div className="flex justify-center items-start space-x-4 p-4">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided: DroppableProvided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    className={`bg-gray-200 p-4 w-64 rounded-lg ${snapshot.isDraggingOver ? 'bg-blue-100' : ''}`}
+                    {...provided.droppableProps}
+                >
+                  <h2 className="text-lg font-bold mb-2">Items</h2>
+                  {items.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.title} index={index}>
+                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`p-2 mb-2 bg-white rounded shadow ${snapshot.isDragging ? 'bg-green-200' : ''}`}
+                            >
+                              <h3 className="font-semibold">{item.title}</h3>
+                              <p>{item.content}</p>
+                            </div>
+                        )}
+                      </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+            )}
+          </Droppable>
+          <Droppable droppableId="droppable2">
+            {(provided: DroppableProvided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    className={`bg-gray-200 p-4 w-64 rounded-lg ${snapshot.isDraggingOver ? 'bg-blue-100' : ''}`}
+                    {...provided.droppableProps}
+                >
+                  <h2 className="text-lg font-bold mb-2">Selected</h2>
+                  {selected.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.title} index={index}>
+                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`p-2 mb-2 bg-white rounded shadow ${snapshot.isDragging ? 'bg-green-200' : ''}`}
+                            >
+                              <h3 className="font-semibold">{item.title}</h3>
+                              <p>{item.content}</p>
+                            </div>
+                        )}
+                      </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
   );
-}
+};
+

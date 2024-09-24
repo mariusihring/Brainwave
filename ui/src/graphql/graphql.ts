@@ -65,6 +65,7 @@ export type Course = {
 
 export type Module = {
   __typename?: 'Module';
+  courses: Array<Course>;
   ects: Scalars['Int']['output'];
   endSemester: Scalars['String']['output'];
   grade?: Maybe<Scalars['Float']['output']>;

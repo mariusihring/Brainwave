@@ -18,6 +18,7 @@ const documents = {
     "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n": types.SaveCalendarLinkDocument,
     "\n  mutation ProcessCalendar {\n    processSemesterCalendar {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n": types.ProcessCalendarDocument,
     "\n    mutation createSemesterMutation($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterMutationDocument,
+    "\n        mutation createSemesterMutation($input: NewSemester!) {\n            createSemester(input: $input) {\n                id\n            }\n        }\n    ": types.CreateSemesterMutationDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.TodoIndexQueryDocument,
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            todoType\n            status\n            course {\n                id\n                name\n                grade\n                teacher\n                academicDepartment\n            }\n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
@@ -42,6 +43,10 @@ export function graphql(source: "\n  mutation ProcessCalendar {\n    processSeme
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation createSemesterMutation($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n"): typeof import('./graphql').CreateSemesterMutationDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n        mutation createSemesterMutation($input: NewSemester!) {\n            createSemester(input: $input) {\n                id\n            }\n        }\n    "): typeof import('./graphql').CreateSemesterMutationDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

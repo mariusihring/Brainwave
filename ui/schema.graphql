@@ -21,6 +21,7 @@ type Course {
 }
 
 type Module {
+  courses: [Course!]!
   ects: Int!
   endSemester: String!
   grade: Float

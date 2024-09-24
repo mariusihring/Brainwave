@@ -1,7 +1,9 @@
-use async_graphql::{InputObject, SimpleObject};
+use crate::course::Course;
+use async_graphql::{ComplexObject, Context, InputObject, SimpleObject};
 use sqlx::prelude::FromRow;
 
 #[derive(SimpleObject, FromRow, Debug)]
+#[graphql(complex)]
 pub struct Module {
     pub id: String,
     pub name: String,
@@ -19,4 +21,11 @@ pub struct NewModule {
     pub grade: Option<f32>,
     pub start_semester: String,
     pub end_semester: String,
+}
+
+#[ComplexObject]
+impl Module {
+    async fn courses(&self, ctx: &Context<'_>) -> Vec<Course> {
+        vec![]
+    }
 }
