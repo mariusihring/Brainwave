@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calendar } from "@/components/ui/calendar"
-import { CheckIcon, Trash2Icon } from 'lucide-react'
+import {BookOpenIcon, CheckIcon, GraduationCapIcon, Trash2Icon} from 'lucide-react'
 import {graphql} from "@/graphql";
 import {useMutation} from "@tanstack/react-query";
 import {execute} from "@/execute.ts";
 import ImportCalendarAppointmentsDialog from "@/components/brainwave/calendar/import_dialog.tsx";
+import type { Module } from "@/__generated__/graphql";
 
 // Hi there my love, im adding comments here so i help u a bit with what to do <3
 export default function SemesterStepper() {
@@ -47,6 +48,7 @@ export default function SemesterStepper() {
     switch (activeStep) {
       case 0:
         handleCreateSemester();
+
         break;
       default:
         break;
@@ -140,8 +142,7 @@ export default function SemesterStepper() {
   const handleCreateSemester = () => {
     // Here you would typically send the semester data to your backend
     mutation.mutate();
-    router.invalidate();
-    setOpen(false);
+    // setActiveStep((prevStep) => prevStep + 1)
   };
 
   //courses
@@ -200,45 +201,44 @@ export default function SemesterStepper() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {formData.modules.map((module, index) => (
                     <div key={index} className="flex space-x-4 items-end">
-                      <Card className="p-4 border-purple-200">
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor={`module-name-${index}`}>Module Name</Label>
-                            <Input
-                                id={`module-name-${index}`}
-                                value={module.name}
-                                onChange={(e) => handleModuleChange(index, 'name', e.target.value)}
-                            />
-                          </div>
-                          <div className="flex items-end space-x-2">
-                            <div className="flex-grow">
-                              <Label htmlFor={`module-ects-${index}`}>ECTS</Label>
-                              <Input
-                                  id={`module-ects-${index}`}
-                                  type="number"
-                                  value={module.ects}
-                                  onChange={(e) => handleModuleChange(index, 'ects', e.target.value)}
-                              />
-                            </div>
-                            <Button
+                      <ModuleCard module={module} index={index}/>
+                      {/*<Card className="p-4">*/}
+                      {/*  <div className="space-y-4">*/}
+                      {/*    <div>*/}
+                      {/*      <Label htmlFor={`module-name-${index}`}>Module Name</Label>*/}
+                      {/*      <Input*/}
+                      {/*          id={`module-name-${index}`}*/}
+                      {/*          value={module.name}*/}
+                      {/*          onChange={(e) => handleModuleChange(index, 'name', e.target.value)}*/}
+                      {/*      />*/}
+                      {/*    </div>*/}
+                      {/*    <div className="flex items-end space-x-2">*/}
+                      {/*      <div className="flex-grow">*/}
+                      {/*        <Label htmlFor={`module-ects-${index}`}>ECTS</Label>*/}
+                      {/*        <Input*/}
+                      {/*            id={`module-ects-${index}`}*/}
+                      {/*            type="number"*/}
+                      {/*            value={module.ects}*/}
+                      {/*            onChange={(e) => handleModuleChange(index, 'ects', e.target.value)}*/}
+                      {/*        />*/}
+                      {/*      </div>*/}
+                      {/*      <Button*/}
 
-                                size="icon"
-                                onClick={() => handleRemoveModule(index)}
-                            >
-                              <Trash2Icon className="h-4 w-4"/>
-                              <span className="sr-only">Remove module</span>
-                            </Button>
-                          </div>
-                        </div>
-                      </Card>
+                      {/*          size="icon"*/}
+                      {/*          onClick={() => handleRemoveModule(index)}*/}
+                      {/*      >*/}
+                      {/*        <Trash2Icon className="h-4 w-4"/>*/}
+                      {/*        <span className="sr-only">Remove module</span>*/}
+                      {/*      </Button>*/}
+                      {/*    </div>*/}
+                      {/*  </div>*/}
+                      {/*</Card>*/}
                     </div>
                 ))}
                 <Card className="flex items-center justify-center">
-                  <Button className="flex grow" variant="ghost" onClick={handleAddModule}>Add Module</Button>
+                  <Button className="flex grow h-full" variant="ghost" onClick={handleAddModule}>Add Module</Button>
                 </Card>
               </div>
-
-
             </div>
         )
       case 'calendar':
@@ -279,13 +279,19 @@ export default function SemesterStepper() {
                 {formData.modules.map((modul, index) => (
                     <div
                         key={index}
-                        className={`p-3 rounded-lg shadow-lg text-black bg-purple-50`}
+                        className={`flex space-x-4 items-end`}
                     >
-                      <p className="text-md">{modul.name}</p>
-                      <p className="text-md pb-2"> ECTS: {modul.ects}</p>
-                      <Card className="flex grow p-1 space-y-4">
-                        hier dann Course rein droppen pls
-                      </Card>
+                      <ModuleCourseCard module={modul} index={index}/>
+                    </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {formData.courses.map((course, index) => (
+                    <div
+                        key={index}
+                        className={`flex space-x-4 items-end`}
+                    >
+                      <CourseCard course={course} index={index}/>
                     </div>
                 ))}
               </div>
@@ -306,7 +312,7 @@ export default function SemesterStepper() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <Card className="w-full max-w-4xl">
           <CardHeader>
-          <CardTitle>Semester Planner</CardTitle>
+            <CardTitle>Semester Planner</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-8">
@@ -319,7 +325,7 @@ export default function SemesterStepper() {
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center ${index < activeStep
-                      ? 'bg-purple-300 text-white'
+                      ? 'bg-green-300 text-white'
                       : index === activeStep
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-gray-300 text-gray-500'
@@ -333,7 +339,7 @@ export default function SemesterStepper() {
                   </div>
                   {index !== steps.length - 1 && (
                     <div
-                      className={`flex-1 h-1 ${index < activeStep ? 'bg-purple-300' : 'bg-gray-300'
+                      className={`flex-1 h-1 ${index < activeStep ? 'bg-green-300' : 'bg-gray-300'
                         }`}
                     />
                   )}
@@ -365,4 +371,88 @@ export default function SemesterStepper() {
       </Card>
     </div>
   )
+}
+
+function ModuleCard({ module, index }: { module: { name: string, ects: number }, index: Number }) {
+  return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <Input
+                placeholder="Module Name"
+                id={`module-name-${index}`}
+                value={module.name}
+                onChange={(e) => handleModuleChange(index, 'name', e.target.value)}
+            />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <GraduationCapIcon className="mr-2 h-4 w-4 opacity-70"/>
+              <span className="text-sm text-muted-foreground">
+                {module.ects} ECTS
+              </span>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <Button
+                  size="icon"
+                  onClick={() => handleRemoveModule(index)}
+              >
+                <Trash2Icon className="h-4 w-4"/>
+                <span className="sr-only">Remove module</span>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+);
+}
+
+
+function ModuleCourseCard({ module, index }: { module: { name: string, ects: number }, index: Number }) {
+  return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>{module.name}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+
+            <div className="flex items-center">
+              <GraduationCapIcon className="mr-2 h-4 w-4 opacity-70"/>
+              <span className="text-sm text-muted-foreground">
+                {module.ects} ECTS
+              </span>
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm text-muted-foreground">
+                <Input placeholder="dann so rein droppen <3"/>
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+  );
+}
+
+function CourseCard({ course, index }: { course: { name: string, ects: number }, index: Number }) {
+  return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>{course.name}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+
+          </div>
+        </CardContent>
+      </Card>
+  );
 }
