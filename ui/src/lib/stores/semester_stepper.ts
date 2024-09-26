@@ -21,8 +21,10 @@ type Actions = {
     lastStep: () => void
     addModule: (x: Module) => void
     removeModule: (x: Module) => void
+    updateModule: (index: number, x: Module) => void
     addCourse: (x: Course) => void
     removeCourse: (x: Course) => void
+    updateCourse: (index: number, x: Course) => void
     setSemester: (x: number) => void
     setStartDate: (x: Date | undefined) => void
     setEndDate: (x: Date | undefined) => void
@@ -46,6 +48,9 @@ export const useSemesterStepper = create<State & Actions>()(
         }, {
             id: (Math.random() + 1).toString(36).substring(7),
             name: "second"
+        }, {
+            id: (Math.random() + 1).toString(36).substring(7),
+            name: "third"
         }],
         calendarLink: '',
         useExistingLink: false,
@@ -75,11 +80,17 @@ export const useSemesterStepper = create<State & Actions>()(
         removeModule: (x: Module) => set((state) => {
             state.modules.splice(state.modules.indexOf(x), 1)
         }),
+        updateModule: (index: number, x: Module) => set((state) => {
+            state.modules[index] = x
+        }),
         addCourse: (x: Course) => set((state) => {
             state.courses.push(x)
         }),
         removeCourse: (x: Course) => set((state) => {
             state.courses.splice(state.courses.indexOf(x), 1)
+        }),
+        updateCourse: (index: number, x: Course) => set((state) => {
+            state.courses[index] = x
         }),
         setStartDate: (x: Date | undefined) => set((state) => {
             state.startDate = x

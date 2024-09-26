@@ -18,6 +18,7 @@ import {
 } from "@hello-pangea/dnd";
 import {Course} from "@/graphql/graphql.ts";
 import * as Module from "node:module";
+import {undefined} from "zod";
 
 export default function SemesterStepper() {
     const formData = useSemesterStepper()
@@ -210,7 +211,7 @@ export default function SemesterStepper() {
                                                 {(provided: DroppableProvided, snapshot) => (
                                                     <div
                                                         ref={provided.innerRef}
-                                                        className={`bg-gray-200 p-4 w-64 rounded-lg ${snapshot.isDraggingOver ? 'bg-blue-100' : ''}`}
+                                                        className={`border shadow-sm p-4 w-62 rounded-md ${snapshot.isDraggingOver ? 'bg-gray-100' : ''}`}
                                                         {...provided.droppableProps}
                                                     >
                                                         <h2 className="text-lg font-bold mb-2">{modul.name}</h2>
@@ -222,7 +223,7 @@ export default function SemesterStepper() {
                                                                         ref={provided.innerRef}
                                                                         {...provided.draggableProps}
                                                                         {...provided.dragHandleProps}
-                                                                        className={`p-2 mb-2 bg-white rounded shadow ${snapshot.isDragging ? 'bg-green-200' : ''}`}
+                                                                        className={`p-2 mb-2 bg-blue rounded shadow-lg ${snapshot.isDragging ? 'bg-green-200' : ''}`}
                                                                     >
                                                                         <h3 className="font-semibold">{item.name}</h3>
 
@@ -237,12 +238,12 @@ export default function SemesterStepper() {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <div className="flex grow">
                                     <Droppable droppableId="courses_overview">
                                         {(provided: DroppableProvided, snapshot) => (
                                             <div
                                                 ref={provided.innerRef}
-                                                className={`bg-gray-200 p-4 w-64 rounded-lg ${snapshot.isDraggingOver ? 'bg-blue-100' : ''}`}
+                                                className={`border shadow-sm p-4 w-full rounded-lg ${snapshot.isDraggingOver ? 'bg-gray-100' : ''}`}
                                                 {...provided.droppableProps}
                                             >
                                                 <h2 className="text-lg font-bold mb-2">Courses</h2>
@@ -256,7 +257,7 @@ export default function SemesterStepper() {
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
-                                                                className={`p-2 mb-2 bg-white rounded shadow ${snapshot.isDragging ? 'bg-green-200' : ''}`}
+                                                                className={`p-2 mb-2 bg-white rounded shadow w-32 ${snapshot.isDragging ? 'bg-green-200' : ''}`}
                                                             >
                                                                 <h3 className="font-semibold">{course.name}</h3>
 
@@ -352,6 +353,7 @@ export default function SemesterStepper() {
 }
 
 function ModuleCard({module, index}: { module: { name: string, ects: number }, index: Number }) {
+    const formData = useSemesterStepper()
     return (
         <Card className="w-full">
             <CardHeader>
@@ -360,7 +362,14 @@ function ModuleCard({module, index}: { module: { name: string, ects: number }, i
                         placeholder="Module Name"
                         id={`module-name-${index}`}
                         value={module.name}
-                        onChange={(e) => handleModuleChange(index, 'name', e.target.value)}
+                        onChange={(e) => formData.updateModule(index, {
+                            courses: [],
+                            ects: 0,
+                            endSemester: "",
+                            id: "",
+                            name: e.target.value,
+                            startSemester: ""
+                        })}
                     />
                 </CardTitle>
             </CardHeader>
