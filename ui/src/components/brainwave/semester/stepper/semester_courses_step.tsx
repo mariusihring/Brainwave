@@ -69,7 +69,7 @@ export default function SemesterCourseStep() {
                       {...provided.droppableProps}
                     >
                       <h2 className="text-lg font-bold mb-2">{modul.name}</h2>
-                      {formData.modules.find(m => m.id === modul.id)?.courses.map((item, index) => (
+                      {formData.modules.find(m => m.id === modul.id)?.courses?.map((item, index) => (
                         <Draggable key={item.id} draggableId={item.id}
                           index={index}>
                           {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (

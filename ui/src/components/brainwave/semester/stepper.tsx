@@ -16,93 +16,11 @@ import SemesterReviewStep from './stepper/semester_review_step'
 
 
 
-const CALENDAR_LINK_QUERY = graphql(`
-  query getCalendarLink {
-    calendarLink
-  }
-`)
 
-const SAVE_CALENDAR_LINK_MUTATION = graphql(`
-  mutation SaveCalendarLink($link: String!) {
-    upsertCalendarLink(calendarLink: $link) {
-      id
-    }
-  }
-`)
-
-const PROCESS_CALENDAR_MUTATION = graphql(`
-  mutation ProcessCalendar {
-    processSemesterCalendar {
-      name
-      weekday
-      startTime
-      endTime
-      location
-    }
-  }
-`)
 
 
 export default function SemesterStepper() {
     const formData = useSemesterStepper()
-    const [selectedAppointments, setSelectedAppointments] = useState<RecurringAppointment[]>([])
-    const [searchTerm, setSearchTerm] = useState("")
-    const [appointments, setAppointments] = useState<RecurringAppointment[]>([])
-    const [calendarLink, setCalendarLink] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
-    const [progress, setProgress] = useState(0)
-    const [isOpen, setIsOpen] = useState(false)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-    const { data: LinkData, refetch: RefetchLink } = useQuery({
-        queryKey: ['calendarLink'],
-        queryFn: () => execute(CALENDAR_LINK_QUERY)
-    })
-    const saveLinkMutation = useMutation({
-        mutationKey: ["saveCalendarLink"],
-        mutationFn: (link: string) => execute(SAVE_CALENDAR_LINK_MUTATION, { link }),
-    })
-
-    const appointmentsMutation = useMutation({
-        mutationKey: ['processCalendar'],
-        mutationFn: () => execute(PROCESS_CALENDAR_MUTATION),
-        onSuccess: (data) => {
-            setAppointments(data.processSemesterCalendar), setIsLoading(false)
-            setProgress(100)
-            setErrorMessage(null)
-        },
-        onError: (error) => {
-            setIsLoading(false)
-            setProgress(0)
-            setErrorMessage(error.message || "help error")
-        }
-    })
-
-    const filteredAppointments = appointments.filter((appointment) =>
-        appointment.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-
-    const handleImport = () => {
-        console.log("Selected appointments:", selectedAppointments)
-        // Here you can call your mutation or perform any other action with the selected appointments
-    }
-
-    // const mutation = useMutation({
-    //   //   mutationKey: ["create_semester"],
-    //   //   mutationFn: () =>
-    //   //       execute(CREATE_SEMESTER_MUTATION, {
-    //   //         input: {
-    //   //           semester: parseInt(formData.semester,10) || 1,
-    //   //           endDate: formData.endDate.toISOString().split('T')[0],
-    //   //           startDate: formData.startDate.toISOString().split('T')[0],
-    //   //           totalEcts: 0,
-    //   //         },
-    //   //       }),
-    //   //   onSuccess: () => {
-    //   //     queryClient.refetchQueries({ queryKey: ["semesters"] });
-    //   //   },
-    //   // });
-
 
     const renderStepContent = () => {
         switch (formData.steps[formData.activeStep].id) {

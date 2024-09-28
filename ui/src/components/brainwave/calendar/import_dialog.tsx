@@ -28,17 +28,7 @@ const SAVE_CALENDAR_LINK_MUTATION = graphql(`
   }
 `)
 
-const PROCESS_CALENDAR_MUTATION = graphql(`
-  mutation ProcessCalendar {
-    processSemesterCalendar {
-      name
-      weekday
-      startTime
-      endTime
-      location
-    }
-  }
-`)
+
 
 export default function ImportCalendarAppointmentsDialog() {
   const [selectedAppointments, setSelectedAppointments] = useState<RecurringAppointment[]>([])

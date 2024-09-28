@@ -100,6 +100,11 @@ export type MutationCreateTodoArgs = {
 };
 
 
+export type MutationProcessSemesterCalendarArgs = {
+  semesterId: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateTodoArgs = {
   id: Scalars['String']['input'];
   input: UpdateTodo;
@@ -246,11 +251,6 @@ export type SaveCalendarLinkMutationVariables = Exact<{
 
 export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: string } };
 
-export type ProcessCalendarMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ProcessCalendarMutation = { __typename?: 'Mutation', processSemesterCalendar: Array<{ __typename?: 'RecurringAppointment', name: string, weekday: WeekdayEnum, startTime: any, endTime: any, location: string }> };
-
 export type CreateSemesterMutationVariables = Exact<{
   input: NewSemester;
 }>;
@@ -334,17 +334,6 @@ export const SaveCalendarLinkDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<SaveCalendarLinkMutation, SaveCalendarLinkMutationVariables>;
-export const ProcessCalendarDocument = new TypedDocumentString(`
-    mutation ProcessCalendar {
-  processSemesterCalendar {
-    name
-    weekday
-    startTime
-    endTime
-    location
-  }
-}
-    `) as unknown as TypedDocumentString<ProcessCalendarMutation, ProcessCalendarMutationVariables>;
 export const CreateSemesterDocument = new TypedDocumentString(`
     mutation createSemester($input: NewSemester!) {
   createSemester(input: $input) {

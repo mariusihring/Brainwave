@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { Course, Module } from "@/graphql/graphql.ts";
+import type { Course, Module, RecurringAppointment } from "@/graphql/graphql.ts";
 
 type State = {
     semester: number | undefined;
@@ -13,7 +13,8 @@ type State = {
     useExistingLink: boolean;
     activeStep: number,
     steps: { id: string, title: string }[]
-    maxUsedStep: number
+    maxUsedStep: number,
+    availableCourses: RecurringAppointment[]
 
 };
 
@@ -35,12 +36,14 @@ type Actions = {
     addModuleCourse: (moduleId: string, x: Course, index: number) => void
     removeModuleCourse: (moduleId: string, index: number) => void
     reorderModuleCourses: (moduleId: string, startIndex: number, endIndex: number) => void
+    setAvailableCourses: (x: RecurringAppointment[]) => void
 
 };
 
 export const useSemesterStepper = create<State & Actions>()(
     immer((set) => ({
         semester: undefined,
+        availableCourses: [],
         created_semester_id: undefined,
         startDate: undefined,
         endDate: undefined,
@@ -132,5 +135,8 @@ export const useSemesterStepper = create<State & Actions>()(
                     state.modules[moduleIndex].courses.splice(endIndex, 0, removed);
                 }
             }),
+        setAvailableCourses: (x: RecurringAppointment[]) => set((state) => {
+            state.availableCourses = x
+        })
     }))
 );
