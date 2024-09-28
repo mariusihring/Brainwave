@@ -21,9 +21,9 @@ type Course {
 }
 
 type Module {
-  courses: [Course!]!
+  courses: [Course!]
   ects: Int!
-  endSemester: String!
+  endSemester: String
   grade: Float
   id: String!
   name: String!
@@ -72,7 +72,7 @@ scalar NaiveTime
 
 input NewModule {
   ects: Int!
-  endSemester: String!
+  endSemester: String
   grade: Float
   name: String!
   startSemester: String!

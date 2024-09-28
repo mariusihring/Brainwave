@@ -29,6 +29,7 @@ export default function SemesterDateStep() {
       loading: "Loading...",
       success: (data) => {
         formData.nextStep()
+        formData.setCreatedSemesterId(data.createSemester.id)
         return `Successfully created the ${data.createSemester.semester} Semester`
       },
       error: (err) => {

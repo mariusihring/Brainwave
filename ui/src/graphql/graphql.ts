@@ -65,9 +65,9 @@ export type Course = {
 
 export type Module = {
   __typename?: 'Module';
-  courses: Array<Course>;
+  courses?: Maybe<Array<Course>>;
   ects: Scalars['Int']['output'];
-  endSemester: Scalars['String']['output'];
+  endSemester?: Maybe<Scalars['String']['output']>;
   grade?: Maybe<Scalars['Float']['output']>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -112,7 +112,7 @@ export type MutationUpsertCalendarLinkArgs = {
 
 export type NewModule = {
   ects: Scalars['Int']['input'];
-  endSemester: Scalars['String']['input'];
+  endSemester?: InputMaybe<Scalars['String']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   startSemester: Scalars['String']['input'];
@@ -265,6 +265,13 @@ export type CreateSemesterMutationMutationVariables = Exact<{
 
 export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string, semester: number } };
 
+export type CreateModuleMutationVariables = Exact<{
+  input: NewModule;
+}>;
+
+
+export type CreateModuleMutation = { __typename?: 'Mutation', createModule: { __typename?: 'Module', id: string, ects: number, name: string } };
+
 export type CreateTodoMutationMutationVariables = Exact<{
   input: NewTodo;
 }>;
@@ -298,7 +305,7 @@ export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __t
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester: string }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
+export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester?: string | null }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -353,6 +360,15 @@ export const CreateSemesterMutationDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateSemesterMutationMutation, CreateSemesterMutationMutationVariables>;
+export const CreateModuleDocument = new TypedDocumentString(`
+    mutation CreateModule($input: NewModule!) {
+  createModule(input: $input) {
+    id
+    ects
+    name
+  }
+}
+    `) as unknown as TypedDocumentString<CreateModuleMutation, CreateModuleMutationVariables>;
 export const CreateTodoMutationDocument = new TypedDocumentString(`
     mutation createTodoMutation($input: NewTodo!) {
   createTodo(input: $input) {

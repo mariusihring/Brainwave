@@ -4,6 +4,7 @@ import { Course, Module } from "@/graphql/graphql.ts";
 
 type State = {
     semester: number | undefined;
+    created_semester_id: string | undefined;
     startDate: Date | undefined;
     endDate: Date | undefined;
     modules: Module[];
@@ -17,6 +18,7 @@ type State = {
 };
 
 type Actions = {
+    setCreatedSemesterId: (x: string) => void
     nextStep: () => void
     lastStep: () => void
     addModule: (x: Module) => void
@@ -39,6 +41,7 @@ type Actions = {
 export const useSemesterStepper = create<State & Actions>()(
     immer((set) => ({
         semester: undefined,
+        created_semester_id: undefined,
         startDate: undefined,
         endDate: undefined,
         modules: [],
@@ -63,6 +66,9 @@ export const useSemesterStepper = create<State & Actions>()(
             { id: 'courses', title: 'Courses' },
             { id: 'review', title: 'Review' },
         ],
+        setCreatedSemesterId: (x: string | undefined) => set((state) => {
+            state.created_semester_id = x
+        }),
         setSemester: (x: number) => set((state) => {
             state.semester = x
         }),
