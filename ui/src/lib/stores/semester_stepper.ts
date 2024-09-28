@@ -24,7 +24,7 @@ type Actions = {
     updateModule: (index: number, x: Module) => void
     addCourse: (x: Course) => void
     removeCourse: (x: Course) => void
-    updateCourse: (index: number, x: Course) => void
+    updateCourse: (index: number, field: string, x: Course) => void
     setSemester: (x: number) => void
     setStartDate: (x: Date | undefined) => void
     setEndDate: (x: Date | undefined) => void
@@ -80,8 +80,16 @@ export const useSemesterStepper = create<State & Actions>()(
         removeModule: (x: Module) => set((state) => {
             state.modules.splice(state.modules.indexOf(x), 1)
         }),
-        updateModule: (index: number, x: Module) => set((state) => {
-            state.modules[index] = x
+        updateModule: (index: number, field: string, x: Module) => set((state) => {
+            switch(field){
+                case 'name':
+                    state.modules[index].name = x.name
+                    break;
+                case 'ects':
+                    state.modules[index].ects = x.ects
+                    break;
+            }
+
         }),
         addCourse: (x: Course) => set((state) => {
             state.courses.push(x)

@@ -1,3 +1,12 @@
+type Appointment {
+	id: String!
+	date: NaiveDate!
+	name: String!
+	startTime: NaiveDateTime!
+	endTime: NaiveDateTime!
+	location: String!
+}
+
 
 type Course {
 	id: String!
@@ -24,6 +33,8 @@ type Mutation {
 	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
+	upsertCalendarLink(calendarLink: String): Settings!
+	processSemesterCalendar: [RecurringAppointment!]!
 }
 
 """
@@ -45,6 +56,17 @@ ISO 8601 combined date and time without timezone.
 * `2015-07-01T08:59:60.123`,
 """
 scalar NaiveDateTime
+
+"""
+ISO 8601 time without timezone.
+Allows for the nanosecond precision and optional leap second representation.
+Format: %H:%M:%S%.f
+
+# Examples
+
+* `08:59:60.123`
+"""
+scalar NaiveTime
 
 input NewModule {
 	name: String!
@@ -76,6 +98,16 @@ type Query {
 	semesters: [Semester!]!
 	module(id: String!): Module!
 	modules: [Module!]!
+	calendarLink: String
+	appointments: [Appointment!]!
+}
+
+type RecurringAppointment {
+	name: String!
+	weekday: WeekdayEnum!
+	startTime: NaiveTime!
+	endTime: NaiveTime!
+	location: String!
 }
 
 type Semester {
@@ -84,8 +116,15 @@ type Semester {
 	startDate: NaiveDate!
 	endDate: NaiveDate!
 	totalEcts: Int!
+	importedAppointments: Boolean!
 	modules: [Module!]!
 	courses: [Course!]!
+}
+
+type Settings {
+	id: String!
+	userId: String!
+	calendarLink: String
 }
 
 
@@ -117,6 +156,16 @@ input UpdateTodo {
 	courseId: String
 	todoType: TodoType
 	status: TodoStatus!
+}
+
+enum WeekdayEnum {
+	MONDAY
+	TUESDAY
+	WEDNESDAY
+	THURSDAY
+	FRIDAY
+	SATURDAY
+	SUNDAY
 }
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

@@ -16,21 +16,103 @@ import {
     DroppableProvided,
     DropResult
 } from "@hello-pangea/dnd";
-import {Course} from "@/graphql/graphql.ts";
+import {Course, RecurringAppointment} from "@/graphql/graphql.ts";
 import * as Module from "node:module";
 import {undefined} from "zod";
+import {useQuery, useMutation} from "@tanstack/react-query";
+import { Progress } from "@/components/ui/progress"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
+import {Checkbox} from "@/components/ui/checkbox.tsx";
 
-export default function SemesterStepper() {
-    const formData = useSemesterStepper()
-    const [courses, setCourses] = useState(formData.courses)
-    // semester
-    const CREATE_SEMESTER_MUTATION = graphql(`
+
+const CREATE_SEMESTER_MUTATION = graphql(`
         mutation createSemesterMutation($input: NewSemester!) {
             createSemester(input: $input) {
                 id
             }
         }
     `);
+
+const CALENDAR_LINK_QUERY = graphql(`
+  query getCalendarLink {
+    calendarLink
+  }
+`)
+
+const SAVE_CALENDAR_LINK_MUTATION = graphql(`
+  mutation SaveCalendarLink($link: String!) {
+    upsertCalendarLink(calendarLink: $link) {
+      id
+    }
+  }
+`)
+
+const PROCESS_CALENDAR_MUTATION = graphql(`
+  mutation ProcessCalendar {
+    processSemesterCalendar {
+      name
+      weekday
+      startTime
+      endTime
+      location
+    }
+  }
+`)
+
+
+export default function SemesterStepper() {
+    const formData = useSemesterStepper()
+    const [courses, setCourses] = useState(formData.courses)
+    const [selectedAppointments, setSelectedAppointments] = useState<RecurringAppointment[]>([])
+    const [searchTerm, setSearchTerm] = useState("")
+    const [appointments, setAppointments] = useState<RecurringAppointment[]>([])
+    const [calendarLink, setCalendarLink] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [isOpen, setIsOpen] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+    const {data: LinkData, refetch: RefetchLink} = useQuery({
+        queryKey : ['calendarLink'],
+        queryFn : () => excecute(CALENDAR_LINK_QUERY)
+    })
+
+    const saveLinkMutation = useMutation({
+        mutationKey: ['saveCalendarLink'],
+        mutationFn: (link: string) => excecute(SAVE_CALENDAR_LINK_MUTATION)
+    })
+
+    const appointmentsMutation = useMutation({
+        mutationKey: ['processCalendar'],
+        mutationFn: () => excecute(PROCESS_CALENDAR_MUTATION),
+        onSuccess: (data) => {
+            setAppointments(data.processSemesterCalendar), setIsLoading(false)
+            setProgress(100)
+            setErrorMessage(null)
+        },
+        onError: (error) => {
+            setIsLoading(false)
+            setProgess(0)
+            setErrorMessage(error.message || "help error")
+        }
+    })
+
+    const filteredAppointments = appointments.filter((appointment) =>
+        appointment.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    const handleAppointmentSelect = (appointment: RecurringAppointment) => {
+        setSelectedAppointments((prev) => {
+            if (prev.includes(appointment)) {
+                return prev.filter((a) => a !== appointment)
+            } else {
+                return [...prev, appointment]
+            }
+        })
+    }
+    const handleImport = () => {
+        console.log("Selected appointments:", selectedAppointments)
+        // Here you can call your mutation or perform any other action with the selected appointments
+    }
 
     // const mutation = useMutation({
     //   //   mutationKey: ["create_semester"],
@@ -156,7 +238,7 @@ export default function SemesterStepper() {
                             ))}
                             <Card className="flex items-center justify-center">
                                 <Button className="flex grow h-full" variant="ghost" onClick={() => formData.addModule({
-                                    ects: 12,
+                                    ects: 0,
                                     endSemester: (Math.random() + 1).toString(36).substring(7),
                                     grade: null,
                                     id: (Math.random() + 1).toString(36).substring(7),
@@ -197,6 +279,7 @@ export default function SemesterStepper() {
                             </div>
                         )}
                         <Button onClick={() => alert('Calendar imported!')}>Import Calendar</Button>
+                        <CoursesTable/>
                     </div>
                 )
             case 'courses':
@@ -362,7 +445,7 @@ function ModuleCard({module, index}: { module: { name: string, ects: number }, i
                         placeholder="Module Name"
                         id={`module-name-${index}`}
                         value={module.name}
-                        onChange={(e) => formData.updateModule(index, {
+                        onChange={(e) => formData.updateModule(index, 'name',{
                             courses: [],
                             ects: 0,
                             endSemester: "",
@@ -386,7 +469,7 @@ function ModuleCard({module, index}: { module: { name: string, ects: number }, i
                     <div className="flex justify-end">
                         <Button
                             size="icon"
-                            onClick={() => handleRemoveModule(index)}
+                            onClick={() => formData.removeModule(module)}
                         >
                             <Trash2Icon className="h-4 w-4"/>
                             <span className="sr-only">Remove module</span>
@@ -442,4 +525,44 @@ function CourseCard({course, index}: { course: { name: string, ects: number }, i
             </CardContent>
         </Card>
     );
+}
+
+function CoursesTable() {
+    const [appointments, setAppointments] = useState<RecurringAppointment[]>([])
+    const filteredAppointments = appointments.filter((appointment) =>
+        appointment.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    return(
+        <div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[50px]">Select</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Weekday</TableHead>
+                        <TableHead>Time</TableHead>
+                        <TableHead>Location</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {filteredAppointments.map((appointment, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <Checkbox
+                                    checked={selectedAppointments.includes(appointment)}
+                                    onCheckedChange={() => handleAppointmentSelect(appointment)}
+                                />
+                            </TableCell>
+                            <TableCell>{appointment.name}</TableCell>
+                            <TableCell>{appointment.weekday}</TableCell>
+                            <TableCell>
+                                {appointment.startTime} - {appointment.endTime}
+                            </TableCell>
+                            <TableCell>{appointment.location}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
+    )
 }
