@@ -251,12 +251,19 @@ export type ProcessCalendarMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type ProcessCalendarMutation = { __typename?: 'Mutation', processSemesterCalendar: Array<{ __typename?: 'RecurringAppointment', name: string, weekday: WeekdayEnum, startTime: any, endTime: any, location: string }> };
 
+export type CreateSemesterMutationVariables = Exact<{
+  input: NewSemester;
+}>;
+
+
+export type CreateSemesterMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
+
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
 }>;
 
 
-export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
+export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string, semester: number } };
 
 export type CreateTodoMutationMutationVariables = Exact<{
   input: NewTodo;
@@ -331,10 +338,18 @@ export const ProcessCalendarDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<ProcessCalendarMutation, ProcessCalendarMutationVariables>;
+export const CreateSemesterDocument = new TypedDocumentString(`
+    mutation createSemester($input: NewSemester!) {
+  createSemester(input: $input) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateSemesterMutation, CreateSemesterMutationVariables>;
 export const CreateSemesterMutationDocument = new TypedDocumentString(`
     mutation createSemesterMutation($input: NewSemester!) {
   createSemester(input: $input) {
     id
+    semester
   }
 }
     `) as unknown as TypedDocumentString<CreateSemesterMutationMutation, CreateSemesterMutationMutationVariables>;

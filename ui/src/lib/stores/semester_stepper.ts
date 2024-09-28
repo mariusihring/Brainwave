@@ -1,9 +1,9 @@
-import {create} from "zustand";
-import {immer} from "zustand/middleware/immer";
-import {Course, Module} from "@/graphql/graphql.ts";
+import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
+import { Course, Module } from "@/graphql/graphql.ts";
 
 type State = {
-    semester: number;
+    semester: number | undefined;
     startDate: Date | undefined;
     endDate: Date | undefined;
     modules: Module[];
@@ -38,7 +38,7 @@ type Actions = {
 
 export const useSemesterStepper = create<State & Actions>()(
     immer((set) => ({
-        semester: 1,
+        semester: undefined,
         startDate: undefined,
         endDate: undefined,
         modules: [],
@@ -57,11 +57,11 @@ export const useSemesterStepper = create<State & Actions>()(
         activeStep: 0,
         maxUsedStep: 0,
         steps: [
-            {id: 'semester', title: 'Semester'},
-            {id: 'modules', title: 'Modules'},
-            {id: 'calendar', title: 'Calendar'},
-            {id: 'courses', title: 'Courses'},
-            {id: 'review', title: 'Review'},
+            { id: 'semester', title: 'Semester' },
+            { id: 'modules', title: 'Modules' },
+            { id: 'calendar', title: 'Calendar' },
+            { id: 'courses', title: 'Courses' },
+            { id: 'review', title: 'Review' },
         ],
         setSemester: (x: number) => set((state) => {
             state.semester = x
@@ -81,7 +81,7 @@ export const useSemesterStepper = create<State & Actions>()(
             state.modules.splice(state.modules.indexOf(x), 1)
         }),
         updateModule: (index: number, field: string, x: Module) => set((state) => {
-            switch(field){
+            switch (field) {
                 case 'name':
                     state.modules[index].name = x.name
                     break;
