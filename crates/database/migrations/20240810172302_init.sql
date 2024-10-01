@@ -65,7 +65,7 @@ CREATE TABLE modules
     ects           INTEGER      NOT NULL,
     grade          FLOAT,
     start_semester TEXT         NOT NULL,
-    end_semester   TEXT         NOT NULL,
+    end_semester   TEXT         ,
     user_id        TEXT         NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id),
     FOREIGN KEY (start_semester) references semester (id),

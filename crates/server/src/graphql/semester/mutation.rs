@@ -16,6 +16,7 @@ impl SemesterMutation {
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
         let id = Uuid::new_v4();
         let semester_hash = format!("{}_{}", user.id.clone(), input.semester.clone());
+        //TODO: when there is allready a semester with the same id so i get a constraint error the return a pretty statusmessage to show in the error toast :)
         sqlx::query_as::<_, Semester>(
             "INSERT INTO semester (id, semester, start_date, end_date, total_ects, user_id, semester_hash) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;"
         )

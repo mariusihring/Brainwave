@@ -62,7 +62,7 @@ async fn setup_app_state() -> AppState {
         .data(db.clone())
         .finish();
 
-    write_schema_to_file(&schema);
+    //write_schema_to_file(&schema);
 
     AppState { db, schema }
 }

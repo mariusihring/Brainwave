@@ -23,12 +23,12 @@ impl CalendarQuery {
         .map(|result| result.map(|settings| settings.calendar_link).flatten())
         .map_err(|err| async_graphql::Error::from(err))
     }
-    pub async fn appointments(&self, ctx: &Context<'_>) -> Vec<Appointment> {
+    pub async fn appointments(&self, ctx: &Context<'_>) -> Result<Vec<Appointment>, sqlx::Error> {
         let user = ctx.data::<DatabaseUser>().unwrap();
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
 
         let appointments: Vec<Appointment> =
-            sqlx::query_as("SELECT * from appointment WHERE user_id = ?;")
+            sqlx::query_as("SELECT * from appointment WHERE user_id = ? AND WHERE ;")
                 .bind(user.id.clone())
                 .fetch_all(db)
                 .await

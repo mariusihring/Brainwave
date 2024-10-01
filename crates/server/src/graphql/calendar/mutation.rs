@@ -73,15 +73,16 @@ impl CalendarMutation {
     pub async fn process_semester_calendar(
         &self,
         ctx: &Context<'_>,
+        semester_id: String
     ) -> Result<Vec<RecurringAppointment>> {
         let db = ctx.data::<Pool<Sqlite>>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
-        let current_date = chrono::Local::now().naive_local().date();
+
         let semesters = fetch_all_semesters(db, &user.id).await?;
 
         let current_semester = semesters.into_iter().find(|semester| {
-            current_date >= semester.start_date && current_date <= semester.end_date
+          semester.id == semester_id
         });
 
         let semester = match current_semester {
@@ -111,7 +112,7 @@ impl CalendarMutation {
 
         insert_appointments(db, user.clone(), &all_appointments).await?;
         update_semester_import_status(db, &semester.id.into()).await?;
-
+        //TODO: das muessen schon courses sein. die die nicht zugeordnet werden werden wieder geloescht
         let recurring_appointments = process_recurring_appointments(all_appointments);
 
         Ok(recurring_appointments)
@@ -370,6 +371,7 @@ fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Recurri
                 .all(|e| e.name == name && !e.name.contains("Klausur"))
             {
                 let new_weekday: WeekdayEnum = weekday.into();
+                // make courses here
                 recurring_appointments.push(RecurringAppointment {
                     name,
                     weekday: new_weekday,
