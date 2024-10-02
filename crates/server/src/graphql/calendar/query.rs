@@ -1,6 +1,5 @@
 use super::CalendarQuery;
 use ::types::calendar::Appointment;
-use ::types::todo::Todo;
 use ::types::{settings::Settings, user::DatabaseUser};
 use async_graphql::*;
 use sqlx::{Pool, Sqlite};
@@ -34,6 +33,6 @@ impl CalendarQuery {
                 .await
                 .map_err(|err| async_graphql::Error::from(err))
                 .unwrap();
-        return appointments;
+        return Ok(appointments);
     }
 }

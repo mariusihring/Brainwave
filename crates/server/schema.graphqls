@@ -36,6 +36,7 @@ type Mutation {
 	createModule(input: NewModule!): Module!
 	upsertCalendarLink(calendarLink: String): Settings!
 	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
+	createCourse(input: NewCourse!): Course!
 }
 
 """
@@ -69,6 +70,13 @@ Format: %H:%M:%S%.f
 """
 scalar NaiveTime
 
+input NewCourse {
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
+
 input NewModule {
 	name: String!
 	ects: Int!
@@ -101,6 +109,7 @@ type Query {
 	modules: [Module!]!
 	calendarLink: String
 	appointments: [Appointment!]!
+	course(id: String!): Course!
 }
 
 type RecurringAppointment {
