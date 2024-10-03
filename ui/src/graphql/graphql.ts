@@ -76,7 +76,9 @@ export type Module = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCourse: Course;
   createModule: Module;
+  createMultipleCourses: Array<Course>;
   createSemester: Semester;
   createTodo: Todo;
   processSemesterCalendar: Array<RecurringAppointment>;
@@ -85,8 +87,18 @@ export type Mutation = {
 };
 
 
+export type MutationCreateCourseArgs = {
+  input: NewCourse;
+};
+
+
 export type MutationCreateModuleArgs = {
   input: NewModule;
+};
+
+
+export type MutationCreateMultipleCoursesArgs = {
+  input: Array<Scalars['String']['input']>;
 };
 
 
@@ -115,6 +127,13 @@ export type MutationUpsertCalendarLinkArgs = {
   calendarLink?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type NewCourse = {
+  academicDepartment?: InputMaybe<Scalars['String']['input']>;
+  grade?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  teacher?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type NewModule = {
   ects: Scalars['Int']['input'];
   endSemester?: InputMaybe<Scalars['String']['input']>;
@@ -141,6 +160,8 @@ export type Query = {
   __typename?: 'Query';
   appointments: Array<Appointment>;
   calendarLink?: Maybe<Scalars['String']['output']>;
+  course: Course;
+  courses: Array<Course>;
   module: Module;
   modules: Array<Module>;
   semester: Semester;
@@ -148,6 +169,11 @@ export type Query = {
   todo: Todo;
   todos: Array<Todo>;
   todosByDate: Array<Todo>;
+};
+
+
+export type QueryCourseArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -258,6 +284,25 @@ export type CreateSemesterMutationVariables = Exact<{
 
 export type CreateSemesterMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
 
+export type GetCoursesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCoursesQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
+
+export type ProcessCalendarMutationVariables = Exact<{
+  input: Scalars['String']['input'];
+}>;
+
+
+export type ProcessCalendarMutation = { __typename?: 'Mutation', processSemesterCalendar: Array<{ __typename?: 'RecurringAppointment', name: string, weekday: WeekdayEnum, startTime: any, endTime: any, location: string }> };
+
+export type CreateCoursesMutationVariables = Exact<{
+  input: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type CreateCoursesMutation = { __typename?: 'Mutation', createMultipleCourses: Array<{ __typename?: 'Course', academicDepartment?: string | null, grade?: number | null, id: string, name: string, teacher?: string | null }> };
+
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
 }>;
@@ -341,6 +386,39 @@ export const CreateSemesterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateSemesterMutation, CreateSemesterMutationVariables>;
+export const GetCoursesDocument = new TypedDocumentString(`
+    query getCourses {
+  courses {
+    id
+    name
+    grade
+    teacher
+    academicDepartment
+  }
+}
+    `) as unknown as TypedDocumentString<GetCoursesQuery, GetCoursesQueryVariables>;
+export const ProcessCalendarDocument = new TypedDocumentString(`
+    mutation ProcessCalendar($input: String!) {
+  processSemesterCalendar(semesterId: $input) {
+    name
+    weekday
+    startTime
+    endTime
+    location
+  }
+}
+    `) as unknown as TypedDocumentString<ProcessCalendarMutation, ProcessCalendarMutationVariables>;
+export const CreateCoursesDocument = new TypedDocumentString(`
+    mutation createCourses($input: [String!]!) {
+  createMultipleCourses(input: $input) {
+    academicDepartment
+    grade
+    id
+    name
+    teacher
+  }
+}
+    `) as unknown as TypedDocumentString<CreateCoursesMutation, CreateCoursesMutationVariables>;
 export const CreateSemesterMutationDocument = new TypedDocumentString(`
     mutation createSemesterMutation($input: NewSemester!) {
   createSemester(input: $input) {

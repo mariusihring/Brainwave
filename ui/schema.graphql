@@ -31,7 +31,9 @@ type Module {
 }
 
 type Mutation {
+  createCourse(input: NewCourse!): Course!
   createModule(input: NewModule!): Module!
+  createMultipleCourses(input: [String!]!): [Course!]!
   createSemester(input: NewSemester!): Semester!
   createTodo(input: NewTodo!): Todo!
   processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
@@ -70,6 +72,13 @@ Format: %H:%M:%S%.f
 """
 scalar NaiveTime
 
+input NewCourse {
+  academicDepartment: String
+  grade: Float
+  name: String!
+  teacher: String
+}
+
 input NewModule {
   ects: Int!
   endSemester: String
@@ -95,6 +104,8 @@ input NewTodo {
 type Query {
   appointments: [Appointment!]!
   calendarLink: String
+  course(id: String!): Course!
+  courses: [Course!]!
   module(id: String!): Module!
   modules: [Module!]!
   semester(semester: Int!): Semester!
