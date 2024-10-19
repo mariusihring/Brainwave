@@ -97,6 +97,7 @@ input NewTodo {
 	dueOn: NaiveDateTime!
 	courseId: String
 	todoType: TodoType
+	notes: String
 }
 
 type Query {
@@ -143,8 +144,10 @@ type Todo {
 	title: String!
 	dueOn: NaiveDateTime!
 	userId: String!
+	courseId: String
 	todoType: TodoType!
 	status: TodoStatus!
+	notes: String
 	course: Course
 }
 
@@ -166,6 +169,7 @@ input UpdateTodo {
 	courseId: String
 	todoType: TodoType
 	status: TodoStatus!
+	notes: String
 }
 
 enum WeekdayEnum {

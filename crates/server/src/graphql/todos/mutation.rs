@@ -13,8 +13,8 @@ impl TodoMutation {
         let db = ctx.data::<Pool<Sqlite>>().unwrap();
         let id = Uuid::new_v4();
         sqlx::query_as::<_, Todo>(
-            "INSERT INTO todos (id, title, due_on, type, course_id, user_id)
-    VALUES (?, ?, ?, ?, ?, ?) RETURNING *;",
+            "INSERT INTO todos (id, title, due_on, type, course_id, user_id, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;",
         )
         .bind(id.to_string())
         .bind(input.title)
@@ -27,6 +27,7 @@ impl TodoMutation {
         )
         .bind(input.course_id)
         .bind(user.id.clone())
+        .bind(input.notes.clone())
         .fetch_one(db)
         .await
         .map_err(|err| async_graphql::Error::from(err))
@@ -37,7 +38,7 @@ impl TodoMutation {
         let db = ctx.data::<Pool<Sqlite>>()?;
 
         sqlx::query_as::<_, Todo>(
-            "UPDATE todos SET due_on = ?,type = ?, course_id = ?, title = ?, status = ?  WHERE id = ? RETURNING *",
+            "UPDATE todos SET due_on = ?,type = ?, course_id = ?, title = ?, status = ?, notes = ?  WHERE id = ? RETURNING *",
         )
             .bind(input.due_on.clone())
             .bind(
@@ -49,6 +50,7 @@ impl TodoMutation {
             .bind(input.course_id.clone())
             .bind(input.title.clone())
             .bind(input.status.clone())
+            .bind(input.notes.clone())
             .bind(id)
             .fetch_one(db)
             .await
