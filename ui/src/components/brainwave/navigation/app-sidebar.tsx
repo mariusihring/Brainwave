@@ -1,22 +1,10 @@
 import * as React from "react";
-import {
-  BookOpen,
-  CalendarIcon,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Pen,
-  Home,
-} from "lucide-react";
+import { Command } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { useUser } from "@/lib/stores/user";
 import { NavMain } from "@/components/brainwave/navigation/nav-main";
-import { NavProjects } from "@/components/brainwave/navigation/nav-projects";
-import { NavSecondary } from "@/components/brainwave/navigation/nav-secondary";
+import NavProjects from "@/components/brainwave/navigation/nav-projects";
 import { NavUser } from "@/components/brainwave/navigation/nav-user";
 import {
   Sidebar,
@@ -32,100 +20,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 
-const data = {
-  navMain: [
-    {
-      title: "Home",
-      url: "/",
-      icon: Home,
-      isGroup: false,
-    },
-    {
-      title: "Calendar",
-      url: "/calendar",
-      icon: CalendarIcon,
-      isGroup: false,
-    },
-    {
-      title: "University",
-      url: "#",
-      icon: BookOpen,
-      isGroup: true,
-      isActive: true,
-      items: [
-        {
-          title: "Semesters",
-          url: "/semester",
-        },
-        {
-          title: "Modules",
-          url: "/modules",
-        },
-        {
-          title: "Courses",
-          url: "/courses",
-        },
-        {
-          title: "Todos",
-          url: "/todos",
-        },
-      ],
-    },
-    {
-      title: "Notes",
-      url: "#",
-      icon: Pen,
-      isGroup: true,
-      isActive: true,
-      items: [
-        {
-          title: "Markdown",
-          url: "#",
-        },
-        {
-          title: "Latex",
-          url: "#",
-        },
-        {
-          title: "Flashcards",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -146,8 +43,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain />
+        {/* <NavProjects /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
         <DatePicker />
       </SidebarContent>

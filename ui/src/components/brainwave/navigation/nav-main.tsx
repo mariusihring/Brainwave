@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
   Collapsible,
@@ -16,24 +16,16 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-type Item = {
-  title: string;
-  url: string;
-  icon: LucideIcon;
-  isActive?: boolean;
-  isGroup: boolean;
-  items?: {
-    title: string;
-    url: string;
-  };
-};
+import { Item, useNavStore } from "@/lib/stores/nav";
 
-export function NavMain({ items }: { items: Item[] }) {
+export function NavMain() {
+  const { navMain } = useNavStore();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {navMain.map((item) => (
           <div key={item.title}>
             {item.isGroup ? (
               <GroupItem item={item} />
@@ -48,10 +40,12 @@ export function NavMain({ items }: { items: Item[] }) {
 }
 
 function NormalItem({ item }: { item: Item }) {
+  const { getIcon } = useNavStore();
+  let Icon = getIcon(item.iconName);
   return (
     <SidebarMenuButton asChild tooltip={item.title}>
       <a href={item.url}>
-        <item.icon />
+        {Icon ? <Icon /> : null}
         <span>{item.title}</span>
       </a>
     </SidebarMenuButton>
@@ -59,12 +53,14 @@ function NormalItem({ item }: { item: Item }) {
 }
 
 function GroupItem({ item }: { item: Item }) {
+  const { getIcon, updateToggleState } = useNavStore();
+  let Icon = getIcon(item.iconName);
   return (
     <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
       <SidebarMenuItem>
         <SidebarMenuButton asChild tooltip={item.title}>
           <a href={item.url}>
-            <item.icon />
+            {Icon ? <Icon /> : null}
             <span>{item.title}</span>
           </a>
         </SidebarMenuButton>
@@ -72,7 +68,7 @@ function GroupItem({ item }: { item: Item }) {
           <>
             <CollapsibleTrigger asChild>
               <SidebarMenuAction className="data-[state=open]:rotate-90">
-                <ChevronRight />
+                <ChevronRight onClick={() => updateToggleState(item)} />
                 <span className="sr-only">Toggle</span>
               </SidebarMenuAction>
             </CollapsibleTrigger>

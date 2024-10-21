@@ -26,6 +26,7 @@ import {
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
+  errorComponent: ({ error }) => <div>{error.message}</div>,
   component: () => {
     const { setUser } = useUser();
     const navigate = useNavigate();
@@ -46,7 +47,7 @@ export const Route = createFileRoute("/_authenticated")({
     }, []);
 
     return (
-      <div className="">
+      <>
         <QuickActions>
           <SidebarProvider>
             <AppSidebar />
@@ -92,7 +93,7 @@ export const Route = createFileRoute("/_authenticated")({
           </SidebarProvider>
         </QuickActions>
         <ReactQueryDevtools />
-      </div>
+      </>
     );
   },
 });
