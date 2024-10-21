@@ -13,12 +13,6 @@ import SemesterCalendarStep from './stepper/semester_calendar_step'
 import SemesterCourseStep from './stepper/semester_courses_step'
 import SemesterReviewStep from './stepper/semester_review_step'
 
-
-
-
-
-
-
 export default function SemesterStepper() {
     const formData = useSemesterStepper()
 

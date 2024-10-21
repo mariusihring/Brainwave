@@ -24,11 +24,12 @@ import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/
 import { Route as AuthenticatedCalendarImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedUniversityIndexImport } from './routes/_authenticated/university/index'
 import { Route as AuthenticatedUniversityModulesImport } from './routes/_authenticated/university/modules'
-import { Route as AuthenticatedUniversityCoursesImport } from './routes/_authenticated/university/courses'
 import { Route as AuthenticatedUniversityTodosIndexImport } from './routes/_authenticated/university/todos/index'
 import { Route as AuthenticatedUniversitySemesterIndexImport } from './routes/_authenticated/university/semester/index'
+import { Route as AuthenticatedUniversityCoursesIndexImport } from './routes/_authenticated/university/courses/index'
 import { Route as AuthenticatedUniversityTodosTodoImport } from './routes/_authenticated/university/todos/$todo'
 import { Route as AuthenticatedUniversitySemesterSemesterImport } from './routes/_authenticated/university/semester/$semester'
+import { Route as AuthenticatedUniversityCoursesCoursesImport } from './routes/_authenticated/university/courses/$courses'
 
 // Create/Update Routes
 
@@ -100,12 +101,6 @@ const AuthenticatedUniversityModulesRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
-const AuthenticatedUniversityCoursesRoute =
-  AuthenticatedUniversityCoursesImport.update({
-    path: '/university/courses',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-
 const AuthenticatedUniversityTodosIndexRoute =
   AuthenticatedUniversityTodosIndexImport.update({
     path: '/university/todos/',
@@ -118,6 +113,12 @@ const AuthenticatedUniversitySemesterIndexRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedUniversityCoursesIndexRoute =
+  AuthenticatedUniversityCoursesIndexImport.update({
+    path: '/university/courses/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedUniversityTodosTodoRoute =
   AuthenticatedUniversityTodosTodoImport.update({
     path: '/university/todos/$todo',
@@ -127,6 +128,12 @@ const AuthenticatedUniversityTodosTodoRoute =
 const AuthenticatedUniversitySemesterSemesterRoute =
   AuthenticatedUniversitySemesterSemesterImport.update({
     path: '/university/semester/$semester',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedUniversityCoursesCoursesRoute =
+  AuthenticatedUniversityCoursesCoursesImport.update({
+    path: '/university/courses/$courses',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -211,13 +218,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/university/courses': {
-      id: '/_authenticated/university/courses'
-      path: '/university/courses'
-      fullPath: '/university/courses'
-      preLoaderRoute: typeof AuthenticatedUniversityCoursesImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/university/modules': {
       id: '/_authenticated/university/modules'
       path: '/university/modules'
@@ -232,6 +232,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUniversityIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/university/courses/$courses': {
+      id: '/_authenticated/university/courses/$courses'
+      path: '/university/courses/$courses'
+      fullPath: '/university/courses/$courses'
+      preLoaderRoute: typeof AuthenticatedUniversityCoursesCoursesImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/university/semester/$semester': {
       id: '/_authenticated/university/semester/$semester'
       path: '/university/semester/$semester'
@@ -244,6 +251,13 @@ declare module '@tanstack/react-router' {
       path: '/university/todos/$todo'
       fullPath: '/university/todos/$todo'
       preLoaderRoute: typeof AuthenticatedUniversityTodosTodoImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/university/courses/': {
+      id: '/_authenticated/university/courses/'
+      path: '/university/courses'
+      fullPath: '/university/courses'
+      preLoaderRoute: typeof AuthenticatedUniversityCoursesIndexImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/university/semester/': {
@@ -275,11 +289,12 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedSwappyRoute,
     AuthenticatedTestRoute,
     AuthenticatedIndexRoute,
-    AuthenticatedUniversityCoursesRoute,
     AuthenticatedUniversityModulesRoute,
     AuthenticatedUniversityIndexRoute,
+    AuthenticatedUniversityCoursesCoursesRoute,
     AuthenticatedUniversitySemesterSemesterRoute,
     AuthenticatedUniversityTodosTodoRoute,
+    AuthenticatedUniversityCoursesIndexRoute,
     AuthenticatedUniversitySemesterIndexRoute,
     AuthenticatedUniversityTodosIndexRoute,
   }),
@@ -311,11 +326,12 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/swappy",
         "/_authenticated/test",
         "/_authenticated/",
-        "/_authenticated/university/courses",
         "/_authenticated/university/modules",
         "/_authenticated/university/",
+        "/_authenticated/university/courses/$courses",
         "/_authenticated/university/semester/$semester",
         "/_authenticated/university/todos/$todo",
+        "/_authenticated/university/courses/",
         "/_authenticated/university/semester/",
         "/_authenticated/university/todos/"
       ]
@@ -358,10 +374,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/university/courses": {
-      "filePath": "_authenticated/university/courses.tsx",
-      "parent": "/_authenticated"
-    },
     "/_authenticated/university/modules": {
       "filePath": "_authenticated/university/modules.tsx",
       "parent": "/_authenticated"
@@ -370,12 +382,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authenticated/university/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/university/courses/$courses": {
+      "filePath": "_authenticated/university/courses/$courses.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/university/semester/$semester": {
       "filePath": "_authenticated/university/semester/$semester.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/university/todos/$todo": {
       "filePath": "_authenticated/university/todos/$todo.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/university/courses/": {
+      "filePath": "_authenticated/university/courses/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/university/semester/": {
