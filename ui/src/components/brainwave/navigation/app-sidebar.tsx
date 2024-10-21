@@ -1,138 +1,104 @@
 import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
-  Bot,
+  Calendar,
   Command,
   Frame,
-  GalleryVerticalEnd,
+  LifeBuoy,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal,
+  Send,
+  Pen,
+  Home,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
+import { useUser } from "@/lib/stores/user";
 import { NavMain } from "@/components/brainwave/navigation/nav-main";
 import { NavProjects } from "@/components/brainwave/navigation/nav-projects";
+import { NavSecondary } from "@/components/brainwave/navigation/nav-secondary";
 import { NavUser } from "@/components/brainwave/navigation/nav-user";
-import { TeamSwitcher } from "@/components/brainwave/navigation/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-// This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Home",
+      url: "/",
+      icon: Home,
+      isGroup: false,
+    },
+    {
+      title: "Calendar",
+      url: "/calendar",
+      icon: Calendar,
+      isGroup: false,
+    },
+    {
+      title: "University",
       url: "#",
-      icon: SquareTerminal,
+      icon: BookOpen,
+      isGroup: true,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Semesters",
+          url: "/semester",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Modules",
+          url: "/modules",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Courses",
+          url: "/courses",
+        },
+        {
+          title: "Todos",
+          url: "/todos",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Notes",
       url: "#",
-      icon: Bot,
+      icon: Pen,
+      isGroup: true,
+      isActive: true,
       items: [
         {
-          title: "Genesis",
+          title: "Markdown",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "Latex",
           url: "#",
         },
         {
-          title: "Quantum",
+          title: "Flashcards",
           url: "#",
         },
       ],
     },
+  ],
+  navSecondary: [
     {
-      title: "Documentation",
+      title: "Support",
       url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      icon: LifeBuoy,
     },
     {
-      title: "Settings",
+      title: "Feedback",
       url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+      icon: Send,
     },
   ],
   projects: [
@@ -155,19 +121,34 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser();
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <Link to="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Brainwave</span>
+                  <span className="truncate text-xs">{user?.username}</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
