@@ -66,7 +66,7 @@ function DatePicker() {
           showOutsideDays={false}
           hideNavigation={true}
           disableNavigation={true}
-          className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[29.5px]"
+          className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[31px]"
         />
       </SidebarGroupContent>
     </SidebarGroup>

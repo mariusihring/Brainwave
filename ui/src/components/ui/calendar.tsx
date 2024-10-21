@@ -44,7 +44,7 @@ function Calendar({
         caption_label: "text-sm font-medium",
         month_grid: "border-collapse space-y-1",
         weekdays: "flex",
-        weekday: "text-muted-foreground w-7 font-normal text-xs",
+        weekday: "text-muted-foreground w-8 font-normal text-xs",
         weeks: "",
         week: "flex mt-2",
         day: "p-0",
@@ -61,7 +61,7 @@ function Calendar({
               variant={"ghost"}
               className={cn(
                 className,
-                "h-6 w-6 p-0 font-normal",
+                "h-8 w-8 p-0 font-normal",
                 modifiers?.today && "bg-accent text-accent-foreground",
                 modifiers?.selected &&
                   "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",

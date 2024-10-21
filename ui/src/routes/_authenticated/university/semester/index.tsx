@@ -67,7 +67,7 @@ function SemesterIndex() {
 		) || null;
 
 	return (
-		<div className="container mx-auto w-full">
+		<div className="w-full">
 			<div className="flex w-full justify-between">
 				<h1 className="text-3xl font-bold mb-8">Semester Overview</h1>
 				<CreateSemesterDialog />
