@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_authenticated/university/courses/')({
 
 function Coursesindex() {
     return(
-        <div className="container mx-auto w-full">
+        <div className="w-full">
             <div className="flex w-full justify-between">
                 <h1 className="text-3xl font-bold mb-8">Courses Overview</h1>
             </div>
