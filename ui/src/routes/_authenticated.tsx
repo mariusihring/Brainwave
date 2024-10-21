@@ -17,13 +17,20 @@ import {
 import QuickActions from "@/components/brainwave/misc/quick_actions.tsx";
 import { useUser } from "@/lib/stores/user";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  Outlet,
+  createFileRoute,
+  useNavigate,
+  useLocation,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
   component: () => {
     const { setUser } = useUser();
     const navigate = useNavigate();
+    const location = useLocation();
+    const crumbs = location.pathname.split("/").filter((val) => val != "");
 
     async function checkAuth() {
       const auth = await useAuth();
@@ -50,15 +57,30 @@ export const Route = createFileRoute("/_authenticated")({
                   <Separator orientation="vertical" className="mr-2 h-4" />
                   <Breadcrumb>
                     <BreadcrumbList>
-                      <BreadcrumbItem className="hidden md:block">
-                        <BreadcrumbLink href="#">
-                          Building Your Application
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                      </BreadcrumbItem>
+                      {crumbs.map((item) => {
+                        if (crumbs.indexOf(item) !== crumbs.length - 1) {
+                          return (
+                            <>
+                              <BreadcrumbItem className="hidden md:block">
+                                <BreadcrumbLink href={`/${item}`}>
+                                  {item[0].toUpperCase() +
+                                    item.substr(1).toLowerCase()}
+                                </BreadcrumbLink>
+                              </BreadcrumbItem>
+                              <BreadcrumbSeparator className="hidden md:block" />
+                            </>
+                          );
+                        } else {
+                          return (
+                            <BreadcrumbItem>
+                              <BreadcrumbPage>
+                                {item[0].toUpperCase() +
+                                  item.substr(1).toLowerCase()}
+                              </BreadcrumbPage>
+                            </BreadcrumbItem>
+                          );
+                        }
+                      })}
                     </BreadcrumbList>
                   </Breadcrumb>
                 </div>

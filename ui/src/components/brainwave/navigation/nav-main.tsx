@@ -33,9 +33,15 @@ export function NavMain({ items }: { items: Item[] }) {
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) =>
-          item.isGroup ? <GroupItem item={item} /> : <NormalItem item={item} />,
-        )}
+        {items.map((item) => (
+          <div key={item.title}>
+            {item.isGroup ? (
+              <GroupItem item={item} />
+            ) : (
+              <NormalItem item={item} />
+            )}
+          </div>
+        ))}
       </SidebarMenu>
     </SidebarGroup>
   );

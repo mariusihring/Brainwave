@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
   BookOpen,
-  Calendar,
+  CalendarIcon,
   Command,
   Frame,
   LifeBuoy,
@@ -22,11 +22,15 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarGroupContent,
 } from "@/components/ui/sidebar";
+import { Calendar } from "@/components/ui/calendar";
+import { useState } from "react";
 
 const data = {
   navMain: [
@@ -39,7 +43,7 @@ const data = {
     {
       title: "Calendar",
       url: "/calendar",
-      icon: Calendar,
+      icon: CalendarIcon,
       isGroup: false,
     },
     {
@@ -144,11 +148,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <DatePicker />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+function DatePicker() {
+  const [date, setDate] = useState<Date>(new Date());
+  return (
+    <SidebarGroup className="px-0 mt-auto">
+      <SidebarGroupContent>
+        <Calendar
+          mode="single"
+          selected={date}
+          showOutsideDays={false}
+          hideNavigation={true}
+          disableNavigation={true}
+          className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[29.5px]"
+        />
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 }
