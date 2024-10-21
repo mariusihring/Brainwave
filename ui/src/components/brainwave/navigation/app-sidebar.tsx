@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
+import BrainwaveLogo from "@/components/brainwave/misc/logo.tsx";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
@@ -32,6 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link to="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
+                  {/*<BrainwaveLogo className="h-8 bg-white" />*/}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Brainwave</span>

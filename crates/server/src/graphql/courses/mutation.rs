@@ -25,4 +25,27 @@ impl CourseMutation {
             academic_department: None,
         })
     }
+
+    pub async fn create_multiple_courses(
+        &self,
+        ctx: &Context<'_>,
+        input: Vec<String>,
+    ) -> Result<Vec<Course>, async_graphql::Error> {
+        let db = ctx.data::<Pool<Sqlite>>()?;
+        let user = ctx.data::<DatabaseUser>()?;
+        let mut response = Vec::new();
+        for course_name in input {
+            let id = Uuid::new_v4();
+            let course: Course = Course {
+                id: id.to_string(),
+                name: course_name,
+                grade: None,
+                teacher: None,
+                academic_department: None,
+            };
+            //TODO: actually insert this in db
+            response.push(course);
+        }
+        Ok(response)
+    }
 }

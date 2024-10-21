@@ -37,6 +37,7 @@ type Mutation {
 	upsertCalendarLink(calendarLink: String): Settings!
 	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
 	createCourse(input: NewCourse!): Course!
+	createMultipleCourses(input: [String!]!): [Course!]!
 }
 
 """
