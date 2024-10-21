@@ -1,8 +1,7 @@
 use async_graphql::{Context, Object};
 use sqlx::{Pool, Sqlite};
-use types::course::{Course, NewCourse};
+use types::course::Course;
 use types::user::DatabaseUser;
-use uuid::Uuid;
 
 use super::CourseQuery;
 

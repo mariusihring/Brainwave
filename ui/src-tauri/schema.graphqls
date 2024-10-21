@@ -25,7 +25,8 @@ type Module {
 	ects: Int!
 	grade: Float
 	startSemester: String!
-	endSemester: String!
+	endSemester: String
+	courses: [Course!]
 }
 
 type Mutation {
@@ -34,7 +35,8 @@ type Mutation {
 	createSemester(input: NewSemester!): Semester!
 	createModule(input: NewModule!): Module!
 	upsertCalendarLink(calendarLink: String): Settings!
-	processSemesterCalendar: [RecurringAppointment!]!
+	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
+	createCourse(input: NewCourse!): Course!
 }
 
 """
@@ -68,12 +70,19 @@ Format: %H:%M:%S%.f
 """
 scalar NaiveTime
 
+input NewCourse {
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
+
 input NewModule {
 	name: String!
 	ects: Int!
 	grade: Float
 	startSemester: String!
-	endSemester: String!
+	endSemester: String
 }
 
 input NewSemester {
@@ -88,6 +97,7 @@ input NewTodo {
 	dueOn: NaiveDateTime!
 	courseId: String
 	todoType: TodoType
+	notes: String
 }
 
 type Query {
@@ -100,6 +110,7 @@ type Query {
 	modules: [Module!]!
 	calendarLink: String
 	appointments: [Appointment!]!
+	course(id: String!): Course!
 }
 
 type RecurringAppointment {
@@ -133,8 +144,10 @@ type Todo {
 	title: String!
 	dueOn: NaiveDateTime!
 	userId: String!
+	courseId: String
 	todoType: TodoType!
 	status: TodoStatus!
+	notes: String
 	course: Course
 }
 
@@ -156,6 +169,7 @@ input UpdateTodo {
 	courseId: String
 	todoType: TodoType
 	status: TodoStatus!
+	notes: String
 }
 
 enum WeekdayEnum {

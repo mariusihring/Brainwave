@@ -17,6 +17,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { Item, useNavStore } from "@/lib/stores/nav";
+import { Link } from "@tanstack/react-router";
 
 export function NavMain() {
   const { navMain } = useNavStore();
@@ -42,12 +43,13 @@ export function NavMain() {
 function NormalItem({ item }: { item: Item }) {
   const { getIcon } = useNavStore();
   let Icon = getIcon(item.iconName);
+
   return (
     <SidebarMenuButton asChild tooltip={item.title}>
-      <a href={item.url}>
+      <Link to={item.url}>
         {Icon ? <Icon /> : null}
         <span>{item.title}</span>
-      </a>
+      </Link>
     </SidebarMenuButton>
   );
 }
@@ -59,10 +61,10 @@ function GroupItem({ item }: { item: Item }) {
     <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
       <SidebarMenuItem>
         <SidebarMenuButton asChild tooltip={item.title}>
-          <a href={item.url}>
+          <Link to={item.url}>
             {Icon ? <Icon /> : null}
             <span>{item.title}</span>
-          </a>
+          </Link>
         </SidebarMenuButton>
         {item.items?.length ? (
           <>
@@ -74,15 +76,17 @@ function GroupItem({ item }: { item: Item }) {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
-                {item.items?.map((subItem) => (
-                  <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild>
-                      <a href={subItem.url}>
-                        <span>{subItem.title}</span>
-                      </a>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))}
+                {item.items?.map((subItem) => {
+                  return (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild>
+                        <Link to={subItem.url}>
+                          <span>{subItem.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  );
+                })}
               </SidebarMenuSub>
             </CollapsibleContent>
           </>
