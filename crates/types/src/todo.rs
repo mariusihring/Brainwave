@@ -15,11 +15,11 @@ pub struct Todo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub user_id: String,
-    #[graphql(skip)]
     pub course_id: Option<String>,
     #[sqlx(rename = "type")]
     pub todo_type: TodoType,
     pub status: TodoStatus,
+    pub notes: Option<String>,
 }
 
 #[derive(InputObject, FromRow)]
@@ -29,6 +29,7 @@ pub struct NewTodo {
     pub course_id: Option<String>,
     #[sqlx(rename = "type")]
     pub todo_type: Option<TodoType>,
+    pub notes: Option<String>,
 }
 #[derive(InputObject, FromRow)]
 pub struct UpdateTodo {
@@ -38,6 +39,7 @@ pub struct UpdateTodo {
     #[sqlx(rename = "type")]
     pub todo_type: Option<TodoType>,
     pub status: TodoStatus,
+    pub notes: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Type, Serialize, Deserialize, Enum, Copy)]

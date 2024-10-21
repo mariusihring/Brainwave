@@ -41,7 +41,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_authenticated/todos/")({
+export const Route = createFileRoute("/_authenticated/university/todos/")({
 	component: () => <TodosIndex />,
 	loader: async ({ context: { queryClient } }) => {
 		queryClient.ensureQueryData(

@@ -9,7 +9,7 @@ import type { Semester } from "@/graphql/graphql.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/semester/")({
+export const Route = createFileRoute("/_authenticated/university/semester/")({
 	component: () => <SemesterIndex />,
 	loader: async ({ context: { queryClient } }) =>
 		queryClient.ensureQueryData(

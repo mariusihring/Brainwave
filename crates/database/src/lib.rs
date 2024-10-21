@@ -6,6 +6,7 @@ pub async fn init(path: &str) -> anyhow::Result<Pool<Sqlite>> {
         .max_connections(10)
         .connect(format!("sqlite://{}", path).as_str())
         .await?;
+    println!("MIGRATING THE DB");
     sqlx::migrate!("./migrations")
         .run(&pool)
         .await
