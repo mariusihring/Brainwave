@@ -52,3 +52,7 @@ export async function signup(username: string, password: string) {
 		return Promise.reject("Username allready used");
 	}
 }
+export async function logout() {
+	Cookies.remove("auth_session")
+	window.location.reload()
+}
