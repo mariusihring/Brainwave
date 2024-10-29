@@ -141,6 +141,10 @@ async fn shutdown(state: AppState) {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn it_works() {}
+    use database::init;
+
+    #[tokio::test]
+    async fn it_works() {
+        let db = init("./test.db").await.unwrap();
+    }
 }

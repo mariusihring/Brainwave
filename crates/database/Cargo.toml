@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sqlx = { workspace = true }
+sea-orm = {workspace = true}
+sea-orm-migration = {workspace = true }
 tokio = { workspace = true }
 chrono = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
+log = {workspace = true}
+migration = {path = "../migration"}

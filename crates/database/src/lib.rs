@@ -1,32 +1,16 @@
-use sqlx::sqlite::SqlitePoolOptions;
-use sqlx::{Pool, Sqlite};
+use sea_orm::ConnectOptions;
+use sea_orm::{Database, DbErr, DatabaseConnection};
 
-pub async fn init(path: &str) -> anyhow::Result<Pool<Sqlite>> {
-    let pool = SqlitePoolOptions::new()
-        .max_connections(10)
-        .connect(format!("sqlite://{}", path).as_str())
-        .await?;
-    println!("MIGRATING THE DB");
-    sqlx::migrate!("./migrations")
-        .run(&pool)
-        .await
-        .expect("failed to migrate");
-    Ok(pool)
+use migration::{Migrator, MigratorTrait};
+
+pub async fn init(path: &str) -> Result<DatabaseConnection, DbErr> {
+    let mut opt = ConnectOptions::new(format!("sqlite://{}?mode=rwc", path).as_str());
+    opt.sqlx_logging(false).sqlx_logging_level(log::LevelFilter::Info);
+
+    let db = Database::connect(opt).await?;
+    Migrator::up(&db, None).await.unwrap();
+    Ok(db)
 }
 
 #[cfg(test)]
-mod tests {
-    use std::fs::File;
-
-    use super::*;
-
-    #[tokio::test]
-    async fn it_works() {
-        File::create("auth.db");
-        let pool = init("").await.expect("failed");
-        sqlx::migrate!("./migrations")
-            .run(&pool)
-            .await
-            .expect("failed to migrate");
-    }
-}
+mod tests {}

@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 serde = { workspace = true}
-sqlx = { workspace = true, features = ["sqlite", "runtime-tokio-native-tls", "chrono", "migrate", "macros", "uuid"] }
 chrono = { workspace = true }
 serde_json = { workspace = true }
 async-graphql = { workspace = true, features = ["chrono"] }
