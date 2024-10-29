@@ -11,18 +11,15 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Semesters::Table)
+                    .table(Settings::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Semesters::Id))
-                    .col(string_uniq(Semesters::SemesterHash).not_null())
-                    .col(integer(Semesters::Semester).not_null())
-                    .col(date(Semesters::StartDate).not_null())
-                    .col(date(Semesters::EndDate).not_null())
-                    .col(string(Semesters::UserId).not_null())
+                    .col(pk_uuid(Settings::Id))
+                    .col(text(Settings::CalendarLink))
+                    .col(string(Settings::UserId))
                     .foreign_key(
                         ForeignKey::create()
-                            .name("FK_Semesters_User")
-                            .from(Semesters::Table, Semesters::UserId)
+                            .name("FK_Settings_User")
+                            .from(Settings::Table, Settings::UserId)
                             .to(Users::Table, Users::Id),
                     )
                     .to_owned(),
@@ -32,19 +29,15 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Semesters::Table).to_owned())
+            .drop_table(Table::drop().table(Settings::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Semesters {
+pub enum Settings {
     Table,
     Id,
-    SemesterHash,
-    Semester,
-    StartDate,
-    EndDate,
-    TotalECTs,
+    CalendarLink,
     UserId,
 }

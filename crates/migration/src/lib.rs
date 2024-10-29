@@ -15,6 +15,8 @@ mod m20241029_123619_create_notebooks_table;
 mod m20241029_123629_create_courses_table;
 mod m20241029_123641_create_session_table;
 mod m20241029_135735_create_semester_table;
+mod m20241029_210413_add_settings_table;
+mod m20241029_210743_add_appointments_table;
 
 pub struct Migrator;
 
@@ -36,6 +38,8 @@ impl MigratorTrait for Migrator {
             Box::new(m20241029_123629_create_courses_table::Migration),
             Box::new(m20241029_123641_create_session_table::Migration),
             Box::new(m20241029_135735_create_semester_table::Migration),
+            Box::new(m20241029_210413_add_settings_table::Migration),
+            Box::new(m20241029_210743_add_appointments_table::Migration),
         ]
     }
 }

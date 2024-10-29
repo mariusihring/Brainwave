@@ -31,6 +31,9 @@ impl MigrationTrait for Migration {
                             .from(Courses::Table, Courses::UserId)
                             .to(Users::Table, Users::Id),
                     )
+                    .col(float_null(Courses::Grade))
+                    .col(string_null(Courses::Teacher))
+                    .col(string_null(Courses::AcademicDepartment))
                     .to_owned(),
             )
             .await
@@ -50,4 +53,7 @@ pub enum Courses {
     Name,
     ModuleId,
     UserId,
+    Grade,
+    Teacher,
+    AcademicDepartment,
 }

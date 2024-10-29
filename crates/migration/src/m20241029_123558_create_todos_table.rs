@@ -42,6 +42,7 @@ impl MigrationTrait for Migration {
                             .default("pending")
                             .not_null(),
                     )
+                    .col(text_null(Todos::Notes))
                     .to_owned(),
             )
             .await
@@ -64,6 +65,7 @@ pub enum Todos {
     CourseId,
     Type,
     Status,
+    Notes,
 }
 
 #[derive(Iden, EnumIter)]

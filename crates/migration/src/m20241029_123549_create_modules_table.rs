@@ -1,6 +1,8 @@
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20241029_123444_create_user_table::Users;
+use crate::{
+    m20241029_123444_create_user_table::Users, m20241029_135735_create_semester_table::Semesters,
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -20,9 +22,24 @@ impl MigrationTrait for Migration {
                     .col(string(Modules::StartSemester).not_null())
                     .col(string_null(Modules::EndSemester))
                     .col(string(Modules::UserId).not_null())
-                    .foreign_key(ForeignKey::create().name("FK_Modules_StartSemester").from(Modules::Table, Modules::StartSemester).to(Semesters::Table, Semesters::Id))
-                    .foreign_key(ForeignKey::create().name("FK_Modules_EndSemester").from(Modules::Table, Modules::EndSemester).to(Semesters::Table, Semesters::Id))
-                    .foreign_key(ForeignKey::create().name("FK_Modules_User").from(Modules::Table, Modules::UserId).to(Users::Table, Users::Id))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("FK_Modules_StartSemester")
+                            .from(Modules::Table, Modules::StartSemester)
+                            .to(Semesters::Table, Semesters::Id),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("FK_Modules_EndSemester")
+                            .from(Modules::Table, Modules::EndSemester)
+                            .to(Semesters::Table, Semesters::Id),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("FK_Modules_User")
+                            .from(Modules::Table, Modules::UserId)
+                            .to(Users::Table, Users::Id),
+                    )
                     .to_owned(),
             )
             .await
@@ -44,5 +61,5 @@ pub enum Modules {
     Grade,
     StartSemester,
     EndSemester,
-    UserId
+    UserId,
 }
