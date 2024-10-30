@@ -10,3 +10,4 @@ node_modules
 *.idea
 .idea/*
 !.idea/compiler.xml
+crates/migration/test.db

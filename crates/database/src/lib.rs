@@ -2,6 +2,7 @@ use sea_orm::ConnectOptions;
 use sea_orm::{Database, DbErr, DatabaseConnection};
 
 use migration::{Migrator, MigratorTrait};
+pub mod models;
 
 pub async fn init(path: &str) -> Result<DatabaseConnection, DbErr> {
     let mut opt = ConnectOptions::new(format!("sqlite://{}?mode=rwc", path).as_str());
