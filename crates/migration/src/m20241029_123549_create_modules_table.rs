@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
@@ -15,7 +16,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Modules::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Modules::Id))
+                    .col(pk_uuid(Modules::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Modules::Name).not_null())
                     .col(integer(Modules::ETCs).not_null())
                     .col(float_null(Modules::Grade))

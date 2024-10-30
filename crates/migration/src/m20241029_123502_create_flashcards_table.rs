@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::m20241029_123629_create_courses_table::Courses;
@@ -15,7 +16,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Flashcards::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Flashcards::Id))
+                    .col(pk_uuid(Flashcards::Id).default(Uuid::new_v4().to_string()))
                     .col(text(Flashcards::Question).not_null())
                     .col(text(Flashcards::Answer).not_null())
                     .col(string(Flashcards::CourseId))

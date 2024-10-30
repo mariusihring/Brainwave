@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
@@ -15,11 +16,11 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Appointments::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Appointments::Id))
-                    .col(date(Appointments::Date).not_null())
+                    .col(pk_uuid(Appointments::Id).default(Uuid::new_v4().to_string()))
+                    .col(date(Appointments::Date).not_null().default(Expr::current_date()))
                     .col(string(Appointments::Title))
-                    .col(date_time(Appointments::StartTime).not_null())
-                    .col(date_time(Appointments::EndTime).not_null())
+                    .col(date_time(Appointments::StartTime).not_null().default(Expr::current_time()))
+                    .col(date_time(Appointments::EndTime).not_null().default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '30 minutes'")))
                     .col(string_null(Appointments::Location))
                     .col(boolean(Appointments::IsCanceled).default(false))
                     .col(string_null(Appointments::CourseId))

@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::m20241029_123444_create_user_table::Users;
@@ -13,8 +14,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Sessions::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Sessions::Id))
-                    .col(date_time(Sessions::ExpiresAt).not_null())
+                    .col(pk_uuid(Sessions::Id).default(Uuid::new_v4().to_string()))
+                    .col(date_time(Sessions::ExpiresAt).default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '1 hour'")))
                     .col(string(Sessions::UserId))
                     .foreign_key(
                         ForeignKey::create()

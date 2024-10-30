@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{m20241029_123444_create_user_table::Users, m20241029_123502_create_flashcards_table::Flashcards};

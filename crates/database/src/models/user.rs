@@ -1,7 +1,8 @@
 use sea_orm::entity::prelude::*;
-use super::_entities::appointments::ActiveModel;
+use super::_entities::users::ActiveModel;
+
 
 impl ActiveModelBehavior for ActiveModel {}
 
 
-//TODO: create Input Model Here
+// Input Type for Graphql

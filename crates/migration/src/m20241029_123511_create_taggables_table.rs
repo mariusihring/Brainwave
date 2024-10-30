@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Taggables::Table)
                     .if_not_exists()
-                    .col(string(Taggables::TagId).not_null())
+                    .col(pk_uuid(Taggables::TagId))
                     .col(string(Taggables::TaggableId).not_null())
                     .col(string(Taggables::TaggableTable).not_null())
                     .col(string(Taggables::UserId).not_null())

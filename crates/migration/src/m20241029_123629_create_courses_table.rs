@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
@@ -15,7 +16,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Courses::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Courses::Id))
+                    .col(pk_uuid(Courses::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Courses::Name).not_null())
                     .col(string(Courses::ModuleId).not_null())
                     .col(string(Courses::UserId).not_null())

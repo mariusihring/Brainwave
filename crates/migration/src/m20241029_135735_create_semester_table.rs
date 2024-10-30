@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::m20241029_123444_create_user_table::Users;
@@ -13,11 +14,11 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Semesters::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Semesters::Id))
+                    .col(pk_uuid(Semesters::Id).default(Uuid::new_v4().to_string()))
                     .col(string_uniq(Semesters::SemesterHash).not_null())
                     .col(integer(Semesters::Semester).not_null())
-                    .col(date(Semesters::StartDate).not_null())
-                    .col(date(Semesters::EndDate).not_null())
+                    .col(date(Semesters::StartDate).not_null().default(Expr::current_date()))
+                    .col(date(Semesters::EndDate).not_null().default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '6 months'")))
                     .col(string(Semesters::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()

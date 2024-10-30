@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -11,7 +12,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Users::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Users::Id))
+                    .col(pk_uuid(Users::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Users::FirstName))
                     .col(string(Users::LastName))
                     .col(text_null(Users::Image))

@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm::{EnumIter, Iterable};
 use sea_orm_migration::{prelude::*, schema::*};
 
@@ -15,9 +16,9 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Todos::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Todos::Id))
+                    .col(pk_uuid(Todos::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Todos::Title).not_null())
-                    .col(date_time(Todos::DueOn).not_null())
+                    .col(date_time(Todos::DueOn).not_null().default(Expr::current_timestamp()))
                     .col(string(Todos::UserId).not_null())
                     .col(string_null(Todos::CourseId))
                     .foreign_key(
@@ -29,7 +30,7 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Todos_Course")
-                            .from(Todos::Table, Todos::UserId)
+                            .from(Todos::Table, Todos::CourseId)
                             .to(Courses::Table, Courses::Id),
                     )
                     .col(

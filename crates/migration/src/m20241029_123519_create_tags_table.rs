@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::m20241029_123444_create_user_table::Users;
@@ -13,7 +14,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Tags::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Tags::Id))
+                    .col(pk_uuid(Tags::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Tags::Name).not_null())
                     .col(string(Tags::Color))
                     .col(string(Tags::UserId).not_null())

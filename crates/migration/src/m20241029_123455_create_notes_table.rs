@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use super::m20241029_123444_create_user_table::Users;
@@ -14,7 +15,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Notes::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Notes::Id))
+                    .col(pk_uuid(Notes::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Notes::Title).not_null())
                     .col(text(Notes::Content))
                     .col(string(Notes::NotebookId))
