@@ -1,6 +1,6 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
-
+use chrono::{Utc, Duration};
 use crate::{
     m20241029_123444_create_user_table::Users, m20241029_123629_create_courses_table::Courses,
 };
@@ -11,6 +11,8 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+
+        let end_date = Utc::now() + Duration::days(180);
         manager
             .create_table(
                 Table::create()
@@ -20,7 +22,7 @@ impl MigrationTrait for Migration {
                     .col(date(Appointments::Date).not_null().default(Expr::current_date()))
                     .col(string(Appointments::Title))
                     .col(date_time(Appointments::StartTime).not_null().default(Expr::current_time()))
-                    .col(date_time(Appointments::EndTime).not_null().default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '30 minutes'")))
+                    .col(date_time(Appointments::EndTime).not_null().default(end_date))
                     .col(string_null(Appointments::Location))
                     .col(boolean(Appointments::IsCanceled).default(false))
                     .col(string_null(Appointments::CourseId))

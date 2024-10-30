@@ -1,3 +1,4 @@
+use chrono::{Utc, Duration};
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
@@ -9,13 +10,15 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+
+        let expires_at = Utc::now() + Duration::hours(1);
         manager
             .create_table(
                 Table::create()
                     .table(Sessions::Table)
                     .if_not_exists()
                     .col(pk_uuid(Sessions::Id).default(Uuid::new_v4().to_string()))
-                    .col(date_time(Sessions::ExpiresAt).default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '1 hour'")))
+                    .col(date_time(Sessions::ExpiresAt).default(expires_at))
                     .col(string(Sessions::UserId))
                     .foreign_key(
                         ForeignKey::create()

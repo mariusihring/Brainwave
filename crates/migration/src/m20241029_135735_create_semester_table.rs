@@ -1,5 +1,6 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
+use chrono::{Utc, Duration};
 
 use crate::m20241029_123444_create_user_table::Users;
 
@@ -9,6 +10,7 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let end_date = Utc::now() + Duration::days(180);
         manager
             .create_table(
                 Table::create()
@@ -18,7 +20,7 @@ impl MigrationTrait for Migration {
                     .col(string_uniq(Semesters::SemesterHash).not_null())
                     .col(integer(Semesters::Semester).not_null())
                     .col(date(Semesters::StartDate).not_null().default(Expr::current_date()))
-                    .col(date(Semesters::EndDate).not_null().default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '6 months'")))
+                    .col(date(Semesters::EndDate).not_null().default(end_date))
                     .col(string(Semesters::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()

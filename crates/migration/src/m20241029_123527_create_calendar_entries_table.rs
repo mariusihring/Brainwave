@@ -1,4 +1,5 @@
-use sea_orm::prelude::Uuid;
+use sea_orm::{prelude::Uuid};
+use chrono::{Utc, Duration};
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::m20241029_123444_create_user_table::Users;
@@ -9,6 +10,8 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+
+        let end_date = Utc::now() + Duration::hours(1);
         manager
             .create_table(
                 Table::create()
@@ -19,7 +22,7 @@ impl MigrationTrait for Migration {
                     .col(string(CalendarEntries::Location))
                     .col(text(CalendarEntries::Details))
                     .col(date_time(CalendarEntries::StartDate).default(Expr::current_timestamp()).not_null())
-                    .col(date_time(CalendarEntries::EndDate).default(Expr::cust("CURRENT_TIMESTAMP + INTERVAL '1 hour'")).not_null())
+                    .col(date_time(CalendarEntries::EndDate).default(end_date).not_null())
                     .col(string(CalendarEntries::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
