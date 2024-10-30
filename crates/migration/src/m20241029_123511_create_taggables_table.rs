@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{m20241029_123444_create_user_table::Users, m20241029_123519_create_tags_table::Tags};
@@ -13,7 +14,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Taggables::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Taggables::TagId))
+                    .col(pk_uuid(Taggables::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Taggables::TagId))
                     .col(string(Taggables::TaggableId).not_null())
                     .col(string(Taggables::TaggableTable).not_null())
                     .col(string(Taggables::UserId).not_null())
@@ -44,6 +46,7 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 enum Taggables {
     Table,
+    Id,
     TagId,
     TaggableId,
     TaggableTable,

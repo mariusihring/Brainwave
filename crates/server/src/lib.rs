@@ -142,9 +142,13 @@ async fn shutdown(state: AppState) {
 #[cfg(test)]
 mod tests {
     use database::init;
+    use database::models::_entities::users::Entity as User;
+    use sea_orm::entity::base_entity::EntityTrait;
 
     #[tokio::test]
     async fn it_works() {
-        let db = init("./test.db").await.unwrap();
+        let db = init("./../../migration/test.db").await.unwrap();
+        let user: Option<database::models::_entities::users::Model> = User::find_by_id(1).one(db).await.unwrap();
+        println!("{:?}", user);
     }
 }

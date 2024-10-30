@@ -1,8 +1,7 @@
 use crate::course::Course;
 use async_graphql::{ComplexObject, Context, InputObject, SimpleObject};
-use sqlx::prelude::FromRow;
 
-#[derive(SimpleObject, FromRow, Debug)]
+#[derive(SimpleObject,  Debug)]
 #[graphql(complex)]
 pub struct Module {
     pub id: String,

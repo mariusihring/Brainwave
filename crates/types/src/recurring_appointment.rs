@@ -1,7 +1,6 @@
 use async_graphql::*;
 use chrono::{NaiveTime, Weekday};
 use serde::{Deserialize, Serialize};
-use sqlx::prelude::FromRow;
 
 #[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq, Eq, Enum)]
 pub enum WeekdayEnum {
@@ -41,7 +40,7 @@ impl From<Weekday> for WeekdayEnum {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, FromRow, SimpleObject)]
+#[derive(Debug, Clone, Serialize, Deserialize,  SimpleObject)]
 pub struct RecurringAppointment {
     pub name: String,
     pub weekday: WeekdayEnum,

@@ -5,7 +5,8 @@ use sea_orm::entity::prelude::*;
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
 #[sea_orm(table_name = "taggables")]
 pub struct Model {
-    pub tag_id: String,
+    #[sea_orm(primary_key, auto_increment = false)]
+    pub tag_id: Uuid,
     pub taggable_id: String,
     pub taggable_table: String,
     pub user_id: String,

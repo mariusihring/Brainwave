@@ -14,6 +14,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(FlashcardReferences::Table)
                     .if_not_exists()
+                    .col(pk_uuid(FlashcardReferences::Id).default(Uuid::new_v4().to_string()))
                     .col(string(FlashcardReferences::FlashCardId).not_null())
                     .col(string(FlashcardReferences::ReferenceId).not_null())
                     .col(string(FlashcardReferences::ReferenceTable).not_null())
@@ -45,6 +46,7 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 pub enum FlashcardReferences {
     Table,
+    Id,
     FlashCardId,
     ReferenceId,
     ReferenceTable,

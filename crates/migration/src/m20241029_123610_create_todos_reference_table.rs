@@ -1,3 +1,4 @@
+use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
@@ -15,6 +16,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(TodosReference::Table)
                     .if_not_exists()
+                    .col(pk_uuid(TodosReference::Id).default(Uuid::new_v4().to_string()))
                     .col(string(TodosReference::TodoId).not_null())
                     .col(string(TodosReference::ReferenceId).not_null())
                     .col(string(TodosReference::ReferenceTable).not_null())
@@ -46,6 +48,7 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 pub enum TodosReference {
     Table,
+    Id,
     TodoId,
     ReferenceId,
     ReferenceTable,
