@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 tokio = { workspace = true }
 axum = { workspace = true, features = ["macros"] }
+sea-orm = {workspace = true}
 serde = { workspace = true }
 database = { path = "../database" }
 tracing-subscriber = { workspace = true, features = ["env-filter"] }

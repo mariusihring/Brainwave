@@ -4396,6 +4396,7 @@ dependencies = [
  "regex",
  "reqwest",
  "scraper",
+ "sea-orm",
  "serde",
  "serde_json",
  "tokio",
