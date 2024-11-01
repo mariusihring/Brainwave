@@ -2,7 +2,7 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql :: Object)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql :: SimpleObject)]
 #[sea_orm(table_name = "module")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]

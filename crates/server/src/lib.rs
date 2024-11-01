@@ -16,6 +16,7 @@ use tower_http::cors::{Any, CorsLayer};
 mod auth;
 mod dir;
 mod graphql;
+mod models;
 mod routers;
 mod state;
 

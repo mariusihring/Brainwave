@@ -2,13 +2,13 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, async_graphql :: Object)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, async_graphql :: SimpleObject)]
 #[sea_orm(table_name = "settings")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
-    #[sea_orm(column_type = "Text")]
-    pub calendar_link: String,
+    #[sea_orm(column_type = "Text", nullable)]
+    pub calendar_link: Option<String>,
     pub user_id: String,
 }
 
