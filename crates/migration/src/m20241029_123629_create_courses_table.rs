@@ -2,7 +2,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
-    m20241029_123444_create_user_table::Users, m20241029_123549_create_modules_table::Modules,
+    m20241029_123444_create_user_table::User, m20241029_123549_create_modules_table::Module,
 };
 
 #[derive(DeriveMigrationName)]
@@ -14,27 +14,27 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Courses::Table)
+                    .table(Course::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Courses::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Courses::Name).not_null())
-                    .col(string(Courses::ModuleId).not_null())
-                    .col(string(Courses::UserId).not_null())
+                    .col(pk_uuid(Course::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Course::Name).not_null())
+                    .col(string(Course::ModuleId).not_null())
+                    .col(string(Course::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Courses_Module")
-                            .from(Courses::Table, Courses::ModuleId)
-                            .to(Modules::Table, Modules::Id),
+                            .from(Course::Table, Course::ModuleId)
+                            .to(Module::Table, Module::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Courses_User")
-                            .from(Courses::Table, Courses::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(Course::Table, Course::UserId)
+                            .to(User::Table, User::Id),
                     )
-                    .col(float_null(Courses::Grade))
-                    .col(string_null(Courses::Teacher))
-                    .col(string_null(Courses::AcademicDepartment))
+                    .col(float_null(Course::Grade))
+                    .col(string_null(Course::Teacher))
+                    .col(string_null(Course::AcademicDepartment))
                     .to_owned(),
             )
             .await
@@ -42,13 +42,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Courses::Table).to_owned())
+            .drop_table(Table::drop().table(Course::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Courses {
+pub enum Course {
     Table,
     Id,
     Name,

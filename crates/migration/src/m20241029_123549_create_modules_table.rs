@@ -2,7 +2,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
-    m20241029_123444_create_user_table::Users, m20241029_135735_create_semester_table::Semesters,
+    m20241029_123444_create_user_table::User, m20241029_135735_create_semester_table::Semester,
 };
 
 #[derive(DeriveMigrationName)]
@@ -14,32 +14,32 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Modules::Table)
+                    .table(Module::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Modules::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Modules::Name).not_null())
-                    .col(integer(Modules::ETCs).not_null())
-                    .col(float_null(Modules::Grade))
-                    .col(string(Modules::StartSemester).not_null())
-                    .col(string_null(Modules::EndSemester))
-                    .col(string(Modules::UserId).not_null())
+                    .col(pk_uuid(Module::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Module::Name).not_null())
+                    .col(integer(Module::ETCs).not_null())
+                    .col(float_null(Module::Grade))
+                    .col(string(Module::StartSemester).not_null())
+                    .col(string_null(Module::EndSemester))
+                    .col(string(Module::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_StartSemester")
-                            .from(Modules::Table, Modules::StartSemester)
-                            .to(Semesters::Table, Semesters::Id),
+                            .from(Module::Table, Module::StartSemester)
+                            .to(Semester::Table, Semester::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_EndSemester")
-                            .from(Modules::Table, Modules::EndSemester)
-                            .to(Semesters::Table, Semesters::Id),
+                            .from(Module::Table, Module::EndSemester)
+                            .to(Semester::Table, Semester::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_User")
-                            .from(Modules::Table, Modules::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(Module::Table, Module::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .to_owned(),
             )
@@ -48,13 +48,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Modules::Table).to_owned())
+            .drop_table(Table::drop().table(Module::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Modules {
+pub enum Module {
     Table,
     Id,
     Name,

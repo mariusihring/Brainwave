@@ -1,6 +1,5 @@
 pub use sea_orm_migration::prelude::*;
 
-
 mod m20241029_123444_create_user_table;
 mod m20241029_123455_create_notes_table;
 mod m20241029_123502_create_flashcards_table;

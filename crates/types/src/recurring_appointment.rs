@@ -40,7 +40,7 @@ impl From<Weekday> for WeekdayEnum {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize,  SimpleObject)]
+#[derive(Debug, Clone, Serialize, Deserialize, SimpleObject)]
 pub struct RecurringAppointment {
     pub name: String,
     pub weekday: WeekdayEnum,

@@ -73,17 +73,16 @@ impl CalendarMutation {
     pub async fn process_semester_calendar(
         &self,
         ctx: &Context<'_>,
-        semester_id: String
+        semester_id: String,
     ) -> Result<Vec<RecurringAppointment>> {
         let db = ctx.data::<Pool<Sqlite>>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
-
         let semesters = fetch_all_semesters(db, &user.id).await?;
 
-        let current_semester = semesters.into_iter().find(|semester| {
-          semester.id == semester_id
-        });
+        let current_semester = semesters
+            .into_iter()
+            .find(|semester| semester.id == semester_id);
 
         let semester = match current_semester {
             Some(semester) => semester,

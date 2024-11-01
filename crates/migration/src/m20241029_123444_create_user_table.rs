@@ -10,34 +10,33 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Users::Table)
+                    .table(User::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Users::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Users::FirstName))
-                    .col(string(Users::LastName))
-                    .col(text_null(Users::Image))
-                    .col(string(Users::Username).not_null())
-                    .col(string(Users::PasswordHash).not_null())
+                    .col(pk_uuid(User::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(User::FirstName))
+                    .col(string(User::LastName))
+                    .col(text_null(User::Image))
+                    .col(string(User::Username).not_null())
+                    .col(string(User::PasswordHash).not_null())
                     .to_owned(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-
         manager
-            .drop_table(Table::drop().table(Users::Table).to_owned())
+            .drop_table(Table::drop().table(User::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Users {
+pub enum User {
     Table,
     Id,
     FirstName,
     LastName,
     Image,
     Username,
-    PasswordHash
+    PasswordHash,
 }

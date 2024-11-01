@@ -2,8 +2,8 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "flashcard_references")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, async_graphql :: Object)]
+#[sea_orm(table_name = "flashcard_reference")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
@@ -16,32 +16,32 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::flashcards::Entity",
+        belongs_to = "super::flashcard::Entity",
         from = "Column::FlashCardId",
-        to = "super::flashcards::Column::Id",
+        to = "super::flashcard::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Flashcards,
+    Flashcard,
     #[sea_orm(
-        belongs_to = "super::users::Entity",
+        belongs_to = "super::user::Entity",
         from = "Column::UserId",
-        to = "super::users::Column::Id",
+        to = "super::user::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Users,
+    User,
 }
 
-impl Related<super::flashcards::Entity> for Entity {
+impl Related<super::flashcard::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Flashcards.def()
+        Relation::Flashcard.def()
     }
 }
 
-impl Related<super::users::Entity> for Entity {
+impl Related<super::user::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Users.def()
+        Relation::User.def()
     }
 }
 

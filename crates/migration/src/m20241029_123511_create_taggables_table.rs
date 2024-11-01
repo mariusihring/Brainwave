@@ -1,7 +1,7 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::{m20241029_123444_create_user_table::Users, m20241029_123519_create_tags_table::Tags};
+use crate::{m20241029_123444_create_user_table::User, m20241029_123519_create_tags_table::Tag};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -12,24 +12,24 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Taggables::Table)
+                    .table(Taggable::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Taggables::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Taggables::TagId))
-                    .col(string(Taggables::TaggableId).not_null())
-                    .col(string(Taggables::TaggableTable).not_null())
-                    .col(string(Taggables::UserId).not_null())
+                    .col(pk_uuid(Taggable::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Taggable::TagId))
+                    .col(string(Taggable::TaggableId).not_null())
+                    .col(string(Taggable::TaggableTable).not_null())
+                    .col(string(Taggable::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Taggables_User")
-                            .from(Taggables::Table, Taggables::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(Taggable::Table, Taggable::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Taggables_Tags")
-                            .from(Taggables::Table, Taggables::TagId)
-                            .to(Tags::Table, Tags::Id),
+                            .from(Taggable::Table, Taggable::TagId)
+                            .to(Tag::Table, Tag::Id),
                     )
                     .to_owned(),
             )
@@ -38,13 +38,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Taggables::Table).to_owned())
+            .drop_table(Table::drop().table(Taggable::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-enum Taggables {
+enum Taggable {
     Table,
     Id,
     TagId,

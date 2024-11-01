@@ -4,7 +4,7 @@ use crate::user::DatabaseUser;
 use async_graphql::{ComplexObject, Context, InputObject, SimpleObject};
 use chrono::NaiveDate;
 
-#[derive(SimpleObject,  Debug)]
+#[derive(SimpleObject, Debug)]
 // #[graphql(complex)]
 pub struct Semester {
     pub id: String,

@@ -2,34 +2,31 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "semesters")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, async_graphql :: Object)]
+#[sea_orm(table_name = "settings")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
-    #[sea_orm(unique)]
-    pub semester_hash: String,
-    pub semester: i32,
-    pub start_date: Date,
-    pub end_date: Date,
+    #[sea_orm(column_type = "Text")]
+    pub calendar_link: String,
     pub user_id: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::users::Entity",
+        belongs_to = "super::user::Entity",
         from = "Column::UserId",
-        to = "super::users::Column::Id",
+        to = "super::user::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Users,
+    User,
 }
 
-impl Related<super::users::Entity> for Entity {
+impl Related<super::user::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Users.def()
+        Relation::User.def()
     }
 }
 

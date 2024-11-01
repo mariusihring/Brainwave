@@ -62,7 +62,7 @@ async fn setup_app_state() -> AppState {
         .data(db.clone())
         .finish();
 
-     write_schema_to_file(&schema);
+    write_schema_to_file(&schema);
 
     AppState { db, schema }
 }
@@ -151,7 +151,11 @@ mod tests {
     #[tokio::test]
     async fn it_works() {
         let db = init("./../../migration/test.db").await.unwrap();
-        let user: Option<database::models::_entities::users::Model> = User::find_by_id(Uuid::from_str("e899acf3-284d-4713-82f8-dbdb1b91c042").unwrap()).one(&db).await.unwrap();
+        let user: Option<database::models::_entities::users::Model> =
+            User::find_by_id(Uuid::from_str("e899acf3-284d-4713-82f8-dbdb1b91c042").unwrap())
+                .one(&db)
+                .await
+                .unwrap();
         println!("{:?}", user);
     }
 }

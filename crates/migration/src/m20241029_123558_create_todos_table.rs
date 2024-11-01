@@ -2,8 +2,8 @@ use sea_orm::prelude::Uuid;
 use sea_orm::{EnumIter, Iterable};
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20241029_123444_create_user_table::Users;
-use crate::m20241029_123629_create_courses_table::Courses;
+use crate::m20241029_123444_create_user_table::User;
+use crate::m20241029_123629_create_courses_table::Course;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -14,36 +14,40 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Todos::Table)
+                    .table(Todo::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Todos::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Todos::Title).not_null())
-                    .col(date_time(Todos::DueOn).not_null().default(Expr::current_timestamp()))
-                    .col(string(Todos::UserId).not_null())
-                    .col(string_null(Todos::CourseId))
+                    .col(pk_uuid(Todo::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Todo::Title).not_null())
+                    .col(
+                        date_time(Todo::DueOn)
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
+                    .col(string(Todo::UserId).not_null())
+                    .col(string_null(Todo::CourseId))
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Todos_User")
-                            .from(Todos::Table, Todos::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(Todo::Table, Todo::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Todos_Course")
-                            .from(Todos::Table, Todos::CourseId)
-                            .to(Courses::Table, Courses::Id),
+                            .from(Todo::Table, Todo::CourseId)
+                            .to(Course::Table, Course::Id),
                     )
                     .col(
-                        enumeration(Todos::Type, Alias::new("type"), TodoType::iter())
+                        enumeration(Todo::Type, Alias::new("type"), TodoType::iter())
                             .default("general")
                             .not_null(),
                     )
                     .col(
-                        enumeration(Todos::Status, Alias::new("status"), TodoStatus::iter())
+                        enumeration(Todo::Status, Alias::new("status"), TodoStatus::iter())
                             .default("pending")
                             .not_null(),
                     )
-                    .col(text_null(Todos::Notes))
+                    .col(text_null(Todo::Notes))
                     .to_owned(),
             )
             .await
@@ -51,13 +55,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Todos::Table).to_owned())
+            .drop_table(Table::drop().table(Todo::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Todos {
+pub enum Todo {
     Table,
     Id,
     Title,

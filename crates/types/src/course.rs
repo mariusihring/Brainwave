@@ -1,6 +1,6 @@
 use async_graphql::{InputObject, SimpleObject};
 
-#[derive(SimpleObject,  Debug)]
+#[derive(SimpleObject, Debug)]
 // #[graphql(complex)]
 //TODO: add module resolver with  complex
 pub struct Course {

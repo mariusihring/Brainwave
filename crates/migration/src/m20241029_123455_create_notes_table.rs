@@ -1,8 +1,8 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use super::m20241029_123444_create_user_table::Users;
-use super::m20241029_123619_create_notebooks_table::Notebooks;
+use super::m20241029_123444_create_user_table::User;
+use super::m20241029_123619_create_notebooks_table::Notebook;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -13,24 +13,24 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Notes::Table)
+                    .table(Note::Table)
                     .if_not_exists()
-                    .col(pk_uuid(Notes::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Notes::Title).not_null())
-                    .col(text(Notes::Content))
-                    .col(string(Notes::NotebookId))
-                    .col(string(Notes::UserId).not_null())
+                    .col(pk_uuid(Note::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(Note::Title).not_null())
+                    .col(text(Note::Content))
+                    .col(string(Note::NotebookId))
+                    .col(string(Note::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Notes_Notebook")
-                            .from(Notes::Table, Notes::NotebookId)
-                            .to(Notebooks::Table, Notebooks::Id),
+                            .from(Note::Table, Note::NotebookId)
+                            .to(Notebook::Table, Notebook::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Notes_User")
-                            .from(Notes::Table, Notes::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(Note::Table, Note::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .to_owned(),
             )
@@ -39,13 +39,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Notes::Table).to_owned())
+            .drop_table(Table::drop().table(Note::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum Notes {
+pub enum Note {
     Table,
     Id,
     Title,

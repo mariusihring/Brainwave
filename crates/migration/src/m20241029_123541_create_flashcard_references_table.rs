@@ -1,7 +1,9 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::{m20241029_123444_create_user_table::Users, m20241029_123502_create_flashcards_table::Flashcards};
+use crate::{
+    m20241029_123444_create_user_table::User, m20241029_123502_create_flashcards_table::Flashcard,
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -12,24 +14,24 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(FlashcardReferences::Table)
+                    .table(FlashcardReference::Table)
                     .if_not_exists()
-                    .col(pk_uuid(FlashcardReferences::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(FlashcardReferences::FlashCardId).not_null())
-                    .col(string(FlashcardReferences::ReferenceId).not_null())
-                    .col(string(FlashcardReferences::ReferenceTable).not_null())
-                    .col(string(FlashcardReferences::UserId).not_null())
+                    .col(pk_uuid(FlashcardReference::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(FlashcardReference::FlashCardId).not_null())
+                    .col(string(FlashcardReference::ReferenceId).not_null())
+                    .col(string(FlashcardReference::ReferenceTable).not_null())
+                    .col(string(FlashcardReference::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_FlashcardReferences_User")
-                            .from(FlashcardReferences::Table, FlashcardReferences::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(FlashcardReference::Table, FlashcardReference::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_FlashcardReferences_Flashcards")
-                            .from(FlashcardReferences::Table, FlashcardReferences::FlashCardId)
-                            .to(Flashcards::Table, Flashcards::Id),
+                            .from(FlashcardReference::Table, FlashcardReference::FlashCardId)
+                            .to(Flashcard::Table, Flashcard::Id),
                     )
                     .to_owned(),
             )
@@ -38,13 +40,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(FlashcardReferences::Table).to_owned())
+            .drop_table(Table::drop().table(FlashcardReference::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum FlashcardReferences {
+pub enum FlashcardReference {
     Table,
     Id,
     FlashCardId,

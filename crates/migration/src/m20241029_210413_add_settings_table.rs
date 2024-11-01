@@ -1,7 +1,7 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20241029_123444_create_user_table::Users;
+use crate::m20241029_123444_create_user_table::User;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -21,7 +21,7 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Settings_User")
                             .from(Settings::Table, Settings::UserId)
-                            .to(Users::Table, Users::Id),
+                            .to(User::Table, User::Id),
                     )
                     .to_owned(),
             )

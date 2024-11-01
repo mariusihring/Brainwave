@@ -2,8 +2,8 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "notes")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, async_graphql :: Object)]
+#[sea_orm(table_name = "note")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
@@ -17,32 +17,32 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::notebooks::Entity",
+        belongs_to = "super::notebook::Entity",
         from = "Column::NotebookId",
-        to = "super::notebooks::Column::Id",
+        to = "super::notebook::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Notebooks,
+    Notebook,
     #[sea_orm(
-        belongs_to = "super::users::Entity",
+        belongs_to = "super::user::Entity",
         from = "Column::UserId",
-        to = "super::users::Column::Id",
+        to = "super::user::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Users,
+    User,
 }
 
-impl Related<super::notebooks::Entity> for Entity {
+impl Related<super::notebook::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Notebooks.def()
+        Relation::Notebook.def()
     }
 }
 
-impl Related<super::users::Entity> for Entity {
+impl Related<super::user::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Users.def()
+        Relation::User.def()
     }
 }
 

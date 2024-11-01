@@ -1,7 +1,0 @@
-use sea_orm::entity::prelude::*;
-use super::_entities::appointments::ActiveModel;
-
-impl ActiveModelBehavior for ActiveModel {}
-
-
-//TODO: create Input Model Here

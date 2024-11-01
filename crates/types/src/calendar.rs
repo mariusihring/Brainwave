@@ -1,7 +1,7 @@
 use async_graphql::{InputObject, SimpleObject};
 use chrono::{NaiveDate, NaiveDateTime};
 
-#[derive(SimpleObject,  Debug)]
+#[derive(SimpleObject, Debug)]
 // #[graphql(complex)]
 pub struct Appointment {
     pub id: String,

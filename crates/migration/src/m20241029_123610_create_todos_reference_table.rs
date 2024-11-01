@@ -1,9 +1,7 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::{
-    m20241029_123444_create_user_table::Users, m20241029_123558_create_todos_table::Todos,
-};
+use crate::{m20241029_123444_create_user_table::User, m20241029_123558_create_todos_table::Todo};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -14,24 +12,24 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(TodosReference::Table)
+                    .table(TodoReference::Table)
                     .if_not_exists()
-                    .col(pk_uuid(TodosReference::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(TodosReference::TodoId).not_null())
-                    .col(string(TodosReference::ReferenceId).not_null())
-                    .col(string(TodosReference::ReferenceTable).not_null())
-                    .col(string(TodosReference::UserId).not_null())
+                    .col(pk_uuid(TodoReference::Id).default(Uuid::new_v4().to_string()))
+                    .col(string(TodoReference::TodoId).not_null())
+                    .col(string(TodoReference::ReferenceId).not_null())
+                    .col(string(TodoReference::ReferenceTable).not_null())
+                    .col(string(TodoReference::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_TodoReference_Todo")
-                            .from(TodosReference::Table, TodosReference::TodoId)
-                            .to(Todos::Table, Todos::Id),
+                            .from(TodoReference::Table, TodoReference::TodoId)
+                            .to(Todo::Table, Todo::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_TodoReference_User")
-                            .from(TodosReference::Table, TodosReference::UserId)
-                            .to(Users::Table, Users::Id),
+                            .from(TodoReference::Table, TodoReference::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .to_owned(),
             )
@@ -40,13 +38,13 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(TodosReference::Table).to_owned())
+            .drop_table(Table::drop().table(TodoReference::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum TodosReference {
+pub enum TodoReference {
     Table,
     Id,
     TodoId,

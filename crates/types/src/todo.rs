@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 
-#[derive(SimpleObject,  Debug)]
+#[derive(SimpleObject, Debug)]
 #[graphql(complex)]
 pub struct Todo {
     pub id: String,
@@ -37,14 +37,14 @@ pub struct UpdateTodo {
     pub notes: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq,  Serialize, Deserialize, Enum, Copy)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Enum, Copy)]
 pub enum TodoStatus {
     Pending,
     InProgress,
     Completed,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq,  Serialize, Deserialize, Enum, Copy)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Enum, Copy)]
 pub enum TodoType {
     Assignment,
     Exam,

@@ -2,8 +2,8 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
-#[sea_orm(table_name = "modules")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql :: Object)]
+#[sea_orm(table_name = "module")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
@@ -18,43 +18,43 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::courses::Entity")]
-    Courses,
+    #[sea_orm(has_many = "super::course::Entity")]
+    Course,
     #[sea_orm(
-        belongs_to = "super::semesters::Entity",
+        belongs_to = "super::semester::Entity",
         from = "Column::EndSemester",
-        to = "super::semesters::Column::Id",
+        to = "super::semester::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Semesters2,
+    Semester2,
     #[sea_orm(
-        belongs_to = "super::semesters::Entity",
+        belongs_to = "super::semester::Entity",
         from = "Column::StartSemester",
-        to = "super::semesters::Column::Id",
+        to = "super::semester::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Semesters1,
+    Semester1,
     #[sea_orm(
-        belongs_to = "super::users::Entity",
+        belongs_to = "super::user::Entity",
         from = "Column::UserId",
-        to = "super::users::Column::Id",
+        to = "super::user::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Users,
+    User,
 }
 
-impl Related<super::courses::Entity> for Entity {
+impl Related<super::course::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Courses.def()
+        Relation::Course.def()
     }
 }
 
-impl Related<super::users::Entity> for Entity {
+impl Related<super::user::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Users.def()
+        Relation::User.def()
     }
 }
 
