@@ -18,6 +18,7 @@ sea-orm = { version = "1.1.0", features = [
     "macros",
     "debug-print",
 ] }
+sea-query = "0.32.0"
 sea-orm-migration = "1.1.0"
 tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
