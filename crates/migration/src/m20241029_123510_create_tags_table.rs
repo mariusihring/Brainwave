@@ -17,7 +17,7 @@ impl MigrationTrait for Migration {
                     .col(pk_uuid(Tag::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Tag::Name).not_null())
                     .col(string(Tag::Color))
-                    .col(string(Tag::UserId).not_null())
+                    .col(uuid(Tag::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Tags_User")

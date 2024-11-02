@@ -15,10 +15,10 @@ impl MigrationTrait for Migration {
                     .table(TodoReference::Table)
                     .if_not_exists()
                     .col(pk_uuid(TodoReference::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(TodoReference::TodoId).not_null())
-                    .col(string(TodoReference::ReferenceId).not_null())
+                    .col(uuid(TodoReference::TodoId).not_null())
+                    .col(uuid(TodoReference::ReferenceId).not_null())
                     .col(string(TodoReference::ReferenceTable).not_null())
-                    .col(string(TodoReference::UserId).not_null())
+                    .col(uuid(TodoReference::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_TodoReference_Todo")

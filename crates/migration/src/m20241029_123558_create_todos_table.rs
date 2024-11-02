@@ -1,9 +1,11 @@
-use sea_orm::prelude::Uuid;
-use sea_orm::{EnumIter, Iterable};
-use sea_orm_migration::{prelude::*, schema::*};
-
 use crate::m20241029_123444_create_user_table::User;
-use crate::m20241029_123629_create_courses_table::Course;
+use crate::m20241029_123453_create_courses_table::Course;
+use sea_orm::prelude::Uuid;
+use sea_orm::prelude::*;
+use sea_orm::sqlx::Column;
+use sea_orm::{EnumIter, Iterable};
+use sea_orm_migration::prelude::{sea_query::extension::postgres::Type, *};
+use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -11,6 +13,27 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(TodoType::Enum)
+                    .values([TodoType::Assignment, TodoType::Exam, TodoType::General])
+                    .to_owned(),
+            )
+            .await?;
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(TodoStatus::Enum)
+                    .values([
+                        TodoStatus::Completed,
+                        TodoStatus::InProgress,
+                        TodoStatus::Pending,
+                    ])
+                    .to_owned(),
+            )
+            .await?;
+
         manager
             .create_table(
                 Table::create()
@@ -23,8 +46,8 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(string(Todo::UserId).not_null())
-                    .col(string_null(Todo::CourseId))
+                    .col(uuid(Todo::UserId).not_null())
+                    .col(uuid_null(Todo::CourseId))
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Todos_User")
@@ -37,16 +60,12 @@ impl MigrationTrait for Migration {
                             .from(Todo::Table, Todo::CourseId)
                             .to(Course::Table, Course::Id),
                     )
-                    .col(
-                        enumeration(Todo::Type, Alias::new("type"), TodoType::iter())
-                            .default("general")
-                            .not_null(),
-                    )
-                    .col(
-                        enumeration(Todo::Status, Alias::new("status"), TodoStatus::iter())
-                            .default("pending")
-                            .not_null(),
-                    )
+                    .col(enumeration(Todo::Type, TodoType::Enum, TodoType::iter()))
+                    .col(enumeration(
+                        Todo::Status,
+                        TodoStatus::Enum,
+                        TodoStatus::iter(),
+                    ))
                     .col(text_null(Todo::Notes))
                     .to_owned(),
             )
@@ -75,6 +94,8 @@ pub enum Todo {
 
 #[derive(Iden, EnumIter)]
 pub enum TodoType {
+    #[iden = "todotype"]
+    Enum,
     #[iden = "assignment"]
     Assignment,
     #[iden = "exam"]
@@ -84,6 +105,8 @@ pub enum TodoType {
 }
 #[derive(Iden, EnumIter)]
 pub enum TodoStatus {
+    #[iden = "todostatus"]
+    Enum,
     #[iden = "pending"]
     Pending,
     #[iden = "inprogress"]

@@ -2,7 +2,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use super::m20241029_123444_create_user_table::User;
-use super::m20241029_123619_create_notebooks_table::Notebook;
+use super::m20241029_123454_create_notebooks_table::Notebook;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -18,8 +18,8 @@ impl MigrationTrait for Migration {
                     .col(pk_uuid(Note::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Note::Title).not_null())
                     .col(text(Note::Content))
-                    .col(string(Note::NotebookId))
-                    .col(string(Note::UserId).not_null())
+                    .col(uuid_null(Note::NotebookId))
+                    .col(uuid(Note::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Notes_Notebook")

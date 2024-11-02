@@ -30,7 +30,7 @@ impl MigrationTrait for Migration {
                             .default(end_date)
                             .not_null(),
                     )
-                    .col(string(CalendarEntry::UserId).not_null())
+                    .col(uuid(CalendarEntry::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_CalendarEntries_User")

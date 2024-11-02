@@ -1,7 +1,7 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20241029_123629_create_courses_table::Course;
+use crate::m20241029_123453_create_courses_table::Course;
 
 use super::m20241029_123444_create_user_table::User;
 
@@ -19,8 +19,8 @@ impl MigrationTrait for Migration {
                     .col(pk_uuid(Flashcard::Id).default(Uuid::new_v4().to_string()))
                     .col(text(Flashcard::Question).not_null())
                     .col(text(Flashcard::Answer).not_null())
-                    .col(string(Flashcard::CourseId))
-                    .col(string(Flashcard::UserId).not_null())
+                    .col(uuid_null(Flashcard::CourseId))
+                    .col(uuid(Flashcard::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Flashcards_Course")

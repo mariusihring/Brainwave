@@ -16,7 +16,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid(Settings::Id).default(Uuid::new_v4().to_string()))
                     .col(text_null(Settings::CalendarLink))
-                    .col(string(Settings::UserId))
+                    .col(uuid(Settings::UserId))
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Settings_User")

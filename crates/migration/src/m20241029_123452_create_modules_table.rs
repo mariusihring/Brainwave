@@ -2,7 +2,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
-    m20241029_123444_create_user_table::User, m20241029_135735_create_semester_table::Semester,
+    m20241029_123444_create_user_table::User, m20241029_123451_create_semester_table::Semester,
 };
 
 #[derive(DeriveMigrationName)]
@@ -20,9 +20,9 @@ impl MigrationTrait for Migration {
                     .col(string(Module::Name).not_null())
                     .col(integer(Module::ETCs).not_null())
                     .col(float_null(Module::Grade))
-                    .col(string(Module::StartSemester).not_null())
-                    .col(string_null(Module::EndSemester))
-                    .col(string(Module::UserId).not_null())
+                    .col(uuid(Module::StartSemester).not_null())
+                    .col(uuid_null(Module::EndSemester))
+                    .col(uuid(Module::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_StartSemester")

@@ -1,7 +1,7 @@
 use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::{m20241029_123444_create_user_table::User, m20241029_123519_create_tags_table::Tag};
+use crate::{m20241029_123444_create_user_table::User, m20241029_123510_create_tags_table::Tag};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -15,10 +15,10 @@ impl MigrationTrait for Migration {
                     .table(Taggable::Table)
                     .if_not_exists()
                     .col(pk_uuid(Taggable::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(Taggable::TagId))
-                    .col(string(Taggable::TaggableId).not_null())
+                    .col(uuid(Taggable::TagId))
+                    .col(uuid(Taggable::TaggableId).not_null())
                     .col(string(Taggable::TaggableTable).not_null())
-                    .col(string(Taggable::UserId).not_null())
+                    .col(uuid(Taggable::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Taggables_User")

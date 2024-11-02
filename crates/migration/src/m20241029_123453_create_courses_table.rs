@@ -2,7 +2,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm_migration::{prelude::*, schema::*};
 
 use crate::{
-    m20241029_123444_create_user_table::User, m20241029_123549_create_modules_table::Module,
+    m20241029_123444_create_user_table::User, m20241029_123452_create_modules_table::Module,
 };
 
 #[derive(DeriveMigrationName)]
@@ -18,8 +18,8 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid(Course::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Course::Name).not_null())
-                    .col(string(Course::ModuleId).not_null())
-                    .col(string(Course::UserId).not_null())
+                    .col(uuid(Course::ModuleId).not_null())
+                    .col(uuid(Course::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Courses_Module")

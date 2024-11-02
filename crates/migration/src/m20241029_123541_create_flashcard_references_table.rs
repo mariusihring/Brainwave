@@ -17,10 +17,10 @@ impl MigrationTrait for Migration {
                     .table(FlashcardReference::Table)
                     .if_not_exists()
                     .col(pk_uuid(FlashcardReference::Id).default(Uuid::new_v4().to_string()))
-                    .col(string(FlashcardReference::FlashCardId).not_null())
-                    .col(string(FlashcardReference::ReferenceId).not_null())
+                    .col(uuid(FlashcardReference::FlashCardId).not_null())
+                    .col(uuid(FlashcardReference::ReferenceId).not_null())
                     .col(string(FlashcardReference::ReferenceTable).not_null())
-                    .col(string(FlashcardReference::UserId).not_null())
+                    .col(uuid(FlashcardReference::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_FlashcardReferences_User")

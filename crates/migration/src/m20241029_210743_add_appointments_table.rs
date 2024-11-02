@@ -1,5 +1,5 @@
 use crate::{
-    m20241029_123444_create_user_table::User, m20241029_123629_create_courses_table::Course,
+    m20241029_123444_create_user_table::User, m20241029_123453_create_courses_table::Course,
 };
 use chrono::{Duration, Utc};
 use sea_orm::prelude::Uuid;
@@ -27,13 +27,13 @@ impl MigrationTrait for Migration {
                     .col(
                         date_time(Appointment::StartTime)
                             .not_null()
-                            .default(Expr::current_time()),
+                            .default(Expr::current_timestamp()),
                     )
                     .col(date_time(Appointment::EndTime).not_null().default(end_date))
                     .col(string_null(Appointment::Location))
                     .col(boolean(Appointment::IsCanceled).default(false))
-                    .col(string_null(Appointment::CourseId))
-                    .col(string(Appointment::UserId).not_null())
+                    .col(uuid_null(Appointment::CourseId))
+                    .col(uuid(Appointment::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Appointments_Course")

@@ -18,7 +18,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid(Session::Id).default(Uuid::new_v4().to_string()))
                     .col(date_time(Session::ExpiresAt).default(expires_at))
-                    .col(string(Session::UserId))
+                    .col(uuid(Session::UserId))
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Session_User")

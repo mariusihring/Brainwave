@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_date()),
                     )
                     .col(date(Semester::EndDate).not_null().default(end_date))
-                    .col(string(Semester::UserId).not_null())
+                    .col(uuid(Semester::UserId).not_null())
                     .col(boolean(Semester::ImportedAppointments).default(false))
                     .col(integer(Semester::TotalECTs).default(0))
                     .foreign_key(
