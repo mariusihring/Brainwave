@@ -1,8 +1,7 @@
 use async_graphql::{InputObject, SimpleObject};
 use chrono::{NaiveDate, NaiveDateTime};
-use sqlx::FromRow;
 
-#[derive(SimpleObject, FromRow, Debug)]
+#[derive(SimpleObject, Debug)]
 // #[graphql(complex)]
 pub struct Appointment {
     pub id: String,

@@ -1,6 +1,8 @@
 use crate::graphql::semester::SemesterQuery;
+use crate::models::_entities::semester;
 use async_graphql::{ComplexObject, Context, Object};
-use sqlx::{Pool, Sqlite};
+use sea_orm::DatabaseConnection;
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use types::semester::Semester;
 use types::user::DatabaseUser;
 
@@ -10,32 +12,32 @@ impl SemesterQuery {
         &self,
         ctx: &Context<'_>,
         semester: i32,
-    ) -> Result<Semester, async_graphql::Error> {
+    ) -> Result<Option<semester::Model>, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>()?;
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
 
-        sqlx::query_as::<_, Semester>(
-            "SELECT * FROM semester WHERE user_id = ? AND semester = ? LIMIT 1;",
-        )
-        .bind(user.id.clone())
-        .bind(semester)
-        .fetch_one(db)
-        .await
-        .map_err(|err| async_graphql::Error::from(err))
+        semester::Entity::find()
+            .filter(
+                semester::Column::UserId
+                    .eq(&user.id)
+                    .and(semester::Column::Semester.eq(semester)),
+            )
+            .one(db)
+            .await
+            .map_err(|err| async_graphql::Error::from(err))
     }
 
     pub async fn semesters(
         &self,
         ctx: &Context<'_>,
-    ) -> Result<Vec<Semester>, async_graphql::Error> {
+    ) -> Result<Vec<semester::Model>, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>()?;
-        let db = ctx.data::<Pool<Sqlite>>()?;
-        let rows: Vec<Semester> = sqlx::query_as("SELECT * FROM semester WHERE user_id = ?;")
-            .bind(user.id.clone())
-            .fetch_all(db)
+        let db = ctx.data::<DatabaseConnection>()?;
+
+        semester::Entity::find()
+            .filter(semester::Column::UserId.eq(&user.id))
+            .all(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))
-            .unwrap();
-        Ok(rows)
     }
 }

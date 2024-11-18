@@ -1,8 +1,6 @@
 mod mutation;
 mod query;
 
-use async_graphql::*;
-
 #[derive(Default)]
 pub struct ModuleQuery;
 

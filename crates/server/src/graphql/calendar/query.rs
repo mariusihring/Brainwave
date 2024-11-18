@@ -1,38 +1,44 @@
 use super::CalendarQuery;
-use ::types::calendar::Appointment;
-use ::types::{settings::Settings, user::DatabaseUser};
-use async_graphql::*;
-use sqlx::{Pool, Sqlite};
 
+use crate::models::_entities::{
+    appointment, appointment::Model as Appointment, settings, user::Model as User,
+};
+use async_graphql::*;
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 #[Object]
 impl CalendarQuery {
     pub async fn calendar_link(
         &self,
         ctx: &Context<'_>,
     ) -> Result<Option<String>, async_graphql::Error> {
-        let user = ctx.data::<DatabaseUser>().unwrap();
-        let db = ctx.data::<Pool<Sqlite>>().unwrap();
+        let user = ctx.data::<User>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        sqlx::query_as::<_, Settings>(
-            "SELECT id, user_id, calendar_link FROM settings WHERE user_id = ? LIMIT 1;",
-        )
-        .bind(user.id.clone())
-        .fetch_optional(db)
-        .await
-        .map(|result| result.map(|settings| settings.calendar_link).flatten())
-        .map_err(|err| async_graphql::Error::from(err))
+        // Use SeaORM to fetch optional settings
+        let result = settings::Entity::find()
+            .filter(settings::Column::UserId.eq(user.id.clone()))
+            .one(db)
+            .await
+            .map_err(|err| async_graphql::Error::from(err))?;
+
+        // Return the calendar link if settings were found, otherwise None
+        Ok(result.and_then(|settings| settings.calendar_link))
     }
-    pub async fn appointments(&self, ctx: &Context<'_>) -> Result<Vec<Appointment>, sqlx::Error> {
-        let user = ctx.data::<DatabaseUser>().unwrap();
-        let db = ctx.data::<Pool<Sqlite>>().unwrap();
 
-        let appointments: Vec<Appointment> =
-            sqlx::query_as("SELECT * from appointment WHERE user_id = ? AND WHERE ;")
-                .bind(user.id.clone())
-                .fetch_all(db)
-                .await
-                .map_err(|err| async_graphql::Error::from(err))
-                .unwrap();
-        return Ok(appointments);
+    pub async fn appointments(
+        &self,
+        ctx: &Context<'_>,
+    ) -> Result<Vec<Appointment>, async_graphql::Error> {
+        let user = ctx.data::<User>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
+
+        // Fetch all appointments for the user using SeaORM
+        let appointments = appointment::Entity::find()
+            .filter(appointment::Column::UserId.eq(user.id.clone()))
+            .all(db)
+            .await
+            .map_err(|err| async_graphql::Error::from(err))?;
+
+        Ok(appointments)
     }
 }

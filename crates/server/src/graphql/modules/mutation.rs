@@ -1,7 +1,8 @@
 use crate::graphql::modules::ModuleMutation;
-
+use crate::models::_entities::{module, semester};
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+use sea_orm::Set;
+use sea_orm::{ActiveModelTrait, DatabaseConnection};
 use types::module::{Module, NewModule};
 use types::user::DatabaseUser;
 use uuid::Uuid;
@@ -12,22 +13,24 @@ impl ModuleMutation {
         &self,
         ctx: &Context<'_>,
         input: NewModule,
-    ) -> Result<Module, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+    ) -> Result<module::Model, async_graphql::Error> {
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
         let id = Uuid::new_v4();
-        sqlx::query_as::<_, Module>(
-            "INSERT INTO modules (id,name, ects, grade, start_semester, end_semester, user_id) VALUES (?, ?, ?,?, ?, ? , ?) RETURNING *;"
-        )
-            .bind(id.to_string())
-            .bind(input.name)
-            .bind(input.ects)
-            .bind(input.grade)
-            .bind(input.start_semester)
-            .bind(input.end_semester)
-            .bind(user.id.clone())
-            .fetch_one(db)
+
+        let module = module::ActiveModel {
+            id: Set(id),
+            name: Set(input.name),
+            et_cs: Set(input.ects),
+            grade: Set(input.grade),
+            start_semester: Set(Uuid::parse_str(input.start_semester.as_str()).unwrap()),
+            end_semester: Set(Uuid::parse_str(input.end_semester.unwrap().as_str()).ok()),
+            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
+        };
+
+        module
+            .insert(db)
             .await
-            .map_err(|err| async_graphql::Error::from(err))
+            .map_err(|e| async_graphql::Error::new(format!("Database Error: {:?}", e)))
     }
 }

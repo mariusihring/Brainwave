@@ -1,16 +1,26 @@
 [workspace]
 resolver = "2"
-members = ["crates/database", "crates/server", "crates/types", "ui/src-tauri"]
+members = [
+    "crates/database",
+    "crates/server",
+    "crates/types",
+    "ui/src-tauri",
+    "crates/migration",
+]
 
 [workspace.dependencies]
-sqlx = { version = "0.6.0", features = [
-  "sqlite",
-  "runtime-tokio-native-tls",
-  "chrono",
-  "migrate",
-  "macros",
-  "uuid",
+sea-orm = { version = "1.1.0", features = [
+    # "sqlx-sqlite",
+    "sqlx-postgres",
+    "runtime-tokio-rustls",
+    "with-chrono",
+    "with-json",
+    "with-uuid",
+    "macros",
+    "debug-print",
 ] }
+sea-query = "0.32.0"
+sea-orm-migration = "1.1.0"
 tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde_json = "1.0"
@@ -19,7 +29,7 @@ serde = { version = "1.0.204", features = ["derive"] }
 tracing-subscriber = "0.3.18"
 tower = "0.4.13"
 tower-http = "0.5.2"
-async-graphql = { version = "7.0.6", features = ["playground", "log"] }
+async-graphql = { version = "7.0.6", features = ["playground", "log", "uuid"] }
 async-graphql-axum = "7.0.7"
 log = "0.4"
 anyhow = "1.0.86"

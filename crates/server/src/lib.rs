@@ -16,6 +16,7 @@ use tower_http::cors::{Any, CorsLayer};
 mod auth;
 mod dir;
 mod graphql;
+mod models;
 mod routers;
 mod state;
 
@@ -62,7 +63,7 @@ async fn setup_app_state() -> AppState {
         .data(db.clone())
         .finish();
 
-     write_schema_to_file(&schema);
+    write_schema_to_file(&schema);
 
     AppState { db, schema }
 }
@@ -141,6 +142,21 @@ async fn shutdown(state: AppState) {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn it_works() {}
+    use std::str::FromStr;
+
+    use crate::models::_entities::user::Entity as User;
+    use database::init;
+    use sea_orm::EntityTrait;
+    use uuid::Uuid;
+
+    #[tokio::test]
+    async fn it_works() {
+        let db = init("./../../migration/test.db").await.unwrap();
+        let user: Option<crate::models::_entities::user::Model> =
+            User::find_by_id(Uuid::from_str("e899acf3-284d-4713-82f8-dbdb1b91c042").unwrap())
+                .one(&db)
+                .await
+                .unwrap();
+        println!("{:?}", user);
+    }
 }
