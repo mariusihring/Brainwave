@@ -1,6 +1,7 @@
 use server::run_server;
 mod auth;
 pub mod graphql;
+mod models;
 mod routers;
 mod state;
 

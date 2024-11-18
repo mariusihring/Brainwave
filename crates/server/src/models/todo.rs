@@ -13,7 +13,7 @@ pub struct NewTodo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub course_id: Option<Uuid>,
-    pub r#type: String,
+    // pub r#type: String,
     pub notes: Option<String>,
 }
 
@@ -23,7 +23,7 @@ pub struct UpdateTodo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub course_id: Option<Uuid>,
-    pub r#type: String,
-    pub status: String,
+    // pub r#type: String,
+    // pub status: String,
     pub notes: Option<String>,
 }

@@ -6,8 +6,6 @@ use async_graphql::*;
 use sea_orm::{prelude::*, DatabaseConnection, EntityTrait, Set};
 use uuid::Uuid;
 
-use crate::models::_entities::sea_orm_active_enums::Todostatus;
-use crate::models::_entities::sea_orm_active_enums::Todotype;
 #[Object]
 impl TodoMutation {
     async fn create_todo(&self, ctx: &Context<'_>, input: NewTodo) -> Result<todo::Model> {
@@ -19,7 +17,6 @@ impl TodoMutation {
             id: Set(id.clone()),
             title: Set(input.title.clone()),
             due_on: Set(input.due_on.clone()),
-            r#type: Set(input.r#type.clone()),
             course_id: Set(input.course_id.clone()),
             user_id: Set(user.id.clone()),
             notes: Set(input.notes.clone()),

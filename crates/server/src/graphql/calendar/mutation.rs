@@ -96,10 +96,11 @@ impl CalendarMutation {
             all_appointments.extend(appointments);
         }
 
-        insert_appointments(&db, user.clone(), &all_appointments).await?;
+        let apps = insert_appointments(&db, user.clone(), &all_appointments).await?;
+
         update_semester_import_status(&db, &semester.id.to_string()).await?;
 
-        let recurring_appointments = process_recurring_appointments(all_appointments);
+        let recurring_appointments = process_recurring_appointments(apps);
 
         Ok(recurring_appointments)
     }
@@ -108,26 +109,18 @@ impl CalendarMutation {
 async fn insert_appointments(
     db: &DatabaseConnection,
     user: DatabaseUser,
-    appointments: &[appointment::Model],
-) -> Result<()> {
+    appointments: &Vec<appointment::ActiveModel>,
+) -> Result<Vec<appointment::Model>> {
+    let mut models = Vec::new();
     let mut txn = db.begin().await?;
 
     for appointment in appointments {
-        let new_appointment = appointment::ActiveModel {
-            id: Set(Uuid::new_v4()),
-            date: Set(appointment.date),
-            title: Set(appointment.title.clone()),
-            start_time: Set(appointment.start_time),
-            end_time: Set(appointment.end_time),
-            location: Set(appointment.location.clone()),
-            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
-            ..Default::default()
-        };
-        new_appointment.insert(&txn).await?;
+        let app = appointment.clone().insert(&txn).await?;
+        models.push(app);
     }
 
     txn.commit().await?;
-    Ok(())
+    Ok(models)
 }
 
 async fn update_semester_import_status(db: &DatabaseConnection, semester_id: &str) -> Result<()> {
