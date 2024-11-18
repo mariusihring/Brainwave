@@ -1,11 +1,12 @@
 use crate::graphql::{Mutation, Query};
 use async_graphql::{EmptySubscription, Schema};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::user::DatabaseUser;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub db: Pool<Sqlite>,
+    pub db: DatabaseConnection,
     pub schema: Schema<Query, Mutation, EmptySubscription>,
 }
 

@@ -1,5 +1,3 @@
-use async_graphql::*;
-
 mod mutation;
 mod query;
 

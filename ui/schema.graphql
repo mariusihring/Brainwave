@@ -3,6 +3,15 @@ schema {
   mutation: Mutation
 }
 
+type Appointment {
+  date: NaiveDate!
+  endTime: NaiveDateTime!
+  id: String!
+  location: String!
+  name: String!
+  startTime: NaiveDateTime!
+}
+
 type Course {
   academicDepartment: String
   grade: Float
@@ -12,8 +21,9 @@ type Course {
 }
 
 type Module {
+  courses: [Course!]
   ects: Int!
-  endSemester: String!
+  endSemester: String
   grade: Float
   id: String!
   name: String!
@@ -21,9 +31,14 @@ type Module {
 }
 
 type Mutation {
+  createCourse(input: NewCourse!): Course!
   createModule(input: NewModule!): Module!
+  createMultipleCourses(input: [String!]!): [Course!]!
   createSemester(input: NewSemester!): Semester!
   createTodo(input: NewTodo!): Todo!
+  processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
+  updateTodo(id: String!, input: UpdateTodo!): Todo!
+  upsertCalendarLink(calendarLink: String): Settings!
 }
 
 """
@@ -46,9 +61,27 @@ ISO 8601 combined date and time without timezone.
 """
 scalar NaiveDateTime
 
+"""
+ISO 8601 time without timezone.
+Allows for the nanosecond precision and optional leap second representation.
+Format: %H:%M:%S%.f
+
+# Examples
+
+* `08:59:60.123`
+"""
+scalar NaiveTime
+
+input NewCourse {
+  academicDepartment: String
+  grade: Float
+  name: String!
+  teacher: String
+}
+
 input NewModule {
   ects: Int!
-  endSemester: String!
+  endSemester: String
   grade: Float
   name: String!
   startSemester: String!
@@ -64,12 +97,15 @@ input NewSemester {
 input NewTodo {
   courseId: String
   dueOn: NaiveDateTime!
-  icon: String!
   title: String!
   todoType: TodoType
 }
 
 type Query {
+  appointments: [Appointment!]!
+  calendarLink: String
+  course(id: String!): Course!
+  courses: [Course!]!
   module(id: String!): Module!
   modules: [Module!]!
   semester(semester: Int!): Semester!
@@ -79,27 +115,67 @@ type Query {
   todosByDate(date: NaiveDate!): [Todo!]!
 }
 
+type RecurringAppointment {
+  endTime: NaiveTime!
+  location: String!
+  name: String!
+  startTime: NaiveTime!
+  weekday: WeekdayEnum!
+}
+
 type Semester {
   courses: [Course!]!
   endDate: NaiveDate!
   id: String!
+  importedAppointments: Boolean!
   modules: [Module!]!
   semester: Int!
   startDate: NaiveDate!
   totalEcts: Int!
 }
 
+type Settings {
+  calendarLink: String
+  id: String!
+  userId: String!
+}
+
 type Todo {
-  courseId: String
+  course: Course
   dueOn: NaiveDateTime!
   id: String!
+  status: TodoStatus!
   title: String!
   todoType: TodoType!
   userId: String!
+}
+
+enum TodoStatus {
+  COMPLETED
+  IN_PROGRESS
+  PENDING
 }
 
 enum TodoType {
   ASSIGNMENT
   EXAM
   GENERAL
+}
+
+input UpdateTodo {
+  courseId: String
+  dueOn: NaiveDateTime!
+  status: TodoStatus!
+  title: String!
+  todoType: TodoType
+}
+
+enum WeekdayEnum {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
 }

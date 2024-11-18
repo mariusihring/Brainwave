@@ -1,8 +1,6 @@
 use async_graphql::{InputObject, SimpleObject};
-use chrono::NaiveDate;
-use sqlx::FromRow;
 
-#[derive(SimpleObject, FromRow, Debug)]
+#[derive(SimpleObject, Debug)]
 // #[graphql(complex)]
 //TODO: add module resolver with  complex
 pub struct Course {

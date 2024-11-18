@@ -1,4 +1,3 @@
-import Agenda from "@/components/brainwave/dashboard/agenda";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -18,37 +17,42 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { execute } from "@/execute.ts";
+import { graphql } from "@/graphql";
+import { format_date_time } from "@/lib/date.ts";
 import { useUser } from "@/lib/stores/user";
-import { createFileRoute } from "@tanstack/react-router";
-import {
-	BookOpenIcon,
-	CalendarIcon,
-	CheckIcon,
-	ChevronRightIcon,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { CalendarIcon, ChevronRightIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 export const Route = createFileRoute("/_authenticated/")({
 	component: () => <Dashboard />,
 });
-
-const test: string[] = ["rust", "typescripto", "boring stuff"];
+const TODO_DASHBOARD_QUERY = graphql(`
+	query TodoDashboardQuery{
+		todos {
+			id
+			title
+			dueOn
+			todoType
+		}
+	}
+`);
 
 function Dashboard() {
 	const { user } = useUser();
 	const { t } = useTranslation(["global"]);
+
+	const { data } = useQuery({
+		queryKey: ["dashboard_todos"],
+		queryFn: () => execute(TODO_DASHBOARD_QUERY),
+	});
 	return (
 		<div className="flex flex-col space-y-6 w-full h-full">
 			<h1 className="font-bold text-3xl px-6">
 				{t("global:hello")}, {user?.username}
 			</h1>
-			{/*<div className="grid bg-red-200 w-full h-full grid-cols-3 grid-rows-2 gap-2">*/}
-
-			{/*    <Agenda/>*/}
-
-			{/*    <div className="w-full h-full bg-green-200"/>*/}
-			{/*    <div className="w-full h-full bg-green-200"/>*/}
-			{/*    <div className="w-full h-full bg-blue-200 col-span-3"/>*/}
-			{/*</div>*/}
 			<main className="grid gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3  w-full">
 				<div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-3">
 					<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
@@ -60,53 +64,31 @@ function Dashboard() {
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<div className="grid gap-4">
-									<div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-										<div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-											<CalendarIcon className="h-4 w-4" />
-										</div>
-										<div>
-											<div className="font-medium">Exam Preparation</div>
-											<div className="text-sm text-muted-foreground">
-												Today, 2:00 PM
+								{data?.todos.slice(0, 3).map((todo) => (
+									<div className="grid gap-4" key={todo.id}>
+										<div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+											<div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+												<CalendarIcon className="h-4 w-4" />
 											</div>
-										</div>
-										<Button variant="ghost" size="icon" className="h-8 w-8">
-											<ChevronRightIcon className="h-4 w-4" />
-										</Button>
-									</div>
-									<div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-										<div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-foreground">
-											<CheckIcon className="h-4 w-4" />
-										</div>
-										<div>
-											<div className="font-medium">Finish Assignment</div>
-											<div className="text-sm text-muted-foreground">
-												Tomorrow, 5:00 PM
+											<div>
+												<div className="font-medium">{todo.title}</div>
+												<div className="text-sm text-muted-foreground">
+													{format_date_time(todo.dueOn)}
+												</div>
 											</div>
+											<Link to={`/todos/$todo`} params={{ todo: todo.id }}>
+												<Button variant="ghost" size="icon" className="h-8 w-8">
+													<ChevronRightIcon className="h-4 w-4" />
+												</Button>
+											</Link>
 										</div>
-										<Button variant="ghost" size="icon" className="h-8 w-8">
-											<ChevronRightIcon className="h-4 w-4" />
-										</Button>
 									</div>
-									<div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-										<div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
-											<BookOpenIcon className="h-4 w-4" />
-										</div>
-										<div>
-											<div className="font-medium">Read Chapter 3</div>
-											<div className="text-sm text-muted-foreground">
-												Friday, 7:00 PM
-											</div>
-										</div>
-										<Button variant="ghost" size="icon" className="h-8 w-8">
-											<ChevronRightIcon className="h-4 w-4" />
-										</Button>
-									</div>
-								</div>
+								))}
 							</CardContent>
 							<CardFooter>
-								<Button>View Full Agenda</Button>
+								<Link to={"/todos"}>
+									<Button>View Full Agenda</Button>
+								</Link>
 							</CardFooter>
 						</Card>
 						<Card x-chunk="dashboard-05-chunk-1">

@@ -15,8 +15,10 @@ import {
 	PanelRightCloseIcon,
 	PenLineIcon,
 	PuzzleIcon,
+	CalendarIcon
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import ImportCalendarAppointmentsDialog from "../calendar/import_dialog";
 
 const iconSize = 20;
 const sideMenuStaticLinks = [
@@ -24,6 +26,11 @@ const sideMenuStaticLinks = [
 		icon: <HomeIcon size={iconSize} />,
 		label: "Dashboard",
 		href: "/",
+	},
+	{
+		icon: <CalendarIcon size={iconSize} />,
+		label: "Calendar",
+		href: "/calendar",
 	},
 	{
 		icon: <GraduationCapIcon size={iconSize} />,
@@ -63,8 +70,8 @@ export default function Navigation({ children }: { children: ReactNode }) {
 		return "ghost";
 	};
 	return (
-		<main className="flex min-h-dvh gap-4 ">
-			<aside className="flex flex-col items-center justify-between border-r p-2 ">
+		<main className="flex min-h-dvh">
+			<aside className="fixed left-0 top-0 bottom-0 flex flex-col items-center justify-between border-r p-2 bg-background z-50">
 				{settings.nav_open ? (
 					<div className="flex my-5 gap-2 items-center justify-center pl-1">
 						<BrainwaveLogo className="w-8 h-8" />
@@ -93,7 +100,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 												}),
 												"h-9 w-9",
 												isCurrentPath(link.href) === "default" &&
-													"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
+												"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
 											)}
 										>
 											{link.icon}
@@ -118,7 +125,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 											size: "sm",
 										}),
 										isCurrentPath(link.href) === "default" &&
-											"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
+										"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
 										"justify-start gap-3 w-full",
 									)}
 								>
@@ -131,26 +138,32 @@ export default function Navigation({ children }: { children: ReactNode }) {
 				</div>
 			</aside>
 
-			<div className="flex flex-1 flex-col  p-2">
-				<nav className="mb-6 flex items-center justify-between">
-					<div className="flex gap-4">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="-ml-2"
-							onClick={() => settings.setNav(!settings.nav_open)}
-						>
-							{settings.nav_open ? (
-								<PanelLeftCloseIcon strokeWidth={1.5} size={18} />
-							) : (
-								<PanelRightCloseIcon strokeWidth={1.5} size={18} />
-							)}
-						</Button>
-						<Input />
+			<div className="flex-1 ml-[64px]"> {/* Adjust ml-[64px] based on your sidebar width */}
+				<nav className="fixed top-0 right-0 left-[64px] bg-background z-40 p-2"> {/* Adjust left-[64px] based on your sidebar width */}
+					<div className="flex gap-4 w-full justify-between">
+						<div className="flex gap-4">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="-ml-2"
+								onClick={() => settings.setNav(!settings.nav_open)}
+							>
+								{settings.nav_open ? (
+									<PanelLeftCloseIcon strokeWidth={1.5} size={18} />
+								) : (
+									<PanelRightCloseIcon strokeWidth={1.5} size={18} />
+								)}
+							</Button>
+							<Input />
+						</div>
+
+						<div className="px-5 pt-1">{pathname === "/calendar" && <ImportCalendarAppointmentsDialog />}</div>
+
 					</div>
-					<div className="flex items-center gap-4" />
 				</nav>
-				<Outlet />
+				<div className="mt-[60px] p-2 overflow-y-auto h-[calc(100vh-60px)] relative z-0"> {/* Adjust mt-[60px] and h-[calc(100vh-60px)] based on your top nav height */}
+					<Outlet />
+				</div>
 			</div>
 		</main>
 	);

@@ -1,0 +1,190 @@
+type Appointment {
+	id: String!
+	date: NaiveDate!
+	name: String!
+	startTime: NaiveDateTime!
+	endTime: NaiveDateTime!
+	location: String!
+}
+
+
+type Course {
+	id: String!
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
+
+
+
+
+type Module {
+	id: String!
+	name: String!
+	ects: Int!
+	grade: Float
+	startSemester: String!
+	endSemester: String
+	courses: [Course!]
+}
+
+type Mutation {
+	createTodo(input: NewTodo!): Todo!
+	updateTodo(input: UpdateTodo!, id: String!): Todo!
+	createSemester(input: NewSemester!): Semester!
+	createModule(input: NewModule!): Module!
+	upsertCalendarLink(calendarLink: String): Settings!
+	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
+	createCourse(input: NewCourse!): Course!
+}
+
+"""
+ISO 8601 calendar date without timezone.
+Format: %Y-%m-%d
+
+# Examples
+
+* `1994-11-13`
+* `2000-02-24`
+"""
+scalar NaiveDate
+
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+
+"""
+ISO 8601 time without timezone.
+Allows for the nanosecond precision and optional leap second representation.
+Format: %H:%M:%S%.f
+
+# Examples
+
+* `08:59:60.123`
+"""
+scalar NaiveTime
+
+input NewCourse {
+	name: String!
+	grade: Float
+	teacher: String
+	academicDepartment: String
+}
+
+input NewModule {
+	name: String!
+	ects: Int!
+	grade: Float
+	startSemester: String!
+	endSemester: String
+}
+
+input NewSemester {
+	semester: Int!
+	startDate: NaiveDate!
+	endDate: NaiveDate!
+	totalEcts: Int!
+}
+
+input NewTodo {
+	title: String!
+	dueOn: NaiveDateTime!
+	courseId: String
+	todoType: TodoType
+	notes: String
+}
+
+type Query {
+	todo(id: String!): Todo!
+	todos: [Todo!]!
+	todosByDate(date: NaiveDate!): [Todo!]!
+	semester(semester: Int!): Semester!
+	semesters: [Semester!]!
+	module(id: String!): Module!
+	modules: [Module!]!
+	calendarLink: String
+	appointments: [Appointment!]!
+	course(id: String!): Course!
+}
+
+type RecurringAppointment {
+	name: String!
+	weekday: WeekdayEnum!
+	startTime: NaiveTime!
+	endTime: NaiveTime!
+	location: String!
+}
+
+type Semester {
+	id: String!
+	semester: Int!
+	startDate: NaiveDate!
+	endDate: NaiveDate!
+	totalEcts: Int!
+	importedAppointments: Boolean!
+	modules: [Module!]!
+	courses: [Course!]!
+}
+
+type Settings {
+	id: String!
+	userId: String!
+	calendarLink: String
+}
+
+
+type Todo {
+	id: String!
+	title: String!
+	dueOn: NaiveDateTime!
+	userId: String!
+	courseId: String
+	todoType: TodoType!
+	status: TodoStatus!
+	notes: String
+	course: Course
+}
+
+enum TodoStatus {
+	PENDING
+	IN_PROGRESS
+	COMPLETED
+}
+
+enum TodoType {
+	ASSIGNMENT
+	EXAM
+	GENERAL
+}
+
+input UpdateTodo {
+	title: String!
+	dueOn: NaiveDateTime!
+	courseId: String
+	todoType: TodoType
+	status: TodoStatus!
+	notes: String
+}
+
+enum WeekdayEnum {
+	MONDAY
+	TUESDAY
+	WEDNESDAY
+	THURSDAY
+	FRIDAY
+	SATURDAY
+	SUNDAY
+}
+
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+schema {
+	query: Query
+	mutation: Mutation
+}

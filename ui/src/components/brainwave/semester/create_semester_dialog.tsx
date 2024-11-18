@@ -15,7 +15,7 @@ import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
 
 const CREATE_SEMESTER_MUTATION = graphql(`
-    mutation createSemesterMutation($input: NewSemester!) {
+    mutation createSemester($input: NewSemester!) {
         createSemester(input: $input) {
             id
         }

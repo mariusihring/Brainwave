@@ -1,6 +1,5 @@
 target
 node_modules
-
 */target
 */node_modules
 .env
@@ -10,3 +9,4 @@ node_modules
 *.idea
 .idea/*
 !.idea/compiler.xml
+crates/migration/test.db

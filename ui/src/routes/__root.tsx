@@ -2,6 +2,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Session, User } from "lucia";
+import { Toaster } from "@/components/ui/sonner"
 
 interface RouterContext {
 	auth: {
@@ -16,6 +17,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		<>
 			<TooltipProvider>
 				<Outlet />
+				<Toaster richColors position="top-center" />
 				{/*<TanStackRouterDevtools />*/}
 			</TooltipProvider>
 		</>
