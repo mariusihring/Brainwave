@@ -13,16 +13,17 @@ pub struct NewTodo {
     pub title: String,
     pub due_on: NaiveDateTime,
     pub course_id: Option<Uuid>,
-    pub r#type: Todotype,
+    pub r#type: String,
     pub notes: Option<String>,
 }
 
 #[derive(DeriveIntoActiveModel, InputObject)]
 pub struct UpdateTodo {
-    pub title: Uuid,
+    pub id: Uuid,
+    pub title: String,
     pub due_on: NaiveDateTime,
     pub course_id: Option<Uuid>,
-    pub r#type: Todotype,
-    pub status: Todostatus,
+    pub r#type: String,
+    pub status: String,
     pub notes: Option<String>,
 }

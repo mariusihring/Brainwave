@@ -1,7 +1,8 @@
 use crate::graphql::semester::SemesterMutation;
+use crate::models::_entities::semester;
 use async_graphql::{Context, Object};
 
-use sea_orm::DatabaseConnection;
+use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, Set, SqlErr};
 use types::semester::{NewSemester, Semester};
 use types::user::DatabaseUser;
 use uuid::Uuid;
@@ -12,24 +13,26 @@ impl SemesterMutation {
         &self,
         ctx: &Context<'_>,
         input: NewSemester,
-    ) -> Result<Semester, async_graphql::Error> {
+    ) -> Result<semester::Model, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>().unwrap();
         let db = ctx.data::<DatabaseConnection>().unwrap();
         let id = Uuid::new_v4();
+
         let semester_hash = format!("{}_{}", user.id.clone(), input.semester.clone());
-        //TODO: when there is allready a semester with the same id so i get a constraint error the return a pretty statusmessage to show in the error toast :)
-        sqlx::query_as::<_, Semester>(
-            "INSERT INTO semester (id, semester, start_date, end_date, total_ects, user_id, semester_hash) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;"
-        )
-            .bind(id.to_string())
-            .bind(input.semester)
-            .bind(input.start_date)
-            .bind(input.end_date)
-            .bind(input.total_ects)
-            .bind(user.id.clone())
-            .bind(semester_hash)
-            .fetch_one(db)
+
+        let new = semester::ActiveModel {
+            semester_hash: Set(semester_hash),
+            semester: Set(input.semester),
+            start_date: Set(input.start_date),
+            end_date: Set(input.start_date),
+            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
+            total_ec_ts: Set(input.total_ects),
+            ..Default::default()
+        };
+
+        //TODO: return propper error if the semester allready exists
+        new.insert(db)
             .await
-            .map_err(|err| async_graphql::Error::from(err))
+            .map_err(|e| async_graphql::Error::from(e))
     }
 }

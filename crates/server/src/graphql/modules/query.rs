@@ -1,8 +1,8 @@
 use crate::graphql::modules::ModuleQuery;
+use crate::models::_entities::module;
 use async_graphql::{Context, Object};
-
 use sea_orm::DatabaseConnection;
-use types::module::Module;
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use types::user::DatabaseUser;
 
 #[Object]
@@ -11,27 +11,32 @@ impl ModuleQuery {
         &self,
         ctx: &Context<'_>,
         id: String,
-    ) -> Result<Module, async_graphql::Error> {
+    ) -> Result<Option<module::Model>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
-        sqlx::query_as::<_, Module>("SELECT * FROM modules WHERE id = ? AND user_id = ? LIMIT 1;")
-            .bind(id)
-            .bind(user.id.clone())
-            .fetch_one(db)
+
+        module::Entity::find()
+            .filter(
+                module::Column::Id
+                    .eq(id)
+                    .and(module::Column::UserId.eq(user.id.clone())),
+            )
+            .one(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))
     }
 
-    pub async fn modules(&self, ctx: &Context<'_>) -> Result<Vec<Module>, async_graphql::Error> {
+    pub async fn modules(
+        &self,
+        ctx: &Context<'_>,
+    ) -> Result<Vec<module::Model>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
-        let modules: Vec<Module> = sqlx::query_as("SELECT * FROM modules WHERE user_id = ?;")
-            .bind(user.id.clone())
-            .fetch_all(db)
+        module::Entity::find()
+            .filter(module::Column::UserId.eq(&user.id))
+            .all(db)
             .await
-            .map_err(|err| async_graphql::Error::from(err))?;
-
-        Ok(modules)
+            .map_err(|err| async_graphql::Error::from(err))
     }
 }
