@@ -12,7 +12,7 @@ pub struct Model {
     pub semester: i32,
     pub start_date: Date,
     pub end_date: Date,
-    pub user_id: String,
+    pub user_id: Uuid,
     pub imported_appointments: bool,
     pub total_ec_ts: i32,
 }

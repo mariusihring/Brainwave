@@ -10,6 +10,7 @@ pub mod flashcard_reference;
 pub mod module;
 pub mod note;
 pub mod notebook;
+pub mod sea_orm_active_enums;
 pub mod semester;
 pub mod session;
 pub mod settings;

@@ -7,10 +7,10 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
-    pub todo_id: String,
-    pub reference_id: String,
+    pub todo_id: Uuid,
+    pub reference_id: Uuid,
     pub reference_table: String,
-    pub user_id: String,
+    pub user_id: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

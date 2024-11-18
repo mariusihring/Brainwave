@@ -11,8 +11,8 @@ pub struct Model {
     pub question: String,
     #[sea_orm(column_type = "Text")]
     pub answer: String,
-    pub course_id: String,
-    pub user_id: String,
+    pub course_id: Option<Uuid>,
+    pub user_id: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

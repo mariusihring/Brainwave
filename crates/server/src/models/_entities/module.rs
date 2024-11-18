@@ -11,9 +11,9 @@ pub struct Model {
     pub et_cs: i32,
     #[sea_orm(column_type = "Float", nullable)]
     pub grade: Option<f32>,
-    pub start_semester: String,
-    pub end_semester: Option<String>,
-    pub user_id: String,
+    pub start_semester: Uuid,
+    pub end_semester: Option<Uuid>,
+    pub user_id: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

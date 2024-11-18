@@ -17,7 +17,7 @@ impl TodoMutation {
             id: Set(id.clone()),
             title: Set(input.title.clone()),
             due_on: Set(input.due_on.clone()),
-            r#type: Set(input.r#type.as_str().to_string()),
+            r#type: Set(input.r#type.clone()),
             course_id: Set(input.course_id.clone()),
             user_id: Set(user.id.clone().to_string()),
             notes: Set(input.notes.clone()),

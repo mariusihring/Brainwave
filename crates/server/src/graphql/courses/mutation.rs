@@ -1,5 +1,6 @@
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::course::{Course, NewCourse};
 use types::user::DatabaseUser;
 use uuid::Uuid;
@@ -13,7 +14,7 @@ impl CourseMutation {
         ctx: &Context<'_>,
         input: NewCourse,
     ) -> Result<Course, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
         let id = Uuid::new_v4();
 
@@ -31,7 +32,7 @@ impl CourseMutation {
         ctx: &Context<'_>,
         input: Vec<String>,
     ) -> Result<Vec<Course>, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
         let mut response = Vec::new();
         for course_name in input {

@@ -49,7 +49,7 @@ impl CalendarMutation {
             None => {
                 let new_settings = settings::ActiveModel {
                     id: Set(Uuid::new_v4()),
-                    user_id: Set(user.id.clone()),
+                    user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
                     calendar_link: Set(processed_link.clone()),
                 };
                 new_settings.insert(&txn).await?
@@ -90,7 +90,9 @@ impl CalendarMutation {
 
         for week_start in weeks {
             let fetch_link = generate_fetch_link(&calendar_link, week_start);
-            let appointments = fetch_calendar_from_dhbw(&fetch_link).await?;
+            let appointments = fetch_calendar_from_dhbw(&fetch_link)
+                .await
+                .expect("failed to fetch calendar from dhbw");
             all_appointments.extend(appointments);
         }
 
@@ -118,7 +120,7 @@ async fn insert_appointments(
             start_time: Set(appointment.start_time),
             end_time: Set(appointment.end_time),
             location: Set(appointment.location.clone()),
-            user_id: Set(user.id.clone()),
+            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
             ..Default::default()
         };
         new_appointment.insert(&txn).await?;

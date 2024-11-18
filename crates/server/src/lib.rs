@@ -144,15 +144,15 @@ async fn shutdown(state: AppState) {
 mod tests {
     use std::str::FromStr;
 
+    use crate::models::_entities::user::Entity as User;
     use database::init;
-    use database::models::_entities::users::Entity as User;
     use sea_orm::EntityTrait;
     use uuid::Uuid;
 
     #[tokio::test]
     async fn it_works() {
         let db = init("./../../migration/test.db").await.unwrap();
-        let user: Option<database::models::_entities::users::Model> =
+        let user: Option<crate::models::_entities::user::Model> =
             User::find_by_id(Uuid::from_str("e899acf3-284d-4713-82f8-dbdb1b91c042").unwrap())
                 .one(&db)
                 .await

@@ -1,5 +1,6 @@
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::course::Course;
 use types::user::DatabaseUser;
 
@@ -12,7 +13,7 @@ impl CourseQuery {
         ctx: &Context<'_>,
         id: String,
     ) -> Result<Course, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
         Ok(Course {

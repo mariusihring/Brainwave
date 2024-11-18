@@ -1,6 +1,7 @@
 use crate::graphql::semester::SemesterMutation;
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::semester::{NewSemester, Semester};
 use types::user::DatabaseUser;
 use uuid::Uuid;
@@ -13,7 +14,7 @@ impl SemesterMutation {
         input: NewSemester,
     ) -> Result<Semester, async_graphql::Error> {
         let user = ctx.data::<DatabaseUser>().unwrap();
-        let db = ctx.data::<Pool<Sqlite>>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
         let id = Uuid::new_v4();
         let semester_hash = format!("{}_{}", user.id.clone(), input.semester.clone());
         //TODO: when there is allready a semester with the same id so i get a constraint error the return a pretty statusmessage to show in the error toast :)

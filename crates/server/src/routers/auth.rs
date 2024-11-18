@@ -1,6 +1,6 @@
 use crate::models::_entities::session;
 use crate::models::_entities::user;
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use axum::{
     extract::{Path, State},
     http::StatusCode,
@@ -8,10 +8,10 @@ use axum::{
 };
 use chrono::NaiveDateTime;
 use chrono::{DateTime, Utc};
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, ModelTrait,
-    QueryFilter, Set, TransactionTrait,
-};
+use sea_orm::DatabaseConnection;
+use sea_orm::DbErr;
+use sea_orm::QuerySelect;
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use types::user::DatabaseUser;
@@ -118,7 +118,7 @@ pub async fn delete_user_sessions(
     Path(user_id): Path<String>,
     State(state): State<AppState>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    let delete_result = session::Entity::delete_many()
+    let _ = session::Entity::delete_many()
         .filter(session::Column::UserId.eq(user_id.clone()))
         .exec(&state.db)
         .await
@@ -219,7 +219,7 @@ pub async fn set_session(
 
     let new_session = session::ActiveModel {
         id: Set(Uuid::parse_str(session.id.clone().as_str()).unwrap()),
-        user_id: Set(session.user_id.clone()),
+        user_id: Set(Uuid::parse_str(session.user_id.clone().as_str()).unwrap()),
 
         expires_at: Set(expires_at_naive),
         // Assuming attributes are stored as JSON or similar; adjust as needed
@@ -279,7 +279,7 @@ pub async fn delete_expired_sessions(
 ) -> Result<StatusCode, (StatusCode, String)> {
     let current_timestamp = Utc::now().timestamp();
 
-    let delete_result = session::Entity::delete_many()
+    let _ = session::Entity::delete_many()
         .filter(session::Column::ExpiresAt.lte(current_timestamp))
         .exec(&state.db)
         .await
@@ -296,11 +296,11 @@ pub async fn delete_expired_sessions(
 // Transformation functions
 
 fn transform_into_database_session(model: session::Model) -> Result<DatabaseSession> {
-    let expires_at_naive: NaiveDateTime = model.expires_at.naive_utc();
+    let expires_at_naive = model.expires_at.and_utc();
 
     Ok(DatabaseSession {
         id: model.id.clone().to_string(),
-        user_id: model.user_id.clone(),
+        user_id: model.user_id.clone().to_string(),
         expires_at: expires_at_naive,
         attributes: HashMap::new(), // Populate if attributes are stored
     })
@@ -316,4 +316,28 @@ fn transform_into_database_user(model: user::Model) -> DatabaseUser {
         id: model.id.clone().to_string(),
         attributes,
     }
+}
+
+pub async fn get_user_from_session_id(
+    session_id: &str,
+    db: &DatabaseConnection,
+) -> Result<Option<DatabaseUser>, DbErr> {
+    // Perform a query on the User entity, joining with the Session entity
+    let user = user::Entity::find()
+        .inner_join(session::Entity)
+        // Filter where the Session ID matches the provided session_id
+        .filter(session::Column::Id.eq(session_id))
+        // Select only the User columns
+        .select_only()
+        .column(user::Column::Id)
+        .column(user::Column::Username)
+        .column(user::Column::PasswordHash)
+        .into_model::<user::Model>()
+        // Execute the query and fetch one result
+        .one(db)
+        .await?
+        // Transform the SeaORM User model into your DatabaseUser type
+        .map(|model| transform_into_database_user(model));
+
+    Ok(user)
 }

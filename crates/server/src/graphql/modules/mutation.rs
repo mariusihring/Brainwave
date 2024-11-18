@@ -1,7 +1,8 @@
 use crate::graphql::modules::ModuleMutation;
 
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::module::{Module, NewModule};
 use types::user::DatabaseUser;
 use uuid::Uuid;
@@ -13,7 +14,7 @@ impl ModuleMutation {
         ctx: &Context<'_>,
         input: NewModule,
     ) -> Result<Module, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
         let id = Uuid::new_v4();
         sqlx::query_as::<_, Module>(

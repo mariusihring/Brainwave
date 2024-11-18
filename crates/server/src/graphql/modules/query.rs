@@ -1,6 +1,7 @@
 use crate::graphql::modules::ModuleQuery;
 use async_graphql::{Context, Object};
-use sqlx::{Pool, Sqlite};
+
+use sea_orm::DatabaseConnection;
 use types::module::Module;
 use types::user::DatabaseUser;
 
@@ -11,7 +12,7 @@ impl ModuleQuery {
         ctx: &Context<'_>,
         id: String,
     ) -> Result<Module, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
         sqlx::query_as::<_, Module>("SELECT * FROM modules WHERE id = ? AND user_id = ? LIMIT 1;")
             .bind(id)
@@ -22,7 +23,7 @@ impl ModuleQuery {
     }
 
     pub async fn modules(&self, ctx: &Context<'_>) -> Result<Vec<Module>, async_graphql::Error> {
-        let db = ctx.data::<Pool<Sqlite>>()?;
+        let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<DatabaseUser>()?;
 
         let modules: Vec<Module> = sqlx::query_as("SELECT * FROM modules WHERE user_id = ?;")

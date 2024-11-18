@@ -2,7 +2,6 @@ use axum::extract::State;
 use axum::response::Response;
 use axum::{extract::Request, middleware::Next};
 use http::StatusCode;
-use sqlx::Acquire;
 
 use crate::routers::auth::get_user_from_session_id;
 use crate::state::AppState;
@@ -26,9 +25,9 @@ pub async fn validate_session(
             ))
         }
     };
-    let mut conn = state.db.clone().acquire().await.unwrap();
+    let mut conn = state.db.clone();
 
-    let user = match get_user_from_session_id(session_token.as_str(), &mut *conn).await {
+    let user = match get_user_from_session_id(session_token.as_str(), &conn).await {
         Ok(user_option) => user_option,
         Err(e) => return Err((StatusCode::UNAUTHORIZED, e.to_string())),
     };

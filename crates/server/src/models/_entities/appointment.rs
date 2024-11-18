@@ -13,8 +13,8 @@ pub struct Model {
     pub end_time: DateTime,
     pub location: Option<String>,
     pub is_canceled: bool,
-    pub course_id: Option<String>,
-    pub user_id: String,
+    pub course_id: Option<Uuid>,
+    pub user_id: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

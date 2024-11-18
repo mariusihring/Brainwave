@@ -3,7 +3,7 @@ use log::{debug, warn};
 use regex::Regex;
 use reqwest::Client;
 use scraper::{Html, Selector};
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QuerySelect, Set};
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use std::collections::HashMap;
 use types::recurring_appointment::{RecurringAppointment, WeekdayEnum};
 use url::Url;
@@ -121,7 +121,6 @@ pub async fn fetch_calendar_from_dhbw(
 
     let re = Regex::new(r"(\d{2}:\d{2})\s*-(\d{2}:\d{2})(.+)").unwrap();
     let mut current_date = None;
-    let mut current_day = 0; // 0 = Monday, 1 = Tuesday, etc.
 
     for row in table.select(&row_selector) {
         let cells: Vec<_> = row.select(&cell_selector).collect();
@@ -143,7 +142,6 @@ pub async fn fetch_calendar_from_dhbw(
                             .unwrap_or_else(|_| get_month_number(date_parts[1]).unwrap_or(1));
 
                         current_date = NaiveDate::from_ymd_opt(2024, month, day);
-                        current_day = 0; // Reset to Monday
                     }
                 }
             }
@@ -182,7 +180,7 @@ pub async fn fetch_calendar_from_dhbw(
                                             //TODO: make this proper Some none action
                                             location: Set(Some(location)),
                                             is_canceled: Set(false),
-                                            user_id: Set("".to_string()),
+                                            user_id: Set(Uuid::new_v4()),
                                             course_id: Set(None),
                                         };
                                         appointments.push(appointment);
