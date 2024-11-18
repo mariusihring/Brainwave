@@ -10,15 +10,7 @@ export const TODO_INDEX_QUERY = graphql(`
             title
             dueOn
             userId
-            todoType
-            status
-            course {
-                id
-                name
-                grade
-                teacher
-                academicDepartment
-            }
+
         }
     }
 `)
@@ -30,15 +22,7 @@ export const UPDATE_TODO_STATUS_MUTATION = graphql(`
             title
             dueOn
             userId
-            todoType
-            status
-            course {
-                id
-                name
-                grade
-                teacher
-                academicDepartment
-            }
+            
         }
     }
 `)

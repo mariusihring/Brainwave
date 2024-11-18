@@ -4,30 +4,35 @@ schema {
 }
 
 type Appointment {
+  courseId: UUID
   date: NaiveDate!
   endTime: NaiveDateTime!
-  id: String!
-  location: String!
-  name: String!
+  id: UUID!
+  isCanceled: Boolean!
+  location: String
   startTime: NaiveDateTime!
+  title: String!
+  userId: UUID!
 }
 
 type Course {
   academicDepartment: String
   grade: Float
-  id: String!
+  id: UUID!
+  moduleId: UUID!
   name: String!
   teacher: String
+  userId: UUID!
 }
 
 type Module {
-  courses: [Course!]
-  ects: Int!
-  endSemester: String
+  endSemester: UUID
+  etCs: Int!
   grade: Float
-  id: String!
+  id: UUID!
   name: String!
-  startSemester: String!
+  startSemester: UUID!
+  userId: UUID!
 }
 
 type Mutation {
@@ -95,10 +100,10 @@ input NewSemester {
 }
 
 input NewTodo {
-  courseId: String
+  courseId: UUID
   dueOn: NaiveDateTime!
+  notes: String
   title: String!
-  todoType: TodoType
 }
 
 type Query {
@@ -106,11 +111,11 @@ type Query {
   calendarLink: String
   course(id: String!): Course!
   courses: [Course!]!
-  module(id: String!): Module!
+  module(id: String!): Module
   modules: [Module!]!
-  semester(semester: Int!): Semester!
+  semester(semester: Int!): Semester
   semesters: [Semester!]!
-  todo(id: String!): Todo!
+  todo(id: String!): Todo
   todos: [Todo!]!
   todosByDate(date: NaiveDate!): [Todo!]!
 }
@@ -126,33 +131,36 @@ type RecurringAppointment {
 type Semester {
   courses: [Course!]!
   endDate: NaiveDate!
-  id: String!
+  id: UUID!
   importedAppointments: Boolean!
   modules: [Module!]!
   semester: Int!
+  semesterHash: String!
   startDate: NaiveDate!
-  totalEcts: Int!
+  totalEcTs: Int!
+  userId: UUID!
 }
 
 type Settings {
   calendarLink: String
-  id: String!
-  userId: String!
+  id: UUID!
+  userId: UUID!
 }
 
 type Todo {
-  course: Course
+  courseId: UUID
   dueOn: NaiveDateTime!
-  id: String!
+  id: UUID!
+  notes: String
   status: TodoStatus!
   title: String!
-  todoType: TodoType!
-  userId: String!
+  type: TodoType!
+  userId: UUID!
 }
 
 enum TodoStatus {
   COMPLETED
-  IN_PROGRESS
+  INPROGRESS
   PENDING
 }
 
@@ -162,12 +170,24 @@ enum TodoType {
   GENERAL
 }
 
+"""
+A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
+Strings within GraphQL. UUIDs are used to assign unique identifiers to
+entities without requiring a central allocating authority.
+
+# References
+
+* [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
+* [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
+"""
+scalar UUID
+
 input UpdateTodo {
-  courseId: String
+  courseId: UUID
   dueOn: NaiveDateTime!
-  status: TodoStatus!
+  id: UUID!
+  notes: String
   title: String!
-  todoType: TodoType
 }
 
 enum WeekdayEnum {

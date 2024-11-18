@@ -1,10 +1,9 @@
 use crate::graphql::modules::ModuleMutation;
-use crate::models::_entities::{module, semester};
+use crate::models::_entities::{module, semester, user};
+use crate::models::module::NewModule;
 use async_graphql::{Context, Object};
 use sea_orm::Set;
 use sea_orm::{ActiveModelTrait, DatabaseConnection};
-use types::module::{Module, NewModule};
-use types::user::DatabaseUser;
 use uuid::Uuid;
 
 #[Object]
@@ -15,7 +14,7 @@ impl ModuleMutation {
         input: NewModule,
     ) -> Result<module::Model, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
         let id = Uuid::new_v4();
 
         let module = module::ActiveModel {
@@ -25,7 +24,7 @@ impl ModuleMutation {
             grade: Set(input.grade),
             start_semester: Set(Uuid::parse_str(input.start_semester.as_str()).unwrap()),
             end_semester: Set(Uuid::parse_str(input.end_semester.unwrap().as_str()).ok()),
-            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
+            user_id: Set(user.id),
         };
 
         module

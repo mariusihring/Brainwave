@@ -1,5 +1,4 @@
-use ::types::recurring_appointment::RecurringAppointment;
-use ::types::user::DatabaseUser;
+
 use async_graphql::*;
 
 use sea_orm::QueryFilter;
@@ -11,7 +10,8 @@ use url::Url;
 
 use crate::graphql::calendar::CalendarMutation;
 
-use crate::models::_entities::{appointment, semester, settings};
+use crate::models::_entities::{appointment, semester, settings, user};
+use crate::models::recurring_appointment::RecurringAppointment;
 
 use super::helper_functions::{
     fetch_all_semesters, fetch_calendar_from_dhbw, fetch_calendar_link, generate_fetch_link,
@@ -25,7 +25,7 @@ impl CalendarMutation {
         ctx: &Context<'_>,
         calendar_link: Option<String>,
     ) -> Result<settings::Model> {
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
         let db = ctx.data::<DatabaseConnection>()?;
 
         let processed_link = calendar_link.map(|link| process_calendar_link(&link));
@@ -33,7 +33,7 @@ impl CalendarMutation {
         let txn = db.begin().await?;
 
         let existing_settings = settings::Entity::find()
-            .filter(settings::Column::UserId.eq(&user.id))
+            .filter(settings::Column::UserId.eq(user.id))
             .one(&txn)
             .await?;
 
@@ -49,7 +49,7 @@ impl CalendarMutation {
             None => {
                 let new_settings = settings::ActiveModel {
                     id: Set(Uuid::new_v4()),
-                    user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
+                    user_id: Set(user.id),
                     calendar_link: Set(processed_link.clone()),
                 };
                 new_settings.insert(&txn).await?
@@ -67,9 +67,9 @@ impl CalendarMutation {
         semester_id: String,
     ) -> Result<Vec<RecurringAppointment>> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<&user::Model>()?;
 
-        let semesters = fetch_all_semesters(&db, &user.id).await?;
+        let semesters = fetch_all_semesters(&db, user.id.to_string().as_str()).await?;
 
         let current_semester = semesters
             .into_iter()
@@ -84,7 +84,7 @@ impl CalendarMutation {
             return Err("The calendar for this semester has already been imported".into());
         }
 
-        let calendar_link = fetch_calendar_link(&db, &user.id).await?;
+        let calendar_link = fetch_calendar_link(&db, user.id.to_string().as_str()).await?;
         let weeks = generate_weeks(semester.start_date, semester.end_date);
         let mut all_appointments = Vec::new();
 
@@ -96,7 +96,7 @@ impl CalendarMutation {
             all_appointments.extend(appointments);
         }
 
-        let apps = insert_appointments(&db, user.clone(), &all_appointments).await?;
+        let apps = insert_appointments(&db,  &all_appointments).await?;
 
         update_semester_import_status(&db, &semester.id.to_string()).await?;
 
@@ -108,7 +108,6 @@ impl CalendarMutation {
 
 async fn insert_appointments(
     db: &DatabaseConnection,
-    user: DatabaseUser,
     appointments: &Vec<appointment::ActiveModel>,
 ) -> Result<Vec<appointment::Model>> {
     let mut models = Vec::new();

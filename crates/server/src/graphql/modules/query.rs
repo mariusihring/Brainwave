@@ -1,9 +1,8 @@
 use crate::graphql::modules::ModuleQuery;
-use crate::models::_entities::module;
+use crate::models::_entities::{module, user};
 use async_graphql::{Context, Object};
 use sea_orm::DatabaseConnection;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
-use types::user::DatabaseUser;
 
 #[Object]
 impl ModuleQuery {
@@ -13,7 +12,7 @@ impl ModuleQuery {
         id: String,
     ) -> Result<Option<module::Model>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
 
         module::Entity::find()
             .filter(
@@ -31,10 +30,10 @@ impl ModuleQuery {
         ctx: &Context<'_>,
     ) -> Result<Vec<module::Model>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
 
         module::Entity::find()
-            .filter(module::Column::UserId.eq(&user.id))
+            .filter(module::Column::UserId.eq(user.id))
             .all(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))

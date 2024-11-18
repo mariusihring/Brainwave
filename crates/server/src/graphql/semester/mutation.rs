@@ -1,10 +1,9 @@
-use crate::graphql::semester::SemesterMutation;
-use crate::models::_entities::semester;
+use crate::{graphql::semester::SemesterMutation, models::semester::NewSemester};
+use crate::models::_entities::{semester, user};
 use async_graphql::{Context, Object};
 
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, Set, SqlErr};
-use types::semester::{NewSemester, Semester};
-use types::user::DatabaseUser;
+
 use uuid::Uuid;
 
 #[Object]
@@ -14,7 +13,7 @@ impl SemesterMutation {
         ctx: &Context<'_>,
         input: NewSemester,
     ) -> Result<semester::Model, async_graphql::Error> {
-        let user = ctx.data::<DatabaseUser>().unwrap();
+        let user = ctx.data::<user::Model>().unwrap();
         let db = ctx.data::<DatabaseConnection>().unwrap();
         let id = Uuid::new_v4();
 
@@ -25,7 +24,7 @@ impl SemesterMutation {
             semester: Set(input.semester),
             start_date: Set(input.start_date),
             end_date: Set(input.start_date),
-            user_id: Set(Uuid::parse_str(user.id.clone().as_str()).unwrap()),
+            user_id: Set(user.id),
             total_ec_ts: Set(input.total_ects),
             ..Default::default()
         };

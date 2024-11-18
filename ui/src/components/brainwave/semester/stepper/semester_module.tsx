@@ -15,7 +15,7 @@ const CREATE_MODULE_MUTATION = graphql(
    mutation CreateModule($input: NewModule!) {
        createModule(input: $input) {
            id
-           ects
+           etCs
            name
        }
    }

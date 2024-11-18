@@ -1,8 +1,7 @@
 use crate::graphql::{Mutation, Query};
+use crate::models::_entities::user;
 use async_graphql::{EmptySubscription, Schema};
-
 use sea_orm::DatabaseConnection;
-use types::user::DatabaseUser;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -12,5 +11,5 @@ pub struct AppState {
 
 #[derive(Clone)]
 pub struct GraphqlContext {
-    pub user: DatabaseUser,
+    pub user: user::Model,
 }

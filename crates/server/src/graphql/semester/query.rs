@@ -1,10 +1,9 @@
 use crate::graphql::semester::SemesterQuery;
-use crate::models::_entities::semester;
+use crate::models::_entities::{semester, user};
 use async_graphql::{ComplexObject, Context, Object};
 use sea_orm::DatabaseConnection;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
-use types::semester::Semester;
-use types::user::DatabaseUser;
+
 
 #[Object]
 impl SemesterQuery {
@@ -13,13 +12,13 @@ impl SemesterQuery {
         ctx: &Context<'_>,
         semester: i32,
     ) -> Result<Option<semester::Model>, async_graphql::Error> {
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
         let db = ctx.data::<DatabaseConnection>()?;
 
         semester::Entity::find()
             .filter(
                 semester::Column::UserId
-                    .eq(&user.id)
+                    .eq(user.id)
                     .and(semester::Column::Semester.eq(semester)),
             )
             .one(db)
@@ -31,11 +30,11 @@ impl SemesterQuery {
         &self,
         ctx: &Context<'_>,
     ) -> Result<Vec<semester::Model>, async_graphql::Error> {
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
         let db = ctx.data::<DatabaseConnection>()?;
 
         semester::Entity::find()
-            .filter(semester::Column::UserId.eq(&user.id))
+            .filter(semester::Column::UserId.eq(user.id))
             .all(db)
             .await
             .map_err(|err| async_graphql::Error::from(err))

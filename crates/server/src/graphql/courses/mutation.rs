@@ -1,9 +1,8 @@
-use crate::models::_entities::course::Model as Course;
+use crate::models::{_entities::{course::Model as Course, user}, course::NewCourse};
 use async_graphql::{Context, Object};
 
 use sea_orm::DatabaseConnection;
-use types::course::NewCourse;
-use types::user::DatabaseUser;
+
 use uuid::Uuid;
 
 use super::CourseMutation;
@@ -16,7 +15,7 @@ impl CourseMutation {
         input: NewCourse,
     ) -> Result<Course, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<user::Model>()?;
         let id = Uuid::new_v4();
 
         Ok(Course {
@@ -26,7 +25,7 @@ impl CourseMutation {
             teacher: None,
             academic_department: None,
             module_id: id,
-            user_id: Uuid::parse_str(user.id.clone().as_str()).unwrap(),
+            user_id: user.id,
         })
     }
 
@@ -36,7 +35,7 @@ impl CourseMutation {
         input: Vec<String>,
     ) -> Result<Vec<Course>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<DatabaseUser>()?;
+        let user = ctx.data::<&user::Model>()?;
         let mut response = Vec::new();
         for course_name in input {
             let id = Uuid::new_v4();
@@ -48,7 +47,7 @@ impl CourseMutation {
                 teacher: None,
                 academic_department: None,
                 module_id: id,
-                user_id: Uuid::parse_str(user.id.clone().as_str()).unwrap(),
+                user_id: user.id,
             };
             response.push(course);
         }

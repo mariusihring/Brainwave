@@ -1,6 +1,6 @@
 use super::TodoQuery;
 use crate::models::_entities::{todo, user::Model as User};
-use ::types::todo::Todo;
+
 use async_graphql::{Context, Object};
 use chrono::{NaiveDate, NaiveDateTime};
 use sea_orm::DatabaseConnection;

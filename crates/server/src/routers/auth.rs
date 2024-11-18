@@ -10,12 +10,18 @@ use chrono::NaiveDateTime;
 use chrono::{DateTime, Utc};
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
+use sea_orm::ModelTrait;
 use sea_orm::QuerySelect;
 use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use types::user::DatabaseUser;
+
 use uuid::Uuid;
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DatabaseUser {
+    pub id: String,
+    pub attributes: HashMap<String, String>,
+}
 
 use crate::state::AppState;
 //TODO: make the return of UUID be a actuall UUID and not a string
@@ -318,23 +324,13 @@ fn transform_into_database_user(model: user::Model) -> DatabaseUser {
 pub async fn get_user_from_session_id(
     session_id: &str,
     db: &DatabaseConnection,
-) -> Result<Option<DatabaseUser>, DbErr> {
-    // Perform a query on the User entity, joining with the Session entity
-    let user = user::Entity::find()
-        .inner_join(session::Entity)
-        // Filter where the Session ID matches the provided session_id
-        .filter(session::Column::Id.eq(session_id))
-        // Select only the User columns
-        .select_only()
-        .column(user::Column::Id)
-        .column(user::Column::Username)
-        .column(user::Column::PasswordHash)
-        .into_model::<user::Model>()
-        // Execute the query and fetch one result
+) -> Result<Option<user::Model>, DbErr> {
+    let session = session::Entity::find_by_id(Uuid::parse_str(session_id).unwrap())
         .one(db)
-        .await?
-        // Transform the SeaORM User model into your DatabaseUser type
-        .map(|model| transform_into_database_user(model));
+        .await?;
 
-    Ok(user)
+    match session {
+        None => Ok(None),
+        Some(sess) => sess.find_related(user::Entity).one(db).await,
+    }
 }

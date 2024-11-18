@@ -35,7 +35,6 @@ const TODO_DASHBOARD_QUERY = graphql(`
 			id
 			title
 			dueOn
-			todoType
 		}
 	}
 `);

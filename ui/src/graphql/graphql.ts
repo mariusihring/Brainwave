@@ -42,89 +42,17 @@ export type Scalars = {
    * * `08:59:60.123`
    */
   NaiveTime: { input: any; output: any; }
-};
-
-export type Appointment = {
-  __typename?: 'Appointment';
-  date: Scalars['NaiveDate']['output'];
-  endTime: Scalars['NaiveDateTime']['output'];
-  id: Scalars['String']['output'];
-  location: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  startTime: Scalars['NaiveDateTime']['output'];
-};
-
-export type Course = {
-  __typename?: 'Course';
-  academicDepartment?: Maybe<Scalars['String']['output']>;
-  grade?: Maybe<Scalars['Float']['output']>;
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  teacher?: Maybe<Scalars['String']['output']>;
-};
-
-export type Module = {
-  __typename?: 'Module';
-  courses?: Maybe<Array<Course>>;
-  ects: Scalars['Int']['output'];
-  endSemester?: Maybe<Scalars['String']['output']>;
-  grade?: Maybe<Scalars['Float']['output']>;
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  startSemester: Scalars['String']['output'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  createCourse: Course;
-  createModule: Module;
-  createMultipleCourses: Array<Course>;
-  createSemester: Semester;
-  createTodo: Todo;
-  processSemesterCalendar: Array<RecurringAppointment>;
-  updateTodo: Todo;
-  upsertCalendarLink: Settings;
-};
-
-
-export type MutationCreateCourseArgs = {
-  input: NewCourse;
-};
-
-
-export type MutationCreateModuleArgs = {
-  input: NewModule;
-};
-
-
-export type MutationCreateMultipleCoursesArgs = {
-  input: Array<Scalars['String']['input']>;
-};
-
-
-export type MutationCreateSemesterArgs = {
-  input: NewSemester;
-};
-
-
-export type MutationCreateTodoArgs = {
-  input: NewTodo;
-};
-
-
-export type MutationProcessSemesterCalendarArgs = {
-  semesterId: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateTodoArgs = {
-  id: Scalars['String']['input'];
-  input: UpdateTodo;
-};
-
-
-export type MutationUpsertCalendarLinkArgs = {
-  calendarLink?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
+   * Strings within GraphQL. UUIDs are used to assign unique identifiers to
+   * entities without requiring a central allocating authority.
+   *
+   * # References
+   *
+   * * [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
+   * * [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
+   */
+  UUID: { input: any; output: any; }
 };
 
 export type NewCourse = {
@@ -150,94 +78,15 @@ export type NewSemester = {
 };
 
 export type NewTodo = {
-  courseId?: InputMaybe<Scalars['String']['input']>;
+  courseId?: InputMaybe<Scalars['UUID']['input']>;
   dueOn: Scalars['NaiveDateTime']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
-  todoType?: InputMaybe<TodoType>;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  appointments: Array<Appointment>;
-  calendarLink?: Maybe<Scalars['String']['output']>;
-  course: Course;
-  courses: Array<Course>;
-  module: Module;
-  modules: Array<Module>;
-  semester: Semester;
-  semesters: Array<Semester>;
-  todo: Todo;
-  todos: Array<Todo>;
-  todosByDate: Array<Todo>;
-};
-
-
-export type QueryCourseArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryModuleArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QuerySemesterArgs = {
-  semester: Scalars['Int']['input'];
-};
-
-
-export type QueryTodoArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryTodosByDateArgs = {
-  date: Scalars['NaiveDate']['input'];
-};
-
-export type RecurringAppointment = {
-  __typename?: 'RecurringAppointment';
-  endTime: Scalars['NaiveTime']['output'];
-  location: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  startTime: Scalars['NaiveTime']['output'];
-  weekday: WeekdayEnum;
-};
-
-export type Semester = {
-  __typename?: 'Semester';
-  courses: Array<Course>;
-  endDate: Scalars['NaiveDate']['output'];
-  id: Scalars['String']['output'];
-  importedAppointments: Scalars['Boolean']['output'];
-  modules: Array<Module>;
-  semester: Scalars['Int']['output'];
-  startDate: Scalars['NaiveDate']['output'];
-  totalEcts: Scalars['Int']['output'];
-};
-
-export type Settings = {
-  __typename?: 'Settings';
-  calendarLink?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
-};
-
-export type Todo = {
-  __typename?: 'Todo';
-  course?: Maybe<Course>;
-  dueOn: Scalars['NaiveDateTime']['output'];
-  id: Scalars['String']['output'];
-  status: TodoStatus;
-  title: Scalars['String']['output'];
-  todoType: TodoType;
-  userId: Scalars['String']['output'];
 };
 
 export enum TodoStatus {
   Completed = 'COMPLETED',
-  InProgress = 'IN_PROGRESS',
+  Inprogress = 'INPROGRESS',
   Pending = 'PENDING'
 }
 
@@ -248,11 +97,11 @@ export enum TodoType {
 }
 
 export type UpdateTodo = {
-  courseId?: InputMaybe<Scalars['String']['input']>;
+  courseId?: InputMaybe<Scalars['UUID']['input']>;
   dueOn: Scalars['NaiveDateTime']['input'];
-  status: TodoStatus;
+  id: Scalars['UUID']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
-  todoType?: InputMaybe<TodoType>;
 };
 
 export enum WeekdayEnum {
@@ -275,19 +124,19 @@ export type SaveCalendarLinkMutationVariables = Exact<{
 }>;
 
 
-export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: string } };
+export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: any } };
 
 export type CreateSemesterMutationVariables = Exact<{
   input: NewSemester;
 }>;
 
 
-export type CreateSemesterMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string } };
+export type CreateSemesterMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: any } };
 
 export type GetCoursesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCoursesQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
+export type GetCoursesQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
 
 export type ProcessCalendarMutationVariables = Exact<{
   input: Scalars['String']['input'];
@@ -301,33 +150,33 @@ export type CreateCoursesMutationVariables = Exact<{
 }>;
 
 
-export type CreateCoursesMutation = { __typename?: 'Mutation', createMultipleCourses: Array<{ __typename?: 'Course', academicDepartment?: string | null, grade?: number | null, id: string, name: string, teacher?: string | null }> };
+export type CreateCoursesMutation = { __typename?: 'Mutation', createMultipleCourses: Array<{ __typename?: 'Course', academicDepartment?: string | null, grade?: number | null, id: any, name: string, teacher?: string | null }> };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
 }>;
 
 
-export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: string, semester: number } };
+export type CreateSemesterMutationMutation = { __typename?: 'Mutation', createSemester: { __typename?: 'Semester', id: any, semester: number } };
 
 export type CreateModuleMutationVariables = Exact<{
   input: NewModule;
 }>;
 
 
-export type CreateModuleMutation = { __typename?: 'Mutation', createModule: { __typename?: 'Module', id: string, ects: number, name: string } };
+export type CreateModuleMutation = { __typename?: 'Mutation', createModule: { __typename?: 'Module', id: any, etCs: number, name: string } };
 
 export type CreateTodoMutationMutationVariables = Exact<{
   input: NewTodo;
 }>;
 
 
-export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'Todo', id: string } };
+export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'Todo', id: any } };
 
 export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null }> };
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any }> };
 
 export type UpdateTodoStatusMutationMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -335,22 +184,22 @@ export type UpdateTodoStatusMutationMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTodoStatusMutationMutation = { __typename?: 'Mutation', updateTodo: { __typename?: 'Todo', id: string, title: string, dueOn: any, userId: string, todoType: TodoType, status: TodoStatus, course?: { __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null } | null } };
+export type UpdateTodoStatusMutationMutation = { __typename?: 'Mutation', updateTodo: { __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any } };
 
 export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: string, date: any, endTime: any, startTime: any, location: string, name: string }> };
+export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, date: any, endTime: any, startTime: any, location?: string | null }> };
 
 export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, title: string, dueOn: any, todoType: TodoType }> };
+export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any }> };
 
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: string, semester: number, endDate: any, totalEcts: number, startDate: any, modules: Array<{ __typename?: 'Module', id: string, name: string, ects: number, grade?: number | null, startSemester: string, endSemester?: string | null }>, courses: Array<{ __typename?: 'Course', id: string, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
+export type GetAllSemesterQuery = { __typename?: 'Query', semesters: Array<{ __typename?: 'Semester', id: any, semester: number, endDate: any, totalEcTs: number, startDate: any, modules: Array<{ __typename?: 'Module', id: any, name: string, etCs: number, grade?: number | null, startSemester: any, endSemester?: any | null }>, courses: Array<{ __typename?: 'Course', id: any, name: string, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -431,7 +280,7 @@ export const CreateModuleDocument = new TypedDocumentString(`
     mutation CreateModule($input: NewModule!) {
   createModule(input: $input) {
     id
-    ects
+    etCs
     name
   }
 }
@@ -450,15 +299,6 @@ export const TodoIndexQueryDocument = new TypedDocumentString(`
     title
     dueOn
     userId
-    todoType
-    status
-    course {
-      id
-      name
-      grade
-      teacher
-      academicDepartment
-    }
   }
 }
     `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;
@@ -469,15 +309,6 @@ export const UpdateTodoStatusMutationDocument = new TypedDocumentString(`
     title
     dueOn
     userId
-    todoType
-    status
-    course {
-      id
-      name
-      grade
-      teacher
-      academicDepartment
-    }
   }
 }
     `) as unknown as TypedDocumentString<UpdateTodoStatusMutationMutation, UpdateTodoStatusMutationMutationVariables>;
@@ -489,7 +320,6 @@ export const AppointmentQueryDocument = new TypedDocumentString(`
     endTime
     startTime
     location
-    name
   }
 }
     `) as unknown as TypedDocumentString<AppointmentQueryQuery, AppointmentQueryQueryVariables>;
@@ -499,7 +329,6 @@ export const TodoDashboardQueryDocument = new TypedDocumentString(`
     id
     title
     dueOn
-    todoType
   }
 }
     `) as unknown as TypedDocumentString<TodoDashboardQueryQuery, TodoDashboardQueryQueryVariables>;
@@ -509,11 +338,11 @@ export const GetAllSemesterDocument = new TypedDocumentString(`
     id
     semester
     endDate
-    totalEcts
+    totalEcTs
     modules {
       id
       name
-      ects
+      etCs
       grade
       startSemester
       endSemester

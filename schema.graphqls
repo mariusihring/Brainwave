@@ -116,6 +116,7 @@ type Query {
 	calendarLink: String
 	appointments: [Appointment!]!
 	course(id: String!): Course!
+	courses: [Course!]!
 }
 
 type RecurringAppointment {
@@ -135,6 +136,8 @@ type Semester {
 	userId: UUID!
 	importedAppointments: Boolean!
 	totalEcTs: Int!
+	courses: [Course!]!
+	modules: [Module!]!
 }
 
 type Settings {

@@ -3,7 +3,6 @@ resolver = "2"
 members = [
     "crates/database",
     "crates/server",
-    "crates/types",
     "ui/src-tauri",
     "crates/migration",
 ]

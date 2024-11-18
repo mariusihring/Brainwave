@@ -5,14 +5,13 @@ use reqwest::Client;
 use scraper::{Html, Selector};
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use std::collections::HashMap;
-use types::recurring_appointment::{RecurringAppointment, WeekdayEnum};
 use url::Url;
 use uuid::Uuid;
 
-use crate::models::_entities::{
+use crate::models::{_entities::{
     appointment::{self, Model as Appointment},
     semester, settings,
-};
+}, recurring_appointment::{RecurringAppointment, WeekdayEnum}};
 
 pub fn process_calendar_link(link: &str) -> String {
     let mut url = match Url::parse(link) {

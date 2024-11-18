@@ -36,7 +36,6 @@ const CALENDAR_APPOINTMENTS = graphql(`
       endTime
       startTime
       location
-      name
     }
   }
 `);
