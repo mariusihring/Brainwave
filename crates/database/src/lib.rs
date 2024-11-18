@@ -4,7 +4,7 @@ use sea_orm::{Database, DatabaseConnection, DbErr};
 use migration::{Migrator, MigratorTrait};
 
 pub async fn init(path: &str) -> Result<DatabaseConnection, DbErr> {
-    let mut opt = ConnectOptions::new(format!("sqlite://{}?mode=rwc", path).as_str());
+    let mut opt = ConnectOptions::new("postgresql://");
     opt.sqlx_logging(false)
         .sqlx_logging_level(log::LevelFilter::Info);
 

@@ -1,6 +1,5 @@
 target
 node_modules
-Makefile
 */target
 */node_modules
 .env

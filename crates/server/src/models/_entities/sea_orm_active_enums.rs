@@ -5,6 +5,7 @@ use sea_orm::entity::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Copy, Enum)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "todostatus")]
+#[graphql(name = "TodoStatus")]
 pub enum Todostatus {
     #[sea_orm(string_value = "completed")]
     Completed,
@@ -15,6 +16,7 @@ pub enum Todostatus {
 }
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Copy, Enum)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "todotype")]
+#[graphql(name = "TodoType")]
 pub enum Todotype {
     #[sea_orm(string_value = "assignment")]
     Assignment,

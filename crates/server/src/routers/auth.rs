@@ -37,12 +37,7 @@ pub async fn get_user(
         .filter(user::Column::Username.eq(payload.username))
         .one(&state.db)
         .await
-        .map_err(|e| {
-            (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Database error: {}", e),
-            )
-        })?
+        .map_err(|e| (StatusCode::NOT_FOUND, format!("Database error: {}", e)))?
         .map(transform_into_database_user);
 
     Ok((StatusCode::OK, Json(db_user)))
@@ -62,7 +57,9 @@ pub async fn create_user(
     let new_user = user::ActiveModel {
         username: Set(payload.username.clone()),
         password_hash: Set(payload.hash.clone()),
-        ..Default::default() // Set other fields as necessary
+        first_name: Set(String::from("test")),
+        last_name: Set(String::from("test")), // Set other fields as necessary
+        ..Default::default()
     };
 
     // Insert the new user into the database
@@ -71,7 +68,7 @@ pub async fn create_user(
         .await
         .map_err(|e| {
             (
-                StatusCode::INTERNAL_SERVER_ERROR,
+                StatusCode::BAD_REQUEST,
                 format!("Failed to insert user: {}", e),
             )
         })?;
