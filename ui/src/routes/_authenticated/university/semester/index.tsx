@@ -7,7 +7,7 @@ import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
 import type { Semester } from "@/graphql/graphql.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/university/semester/")({
 	component: () => <SemesterIndex />,
@@ -58,6 +58,10 @@ function SemesterIndex() {
 		initialData: Route.useLoaderData(),
 	});
 	if (error) console.log(error);
+	const navigate = useNavigate();
+	if (semesters.length === 0) {
+		navigate({ to: "/semester_stepper" });
+	}
 	const currentDate = new Date();
 	const currentSemester =
 		semesters.find(

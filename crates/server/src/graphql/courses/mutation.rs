@@ -35,7 +35,7 @@ impl CourseMutation {
         input: Vec<String>,
     ) -> Result<Vec<Course>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<&user::Model>()?;
+        let user = ctx.data::<user::Model>()?;
         let mut response = Vec::new();
         for course_name in input {
             let id = Uuid::new_v4();

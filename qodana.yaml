@@ -1,0 +1,26 @@
+version: "1.0"
+
+profile:
+  name: qodana.recommended
+
+exclude:
+  - name: "All"
+    paths:
+      - target/**
+      - node_modules/**
+      - dist/**
+      - build/**
+
+linter: jetbrains/qodana-js:latest
+
+include:
+  - name: "JavaScript and TypeScript"
+    paths:
+      - src/**/*.{js,jsx,ts,tsx}
+  - name: "Rust"
+    paths:
+      - src/**/*.rs
+
+plugins:
+  - id: "org.rust.lang"
+  - id: "com.intellij.typescript"

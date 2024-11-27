@@ -57,6 +57,7 @@ pub fn generate_weeks(start_date: NaiveDate, end_date: NaiveDate) -> Vec<NaiveDa
     let mut weeks = Vec::new();
     let mut current_date = start_date;
 
+    debug!("Current_date: {}, end_date: {}", current_date, end_date);
     while current_date <= end_date {
         if current_date.weekday() == Weekday::Mon {
             weeks.push(current_date);
@@ -88,7 +89,7 @@ pub async fn fetch_semester(
 
 pub async fn fetch_calendar_link(
     db: &DatabaseConnection,
-    user_id: &str,
+    user_id: uuid::Uuid,
 ) -> Result<String, sea_orm::DbErr> {
     let settings = settings::Entity::find()
         .filter(settings::Column::UserId.eq(user_id))
@@ -102,6 +103,7 @@ pub async fn fetch_calendar_link(
 
 pub async fn fetch_calendar_from_dhbw(
     fetch_link: &str,
+    user_id: uuid::Uuid,
 ) -> Result<Vec<appointment::ActiveModel>, Box<dyn std::error::Error>> {
     let mut appointments: Vec<appointment::ActiveModel> = Vec::new();
     debug!("Starting fetch_calendar_from_dhbw");
@@ -125,6 +127,7 @@ pub async fn fetch_calendar_from_dhbw(
         let cells: Vec<_> = row.select(&cell_selector).collect();
 
         if cells.is_empty() {
+            warn!("No cells");
             continue;
         }
 
@@ -179,9 +182,10 @@ pub async fn fetch_calendar_from_dhbw(
                                             //TODO: make this proper Some none action
                                             location: Set(Some(location)),
                                             is_canceled: Set(false),
-                                            user_id: Set(Uuid::new_v4()),
+                                            user_id: Set(user_id),
                                             course_id: Set(None),
                                         };
+                                        debug!("{:?}", appointment);
                                         appointments.push(appointment);
                                     } else {
                                         warn!("Failed to parse time for appointment: {}", name);
@@ -247,7 +251,7 @@ pub fn process_recurring_appointments(appointments: Vec<Appointment>) -> Vec<Rec
 
 pub async fn fetch_all_semesters(
     db: &DatabaseConnection,
-    user_id: &str,
+    user_id: uuid::Uuid,
 ) -> Result<Vec<semester::Model>, sea_orm::DbErr> {
     semester::Entity::find()
         .filter(semester::Column::UserId.eq(user_id))

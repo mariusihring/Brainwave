@@ -17,13 +17,13 @@ impl SemesterMutation {
         let db = ctx.data::<DatabaseConnection>().unwrap();
         let id = Uuid::new_v4();
 
-        let semester_hash = format!("{}_{}", user.id.clone(), input.semester.clone());
-
+        let semester_hash = format!("semester_{}_{}",  input.semester.clone(), user.id.clone());
         let new = semester::ActiveModel {
+            id: Set(id),
             semester_hash: Set(semester_hash),
             semester: Set(input.semester),
             start_date: Set(input.start_date),
-            end_date: Set(input.start_date),
+            end_date: Set(input.end_date),
             user_id: Set(user.id),
             total_ec_ts: Set(input.total_ects),
             ..Default::default()

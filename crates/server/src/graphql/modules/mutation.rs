@@ -23,7 +23,7 @@ impl ModuleMutation {
             et_cs: Set(input.ects),
             grade: Set(input.grade),
             start_semester: Set(Uuid::parse_str(input.start_semester.as_str()).unwrap()),
-            end_semester: Set(Uuid::parse_str(input.end_semester.unwrap().as_str()).ok()),
+            end_semester: Set(None),
             user_id: Set(user.id),
         };
 

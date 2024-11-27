@@ -67,9 +67,9 @@ impl CalendarMutation {
         semester_id: String,
     ) -> Result<Vec<RecurringAppointment>> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let user = ctx.data::<&user::Model>()?;
+        let user = ctx.data::<user::Model>()?;
 
-        let semesters = fetch_all_semesters(&db, user.id.to_string().as_str()).await?;
+        let semesters = fetch_all_semesters(&db, user.id).await?;
 
         let current_semester = semesters
             .into_iter()
@@ -84,18 +84,19 @@ impl CalendarMutation {
             return Err("The calendar for this semester has already been imported".into());
         }
 
-        let calendar_link = fetch_calendar_link(&db, user.id.to_string().as_str()).await?;
+        let calendar_link = fetch_calendar_link(&db, user.id).await?;
         let weeks = generate_weeks(semester.start_date, semester.end_date);
+        println!("{:?}", weeks);
         let mut all_appointments = Vec::new();
 
         for week_start in weeks {
             let fetch_link = generate_fetch_link(&calendar_link, week_start);
-            let appointments = fetch_calendar_from_dhbw(&fetch_link)
+            let appointments = fetch_calendar_from_dhbw(&fetch_link, user.id.clone())
                 .await
                 .expect("failed to fetch calendar from dhbw");
             all_appointments.extend(appointments);
         }
-
+        println!("{:?}", all_appointments);
         let apps = insert_appointments(&db,  &all_appointments).await?;
 
         update_semester_import_status(&db, &semester.id.to_string()).await?;
@@ -112,13 +113,15 @@ async fn insert_appointments(
 ) -> Result<Vec<appointment::Model>> {
     let mut models = Vec::new();
     let mut txn = db.begin().await?;
-
+    println!("start insert appointments");
     for appointment in appointments {
         let app = appointment.clone().insert(&txn).await?;
         models.push(app);
     }
 
     txn.commit().await?;
+    
+    println!("end insert appointments");
     Ok(models)
 }
 
