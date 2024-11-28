@@ -356,7 +356,7 @@ export type UpdateTodoStatusMutationMutation = { __typename?: 'Mutation', update
 export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, date: any, endTime: any, startTime: any, location?: string | null }> };
+export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
 
 export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -486,6 +486,7 @@ export const AppointmentQueryDocument = new TypedDocumentString(`
     query AppointmentQuery {
   appointments {
     id
+    title
     date
     endTime
     startTime
@@ -877,7 +878,7 @@ export type UpdateTodoStatusMutationMutation = { __typename?: 'Mutation', update
 export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, date: any, endTime: any, startTime: any, location?: string | null }> };
+export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
 
 export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

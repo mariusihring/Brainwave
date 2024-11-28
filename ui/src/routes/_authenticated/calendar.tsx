@@ -32,6 +32,7 @@ const CALENDAR_APPOINTMENTS = graphql(`
   query AppointmentQuery {
     appointments {
       id
+      title
       date
       endTime
       startTime
@@ -46,12 +47,12 @@ interface Event {
 	endTime: string;
 	startTime: string;
 	location: string;
-	name: string;
+	title: string;
 }
 
 const EventComponent = ({ event }: { event: Event }) => (
 	<div className="p-2 bg-primary/10 border border-primary rounded-md shadow-sm">
-		<div className="font-medium text-primary">{event.name}</div>
+		<div className="font-medium text-primary">{event.title}</div>
 		<div className="flex items-center text-xs text-muted-foreground mt-1">
 			<MapPinIcon className="w-3 h-3 mr-1" />
 			{event.location}
@@ -174,7 +175,7 @@ function CalendarIndex() {
 								).format("YYYY-MM-DDTHH:mm:ss");
 								handleUpdateEvent({
 									...selectedEvent,
-									name: formData.get("name") as string,
+									title: formData.get("title") as string,
 									location: formData.get("location") as string,
 									date: formData.get("date") as string,
 									startTime,
@@ -184,11 +185,11 @@ function CalendarIndex() {
 							className="space-y-4"
 						>
 							<div className="space-y-2">
-								<Label htmlFor="name">Name</Label>
+								<Label htmlFor="title">Title</Label>
 								<Input
-									id="name"
-									name="name"
-									defaultValue={selectedEvent.name}
+									id="title"
+									name="title"
+									defaultValue={selectedEvent.title}
 								/>
 							</div>
 							<div className="space-y-2">

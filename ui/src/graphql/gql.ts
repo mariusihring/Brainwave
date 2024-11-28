@@ -25,7 +25,7 @@ const documents = {
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n\n        }\n    }\n": types.TodoIndexQueryDocument,
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            \n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
-    "\n  query AppointmentQuery {\n    appointments {\n      id\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
+    "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
     "\n\tquery TodoDashboardQuery{\n\t\ttodos {\n\t\t\tid\n\t\t\ttitle\n\t\t\tdueOn\n\t\t}\n\t}\n": types.TodoDashboardQueryDocument,
     "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n      }\n      courses {\n        id\n        name\n        grade\n        teacher\n        academicDepartment\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
 };
@@ -77,7 +77,7 @@ export function graphql(source: "\n    mutation UpdateTodoStatusMutation($id: St
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query AppointmentQuery {\n    appointments {\n      id\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n"): typeof import('./graphql').AppointmentQueryDocument;
+export function graphql(source: "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n"): typeof import('./graphql').AppointmentQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
