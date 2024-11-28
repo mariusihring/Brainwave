@@ -21,31 +21,31 @@ export const Route = createFileRoute("/_authenticated/university/semester/")({
 	pendingComponent: () => <PendingSemesterIndex />,
 });
 
-const SEMESTER_QUERY = graphql(`
-	query getAllSemester {
-		semesters {
-			id
-			semester
-			endDate
-			totalEcTs
-			modules {
-				id
-				name
-				etCs
-				grade
-				startSemester
-				endSemester
-			}
-			courses {
-				id
-				name
-				grade
-				teacher
-				academicDepartment
-			}
-			startDate
-		}
-	}
+export const SEMESTER_QUERY = graphql(`
+  query getAllSemester {
+    semesters {
+      id
+      semester
+      endDate
+      totalEcTs
+      modules {
+        id
+        name
+        etCs
+        grade
+        startSemester
+        endSemester
+      }
+      courses {
+        id
+        name
+        grade
+        teacher
+        academicDepartment
+      }
+      startDate
+    }
+  }
 `);
 
 function SemesterIndex() {

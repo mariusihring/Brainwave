@@ -6,14 +6,30 @@ import SemesterCourseStep from "./stepper/semester_courses_step";
 import SemesterDateStep from "./stepper/semester_dates";
 import SemesterModuleStep from "./stepper/semester_module";
 import SemesterReviewStep from "./stepper/semester_review_step";
+import { useQuery } from "@tanstack/react-query";
+import { SEMESTER_QUERY } from "@/routes/_authenticated/university/semester";
+import { execute } from "@/execute";
+import { useEffect } from "react";
+import type { Semester } from "@/graphql/types";
+
 export default function SemesterStepper() {
 	const formData = useSemesterStepper();
+
+	const semesters = useQuery({
+		queryKey: ["get_all_semesters_for_stepper"],
+		queryFn: () => execute(SEMESTER_QUERY),
+	});
+
+	useEffect(() => {
+		formData.setSemesters(semesters.data?.semesters as Semester[]);
+	}, [semesters]);
 
 	const renderStepContent = () => {
 		switch (formData.steps[formData.activeStep].id) {
 			case "semester":
 				return <SemesterDateStep />;
 			case "modules":
+				semesters.refetch();
 				return <SemesterModuleStep />;
 			case "calendar":
 				return <SemesterCalendarStep />;
@@ -33,7 +49,7 @@ export default function SemesterStepper() {
 					<CardTitle>Semester Planner</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<div className="mb-8">
+					<div className="mb-8 mx-auto">
 						<div className="flex items-center">
 							{formData.steps.map((step, index) => (
 								<div
@@ -77,7 +93,7 @@ export default function SemesterStepper() {
 											: "text-gray-400"
 									}`}
 								>
-									{step.label}
+									{step.title}
 								</div>
 							))}
 						</div>

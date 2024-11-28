@@ -3,6 +3,7 @@ import type {
 	Module,
 	RecurringAppointment,
 } from "@/graphql/graphql.ts";
+import type { Semester } from "@/graphql/types";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -19,6 +20,8 @@ type State = {
 	steps: { id: string; title: string }[];
 	maxUsedStep: number;
 	availableCourses: RecurringAppointment[];
+	//stuff for the module creation
+	semesters: Semester[];
 };
 
 type Actions = {
@@ -27,7 +30,7 @@ type Actions = {
 	lastStep: () => void;
 	addModule: (x: Module) => void;
 	removeModule: (x: Module) => void;
-	updateModule: (index: number, x: Module) => void;
+	updateModule: (x: Module) => void;
 	addAllCourses: (x: Course[]) => void;
 	addCourse: (x: Course) => void;
 	removeCourse: (x: Course) => void;
@@ -45,6 +48,9 @@ type Actions = {
 		endIndex: number,
 	) => void;
 	setAvailableCourses: (x: RecurringAppointment[]) => void;
+	setSemesters: (x: Semester[]) => void;
+	addOneSemester: (x: Semester) => void;
+	deleteModule: (x: string) => void;
 };
 
 export const useSemesterStepper = create<State & Actions>()(
@@ -55,20 +61,7 @@ export const useSemesterStepper = create<State & Actions>()(
 		startDate: undefined,
 		endDate: undefined,
 		modules: [],
-		courses: [
-			{
-				id: (Math.random() + 1).toString(36).substring(7),
-				name: "first",
-			},
-			{
-				id: (Math.random() + 1).toString(36).substring(7),
-				name: "second",
-			},
-			{
-				id: (Math.random() + 1).toString(36).substring(7),
-				name: "third",
-			},
-		],
+		courses: [],
 		calendarLink: "",
 		useExistingLink: false,
 		activeStep: 0,
@@ -80,6 +73,7 @@ export const useSemesterStepper = create<State & Actions>()(
 			{ id: "courses", title: "Courses" },
 			{ id: "review", title: "Review" },
 		],
+		semesters: [],
 		setCreatedSemesterId: (x: string | undefined) =>
 			set((state) => {
 				state.created_semester_id = x;
@@ -105,16 +99,9 @@ export const useSemesterStepper = create<State & Actions>()(
 			set((state) => {
 				state.modules.splice(state.modules.indexOf(x), 1);
 			}),
-		updateModule: (index: number, field: string, x: Module) =>
+		updateModule: (x: Module) =>
 			set((state) => {
-				switch (field) {
-					case "name":
-						state.modules[index].name = x.name;
-						break;
-					case "ects":
-						state.modules[index].ects = x.ects;
-						break;
-				}
+				state.modules.map((mod) => (mod.id === x ? x : mod));
 			}),
 		addCourse: (x: Course) =>
 			set((state) => {
@@ -177,5 +164,15 @@ export const useSemesterStepper = create<State & Actions>()(
 			set((state) => {
 				state.availableCourses = x;
 			}),
+		setSemesters: (x: Semester[]) =>
+			set((state) => {
+				state.semesters = x;
+			}),
+		addOneSemester: (x: Semester) =>
+			set((state) => {
+				state.semesters.push(x);
+			}),
+		deleteModule: (x: string) =>
+			set((state) => state.modules.filter((mod) => mod.id !== x)),
 	})),
 );

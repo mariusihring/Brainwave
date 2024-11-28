@@ -10,18 +10,19 @@ import {
 } from "@/components/ui/select";
 import { execute } from "@/execute";
 import { graphql } from "@/graphql";
+import { Semester } from "@/graphql/types";
 import { useSemesterStepper } from "@/lib/stores/semester_stepper";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const CREATE_SEMESTER_MUTATION = graphql(`
-  mutation createSemesterMutation($input: NewSemester!)  {
+  mutation createSemesterMutation($input: NewSemester!) {
     createSemester(input: $input) {
       id
       semester
     }
   }
-  `);
+`);
 
 export default function SemesterDateStep() {
 	const formData = useSemesterStepper();
