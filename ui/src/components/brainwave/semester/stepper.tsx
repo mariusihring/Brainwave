@@ -1,18 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { execute } from "@/execute";
-import { graphql } from "@/graphql";
-import { RecurringAppointment } from "@/graphql/graphql.ts";
 import { useSemesterStepper } from "@/lib/stores/semester_stepper.ts";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { CheckIcon } from "lucide-react";
-import { useState } from "react";
 import SemesterCalendarStep from "./stepper/semester_calendar_step";
 import SemesterCourseStep from "./stepper/semester_courses_step";
 import SemesterDateStep from "./stepper/semester_dates";
 import SemesterModuleStep from "./stepper/semester_module";
 import SemesterReviewStep from "./stepper/semester_review_step";
-
 export default function SemesterStepper() {
 	const formData = useSemesterStepper();
 
@@ -34,8 +27,8 @@ export default function SemesterStepper() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-			<Card className="w-full max-w-4xl">
+		<div className="min-h-screen bg-gray-100 p-4 flex">
+			<Card className="flex-1 m-4">
 				<CardHeader>
 					<CardTitle>Semester Planner</CardTitle>
 				</CardHeader>
@@ -46,7 +39,6 @@ export default function SemesterStepper() {
 								<div
 									key={step.id}
 									className={`flex items-center ${index !== formData.steps.length - 1 ? "flex-1" : ""}`}
-									// onClick={() => handleStepClick(index)}
 								>
 									<div
 										className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -85,7 +77,7 @@ export default function SemesterStepper() {
 											: "text-gray-400"
 									}`}
 								>
-									{step.title}
+									{step.label}
 								</div>
 							))}
 						</div>

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
-import { type NewTodo, TodoType } from "@/graphql/graphql.ts";
+import { type NewTodo } from "@/graphql/graphql.ts";
 import { formatToNaiveDateTime } from "@/lib/date";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -44,7 +44,6 @@ export default function CreateTodoDialog() {
 					courseId: todo.courseId,
 					dueOn: todo.dueOn,
 					title: todo.title as string,
-					todoType: todo.todoType,
 				},
 			}),
 		onSuccess: () => {
