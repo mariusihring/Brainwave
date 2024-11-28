@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
+	CalendarIcon,
 	DiamondIcon,
 	GraduationCapIcon,
 	HomeIcon,
@@ -15,7 +16,6 @@ import {
 	PanelRightCloseIcon,
 	PenLineIcon,
 	PuzzleIcon,
-	CalendarIcon
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import ImportCalendarAppointmentsDialog from "../calendar/import_dialog";
@@ -100,7 +100,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 												}),
 												"h-9 w-9",
 												isCurrentPath(link.href) === "default" &&
-												"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
+													"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
 											)}
 										>
 											{link.icon}
@@ -125,7 +125,7 @@ export default function Navigation({ children }: { children: ReactNode }) {
 											size: "sm",
 										}),
 										isCurrentPath(link.href) === "default" &&
-										"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
+											"dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
 										"justify-start gap-3 w-full",
 									)}
 								>
@@ -138,8 +138,12 @@ export default function Navigation({ children }: { children: ReactNode }) {
 				</div>
 			</aside>
 
-			<div className="flex-1 ml-[64px]"> {/* Adjust ml-[64px] based on your sidebar width */}
-				<nav className="fixed top-0 right-0 left-[64px] bg-background z-40 p-2"> {/* Adjust left-[64px] based on your sidebar width */}
+			<div className="flex-1 ml-[64px]">
+				{" "}
+				{/* Adjust ml-[64px] based on your sidebar width */}
+				<nav className="fixed top-0 right-0 left-[64px] bg-background z-40 p-2">
+					{" "}
+					{/* Adjust left-[64px] based on your sidebar width */}
 					<div className="flex gap-4 w-full justify-between">
 						<div className="flex gap-4">
 							<Button
@@ -157,11 +161,14 @@ export default function Navigation({ children }: { children: ReactNode }) {
 							<Input />
 						</div>
 
-						<div className="px-5 pt-1">{pathname === "/calendar" && <ImportCalendarAppointmentsDialog />}</div>
-
+						<div className="px-5 pt-1">
+							{pathname === "/calendar" && <ImportCalendarAppointmentsDialog />}
+						</div>
 					</div>
 				</nav>
-				<div className="mt-[60px] p-2 overflow-y-auto h-[calc(100vh-60px)] relative z-0"> {/* Adjust mt-[60px] and h-[calc(100vh-60px)] based on your top nav height */}
+				<div className="mt-[60px] p-2 overflow-y-auto h-[calc(100vh-60px)] relative z-0">
+					{" "}
+					{/* Adjust mt-[60px] and h-[calc(100vh-60px)] based on your top nav height */}
 					<Outlet />
 				</div>
 			</div>

@@ -12,10 +12,10 @@ import { login } from "@/lib/auth/functions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
+import bcrypt from "bcryptjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BrainwaveLogo from "./logo";
-import bcrypt from "bcryptjs"
 
 const loginSchema = z.object({
 	username: z.string().min(2).max(50),
@@ -36,14 +36,12 @@ export default function Login() {
 		try {
 			await login(values.username, values.password);
 			await navigate({ to: "/" });
-			// @ts-ignore
-		} catch (e: string) {
+		} catch (e: unknown) {
 			if (e.includes("Username")) {
-				form.setError("username", { message: e as string })
+				form.setError("username", { message: e as string });
 			} else {
-				form.setError("password", { message: e as string })
+				form.setError("password", { message: e as string });
 			}
-
 		}
 	};
 

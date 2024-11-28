@@ -1,7 +1,7 @@
 {
-    "hello": "Hello",
-    "courses": "Courses",
-    "todos": "To-Do's",
-    "notebooks": "Notebooks",
-    "flashcards": "Flashcards"
+	"hello": "Hello",
+	"courses": "Courses",
+	"todos": "To-Do's",
+	"notebooks": "Notebooks",
+	"flashcards": "Flashcards"
 }

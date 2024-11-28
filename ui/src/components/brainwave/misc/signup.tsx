@@ -12,10 +12,10 @@ import { signup } from "@/lib/auth/functions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
+import bcrypt from "bcryptjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BrainwaveLogo from "./logo";
-import bcrypt from "bcryptjs"
 
 const loginSchema = z.object({
 	username: z.string().min(2).max(50),
@@ -33,7 +33,7 @@ export default function Signup() {
 	});
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-		const hashed_password = bcrypt.hashSync(values.password)
+		const hashed_password = bcrypt.hashSync(values.password);
 		try {
 			await signup(values.username, hashed_password);
 			await navigate({ to: "/" });

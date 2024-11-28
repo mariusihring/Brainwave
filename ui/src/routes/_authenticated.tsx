@@ -1,4 +1,5 @@
 import { useAuth } from "@/auth";
+import QuickActions from "@/components/brainwave/misc/quick_actions.tsx";
 import { AppSidebar } from "@/components/brainwave/navigation/app-sidebar";
 import {
 	Breadcrumb,
@@ -14,14 +15,13 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import QuickActions from "@/components/brainwave/misc/quick_actions.tsx";
 import { useUser } from "@/lib/stores/user";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	Outlet,
 	createFileRoute,
-	useNavigate,
 	useLocation,
+	useNavigate,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 

@@ -1,6 +1,12 @@
-import { execute } from "@/execute";
-import { graphql } from "@/graphql";
-import { useSemesterStepper } from "@/lib/stores/semester_stepper";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import {
 	Table,
 	TableBody,
@@ -9,15 +15,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { execute } from "@/execute";
+import { graphql } from "@/graphql";
+import { useSemesterStepper } from "@/lib/stores/semester_stepper";
 import { useEffect, useState } from "react";
 
 export default function SemesterCourseStep() {
