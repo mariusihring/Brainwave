@@ -67,6 +67,7 @@
 		"@types/bcryptjs": "^2.4.6",
 		"@types/bun": "^1.1.6",
 		"@types/js-cookie": "^3.0.6",
+		"@types/react-big-calendar": "^1.16.0",
 		"axios": "^1.7.3",
 		"bcryptjs": "^2.4.3",
 		"class-variance-authority": "^0.7.0",

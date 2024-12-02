@@ -1,32 +1,17 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+
 import { execute } from "@/execute";
 import { graphql } from "@/graphql";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { CalendarIcon, MapPinIcon } from "lucide-react";
-import moment from "moment";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { v4 as uuidv4 } from "uuid";
+import { ChevronLeft, ChevronRight, MapPinIcon } from "lucide-react";
 
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import React, { useState } from "react";
 
-const localizer = momentLocalizer(moment);
-const DnDCalendar = withDragAndDrop(Calendar);
+import { generateTimeSlots, generateWeekDays } from "@/lib/utils/calendar";
+import { differenceInMinutes, format, isSameDay, isWithinInterval, parseISO } from "date-fns";
+import type { Appointment } from "@/graphql/types";
 
 const CALENDAR_APPOINTMENTS = graphql(`
   query AppointmentQuery {
@@ -42,206 +27,136 @@ const CALENDAR_APPOINTMENTS = graphql(`
 `);
 
 interface Event {
-	id: string;
-	date: string;
-	endTime: string;
-	startTime: string;
-	location: string;
-	title: string;
+  id: string;
+  date: string;
+  endTime: string;
+  startTime: string;
+  location: string;
+  title: string;
 }
 
-const EventComponent = ({ event }: { event: Event }) => (
-	<div className="p-2 bg-primary/10 border border-primary rounded-md shadow-sm">
-		<div className="font-medium text-primary">{event.title}</div>
-		<div className="flex items-center text-xs text-muted-foreground mt-1">
-			<MapPinIcon className="w-3 h-3 mr-1" />
-			{event.location}
-		</div>
-	</div>
-);
-
 export const Route = createFileRoute("/_authenticated/calendar")({
-	component: () => <CalendarIndex />,
-	errorComponent: ({ error }) => <div>{error.message}</div>,
-	loader: async ({ context: { queryClient } }) =>
-		queryClient.ensureQueryData(
-			queryOptions({
-				queryKey: ["calendar_appointments"],
-				queryFn: () => execute(CALENDAR_APPOINTMENTS),
-			}),
-		),
+  component: () => <CalendarIndex />,
+  errorComponent: ({ error }) => <div>{error.message}</div>,
+  loader: async ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(
+      queryOptions({
+        queryKey: ["calendar_appointments"],
+        queryFn: () => execute(CALENDAR_APPOINTMENTS),
+      })
+    ),
 });
 
 function CalendarIndex() {
-	const {
-		data: { appointments = [] },
-	} = useQuery({
-		queryKey: ["calendar_appointments"],
-		queryFn: () => execute(CALENDAR_APPOINTMENTS),
-		initialData: Route.useLoaderData(),
-	});
+  const {
+    data: { appointments = [] },
+  } = useQuery({
+    queryKey: ["calendar_appointments"],
+    queryFn: () => execute(CALENDAR_APPOINTMENTS),
+    initialData: Route.useLoaderData(),
+  });
 
-	const [events, setEvents] = useState<Event[]>(
-		appointments.map((appointment) => ({
-			...appointment,
-			id: uuidv4(), // Generate a unique ID for each event
-		})),
-	);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
+  const weekDays = generateWeekDays(currentWeek);
+  const timeSlots = generateTimeSlots();
 
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const navigateWeek = (direction: "prev" | "next") => {
+    setCurrentWeek((prevWeek) => {
+      const newWeek = new Date(prevWeek);
+      newWeek.setDate(newWeek.getDate() + (direction === "next" ? 7 : -7));
+      return newWeek;
+    });
+  };
 
-	const calendarEvents = useMemo(() => {
-		return events.map((event) => ({
-			...event,
-			start: new Date(event.startTime),
-			end: new Date(event.endTime),
-		}));
-	}, [events]);
+  const getAppointmentsForDay = (day: Date) => {
+    return appointments.filter((appointment) => {
+      const appointmentStart = parseISO(appointment.startTime);
+      return isSameDay(appointmentStart, day);
+    });
+  };
 
-	const onEventDrop = useCallback(
-		({ event, start, end }) => {
-			setEvents((prev) =>
-				prev.map((ev) =>
-					ev.id === event.id
-						? {
-								...ev,
-								date: moment(start).format("YYYY-MM-DD"),
-								startTime: moment(start).format("YYYY-MM-DDTHH:mm:ss"),
-								endTime: moment(end).format("YYYY-MM-DDTHH:mm:ss"),
-							}
-						: ev,
-				),
-			);
-		},
-		[setEvents],
-	);
+  const isAllDayAppointment = (appointment: Appointment) => {
+    const start = parseISO(appointment.startTime);
+    const end = parseISO(appointment.endTime);
+    return differenceInMinutes(end, start) >= 720; // 12 hours or more
+  };
 
-	const onSelectEvent = useCallback((event: Event) => {
-		setSelectedEvent(event);
-		setIsDialogOpen(true);
-	}, []);
+  const getAppointmentStyle = (appointment: Appointment) => {
+    const start = parseISO(appointment.startTime);
+    const end = parseISO(appointment.endTime);
+    const dayStart = new Date(start);
+    dayStart.setHours(6, 0, 0, 0); // 6 AM start for the calendar
+    const startMinutes = differenceInMinutes(start, dayStart);
+    const durationMinutes = differenceInMinutes(end, start);
+    const top = (startMinutes / 60) * 3; // 3rem per hour
+    const height = (durationMinutes / 60) * 3; // 3rem per hour
 
-	const handleUpdateEvent = (updatedEvent: Event) => {
-		setEvents((prev) =>
-			prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)),
-		);
-		setIsDialogOpen(false);
-	};
+    return {
+      top: `${top}rem`,
+      height: `${height}rem`,
+      zIndex: 10, // Ensure the appointment is above the grid
+    };
+  };
 
-	return (
-		<Card className="w-full max-w-4xl mx-auto shadow-lg">
-			<CardHeader>
-				<CardTitle className="text-2xl font-bold">Weekly Schedule</CardTitle>
-			</CardHeader>
-			<CardContent className="p-6">
-				<DnDCalendar
-					localizer={localizer}
-					events={calendarEvents}
-					startAccessor="start"
-					endAccessor="end"
-					style={{ height: 600 }}
-					defaultView="week"
-					views={["week"]}
-					onEventDrop={onEventDrop}
-					resizable
-					selectable
-					onSelectEvent={onSelectEvent}
-					components={{
-						event: EventComponent,
-					}}
-					className="bg-background text-foreground rounded-md shadow-sm"
-				/>
-			</CardContent>
-			{selectedEvent && (
-				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-					<DialogContent className="sm:max-w-[425px]">
-						<DialogHeader>
-							<DialogTitle>Edit Appointment</DialogTitle>
-						</DialogHeader>
-						<form
-							onSubmit={(e) => {
-								e.preventDefault();
-								const formData = new FormData(e.target as HTMLFormElement);
-								const startTime = moment(
-									(formData.get("date") as string) +
-										"T" +
-										formData.get("startTime"),
-								).format("YYYY-MM-DDTHH:mm:ss");
-								const endTime = moment(
-									(formData.get("date") as string) +
-										"T" +
-										formData.get("endTime"),
-								).format("YYYY-MM-DDTHH:mm:ss");
-								handleUpdateEvent({
-									...selectedEvent,
-									title: formData.get("title") as string,
-									location: formData.get("location") as string,
-									date: formData.get("date") as string,
-									startTime,
-									endTime,
-								});
-							}}
-							className="space-y-4"
-						>
-							<div className="space-y-2">
-								<Label htmlFor="title">Title</Label>
-								<Input
-									id="title"
-									name="title"
-									defaultValue={selectedEvent.title}
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="location">Location</Label>
-								<Input
-									id="location"
-									name="location"
-									defaultValue={selectedEvent.location}
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="date">Date</Label>
-								<div className="relative">
-									<CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-									<Input
-										id="date"
-										name="date"
-										type="date"
-										defaultValue={selectedEvent.date}
-										className="pl-10"
-									/>
-								</div>
-							</div>
-							<div className="grid grid-cols-2 gap-4">
-								<div className="space-y-2">
-									<Label htmlFor="startTime">Start Time</Label>
-									<Input
-										id="startTime"
-										name="startTime"
-										type="time"
-										defaultValue={moment(selectedEvent.startTime).format(
-											"HH:mm",
-										)}
-									/>
-								</div>
-								<div className="space-y-2">
-									<Label htmlFor="endTime">End Time</Label>
-									<Input
-										id="endTime"
-										name="endTime"
-										type="time"
-										defaultValue={moment(selectedEvent.endTime).format("HH:mm")}
-									/>
-								</div>
-							</div>
-							<DialogFooter>
-								<Button type="submit">Save changes</Button>
-							</DialogFooter>
-						</form>
-					</DialogContent>
-				</Dialog>
-			)}
-		</Card>
-	);
+  return (
+    <Card className="w-full bg-stone-50 shadow-sm relative">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-light text-stone-700">
+            {format(weekDays[0], "MMMM yyyy")}
+          </h2>
+          <div className="flex space-x-2">
+            <Button variant="ghost" size="sm" onClick={() => navigateWeek("prev")}>
+              <ChevronLeft className="h-4 w-4 text-stone-500" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigateWeek("next")}>
+              <ChevronRight className="h-4 w-4 text-stone-500" />
+            </Button>
+          </div>
+        </div>
+        <div className="grid grid-cols-6 gap-4">
+          <div></div>
+          {weekDays.map((day) => (
+            <div key={day.toString()} className="text-center">
+              <div className="font-medium text-stone-600">{format(day, "EEE")}</div>
+              <div className="text-sm text-stone-400">{format(day, "d")}</div>
+            </div>
+          ))}
+          <div className="col-span-6">
+            <div className="relative">
+              {weekDays.map((day, index) => (
+                <div
+                  key={day.toString()}
+                  className="absolute"
+                  style={{ top: "8rem", left: `${(index + 1) * (100 / 6)}%`, width: `${100 / 6}%` }}
+                >
+                  {getAppointmentsForDay(day)
+                    .filter((app) => !isAllDayAppointment(app))
+                    .map((appointment) => (
+                      <div
+                        key={appointment.id}
+                        className="absolute left-1 right-1 bg-amber-100 text-amber-800 rounded-sm px-2 py-1 text-xs truncate shadow-sm"
+                        style={getAppointmentStyle(appointment)}
+                      >
+                        {appointment.title}
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          {timeSlots.map((time) => (
+            <React.Fragment key={time}>
+              <div className="text-right pr-4 py-2 text-sm text-stone-400">{time}</div>
+              {weekDays.map((day) => (
+                <div key={`${day}-${time}`} className="relative h-12 group">
+                  <div className="absolute inset-0 border-t border-stone-100 group-hover:bg-stone-100/50 transition-colors duration-200"></div>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
