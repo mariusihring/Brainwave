@@ -1,3 +1,4 @@
+import NavComingUpView from "@/components/brainwave/navigation/nav-coming-up";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -89,6 +90,15 @@ function Dashboard() {
 									<Button>View Full Agenda</Button>
 								</Link>
 							</CardFooter>
+						</Card>
+						<Card className="sm:col-span-2">
+							<CardHeader className="pb-2">
+								<CardTitle className="text-4xl">Coming up</CardTitle>
+								<CardDescription>This Week</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<NavComingUpView />
+							</CardContent>
 						</Card>
 						<Card x-chunk="dashboard-05-chunk-1">
 							<CardHeader className="pb-2">

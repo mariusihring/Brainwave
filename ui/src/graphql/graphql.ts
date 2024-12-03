@@ -193,6 +193,11 @@ export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any }> };
 
+export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ModuleIndexQueryQuery = { __typename?: 'Query', modules: Array<{ __typename?: 'Module', id: any, userId: any, name: string, etCs: number, startSemester: any, endSemester?: any | null, grade?: number | null }> };
+
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -333,6 +338,19 @@ export const TodoDashboardQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<TodoDashboardQueryQuery, TodoDashboardQueryQueryVariables>;
+export const ModuleIndexQueryDocument = new TypedDocumentString(`
+    query ModuleIndexQuery {
+  modules {
+    id
+    userId
+    name
+    etCs
+    startSemester
+    endSemester
+    grade
+  }
+}
+    `) as unknown as TypedDocumentString<ModuleIndexQueryQuery, ModuleIndexQueryQueryVariables>;
 export const GetAllSemesterDocument = new TypedDocumentString(`
     query getAllSemester {
   semesters {
@@ -714,6 +732,11 @@ export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any }> };
+
+export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ModuleIndexQueryQuery = { __typename?: 'Query', modules: Array<{ __typename?: 'Module', id: any, userId: any, name: string, etCs: number, startSemester: any, endSemester?: any | null, grade?: number | null }> };
 
 export type GetAllSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
