@@ -17,6 +17,7 @@ import * as types from './graphql';
 const documents = {
     "\n  query getCalendarLink {\n    calendarLink\n  }\n": types.GetCalendarLinkDocument,
     "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n": types.SaveCalendarLinkDocument,
+    "\n  query EventsQuery {\n    appointments {\n      id\n      title\n      startTime\n      endTime\n    }\n  }\n": types.EventsQueryDocument,
     "\n    mutation createSemester($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterDocument,
     "\n  query getCourses {\n    courses {\n      id\n      name\n      grade\n      teacher\n      academicDepartment\n    }\n  }\n": types.GetCoursesDocument,
     "\n  mutation ProcessCalendar($input: String!) {\n    processSemesterCalendar(semesterId: $input) {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n": types.ProcessCalendarDocument,
@@ -27,7 +28,7 @@ const documents = {
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n\n        }\n    }\n": types.TodoIndexQueryDocument,
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            \n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
     "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
-    "\n\tquery TodoDashboardQuery{\n\t\ttodos {\n\t\t\tid\n\t\t\ttitle\n\t\t\tdueOn\n\t\t}\n\t}\n": types.TodoDashboardQueryDocument,
+    "\n  query TodoDashboardQuery {\n    todos {\n      id\n      title\n      dueOn\n    }\n  }\n": types.TodoDashboardQueryDocument,
     "\n  query ModuleIndexQuery {\n   modules {\n  id\n  userId\n name\netCs\nstartSemester\nendSemester\ngrade\n}\n}\n": types.ModuleIndexQueryDocument,
     "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n      }\n      courses {\n        id\n        name\n        grade\n        teacher\n        academicDepartment\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
 };
@@ -40,6 +41,10 @@ export function graphql(source: "\n  query getCalendarLink {\n    calendarLink\n
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n"): typeof import('./graphql').SaveCalendarLinkDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query EventsQuery {\n    appointments {\n      id\n      title\n      startTime\n      endTime\n    }\n  }\n"): typeof import('./graphql').EventsQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -83,7 +88,7 @@ export function graphql(source: "\n  query AppointmentQuery {\n    appointments 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n\tquery TodoDashboardQuery{\n\t\ttodos {\n\t\t\tid\n\t\t\ttitle\n\t\t\tdueOn\n\t\t}\n\t}\n"): typeof import('./graphql').TodoDashboardQueryDocument;
+export function graphql(source: "\n  query TodoDashboardQuery {\n    todos {\n      id\n      title\n      dueOn\n    }\n  }\n"): typeof import('./graphql').TodoDashboardQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

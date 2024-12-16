@@ -3,8 +3,8 @@ resolver = "2"
 members = [
     "crates/database",
     "crates/server",
-    "ui/src-tauri",
     "crates/migration",
+    "ui/src-tauri",
 ]
 
 [workspace.dependencies]

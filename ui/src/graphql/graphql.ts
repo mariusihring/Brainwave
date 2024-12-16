@@ -123,6 +123,11 @@ export type SaveCalendarLinkMutationVariables = Exact<{
 
 export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: any } };
 
+export type EventsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, startTime: any, endTime: any }> };
+
 export type CreateSemesterMutationVariables = Exact<{
   input: NewSemester;
 }>;
@@ -230,6 +235,16 @@ export const SaveCalendarLinkDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<SaveCalendarLinkMutation, SaveCalendarLinkMutationVariables>;
+export const EventsQueryDocument = new TypedDocumentString(`
+    query EventsQuery {
+  appointments {
+    id
+    title
+    startTime
+    endTime
+  }
+}
+    `) as unknown as TypedDocumentString<EventsQueryQuery, EventsQueryQueryVariables>;
 export const CreateSemesterDocument = new TypedDocumentString(`
     mutation createSemester($input: NewSemester!) {
   createSemester(input: $input) {
@@ -662,6 +677,11 @@ export type SaveCalendarLinkMutationVariables = Exact<{
 
 
 export type SaveCalendarLinkMutation = { __typename?: 'Mutation', upsertCalendarLink: { __typename?: 'Settings', id: any } };
+
+export type EventsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, startTime: any, endTime: any }> };
 
 export type CreateSemesterMutationVariables = Exact<{
   input: NewSemester;
