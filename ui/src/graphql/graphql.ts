@@ -193,11 +193,6 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
 
-export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any }> };
-
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -344,15 +339,6 @@ export const AppointmentQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AppointmentQueryQuery, AppointmentQueryQueryVariables>;
-export const TodoDashboardQueryDocument = new TypedDocumentString(`
-    query TodoDashboardQuery {
-  todos {
-    id
-    title
-    dueOn
-  }
-}
-    `) as unknown as TypedDocumentString<TodoDashboardQueryQuery, TodoDashboardQueryQueryVariables>;
 export const ModuleIndexQueryDocument = new TypedDocumentString(`
     query ModuleIndexQuery {
   modules {
@@ -747,11 +733,6 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
-
-export type TodoDashboardQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TodoDashboardQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

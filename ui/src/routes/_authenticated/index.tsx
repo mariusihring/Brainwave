@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,36 +17,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { execute } from "@/execute.ts";
-import { graphql } from "@/graphql";
-import { format_date_time } from "@/lib/date.ts";
 import { useUser } from "@/lib/stores/user";
-import { useQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { CalendarIcon, ChevronRightIcon } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: () => <Dashboard />,
 });
-const TODO_DASHBOARD_QUERY = graphql(`
-  query TodoDashboardQuery {
-    todos {
-      id
-      title
-      dueOn
-    }
-  }
-`);
 
 function Dashboard() {
   const { user } = useUser();
   const { t } = useTranslation(["global"]);
 
-  const { data } = useQuery({
-    queryKey: ["dashboard_todos"],
-    queryFn: () => execute(TODO_DASHBOARD_QUERY),
-  });
   return (
     <div className="flex flex-col space-y-6 w-full h-full">
       <h1 className="font-bold text-3xl px-6">

@@ -6,21 +6,21 @@ import type { Session, User } from "lucia";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 interface RouterContext {
-	auth: {
-		session: Session;
-		user: User;
-	};
-	queryClient: QueryClient;
+  auth: {
+    session: Session;
+    user: User;
+  };
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	component: () => (
-		<>
-			<TooltipProvider>
-				<Outlet />
-				<Toaster richColors position="top-center" />
-				<TanStackRouterDevtools />
-			</TooltipProvider>
-		</>
-	),
+  component: () => (
+    <>
+      <TooltipProvider>
+        <Outlet />
+        <Toaster richColors position="top-center" />
+        {/* <TanStackRouterDevtools /> */}
+      </TooltipProvider>
+    </>
+  ),
 });

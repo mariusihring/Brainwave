@@ -1,16 +1,40 @@
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
+use tauri::{TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+mod window;
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
-            if cfg!(debug_assertions) {
-                app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                )?;
+            let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+                .hidden_title(true)
+                .min_inner_size(1300.0, 1000.0);
+
+            // set transparent title bar only when building for macOS
+            #[cfg(target_os = "macos")]
+            let win_builder = win_builder.title_bar_style(TitleBarStyle::Transparent);
+
+            let window = win_builder.build().unwrap();
+
+            // set background color only when building for macOS
+            #[cfg(target_os = "macos")]
+            {
+                use cocoa::appkit::{NSColor, NSWindow};
+                use cocoa::base::{id, nil};
+
+                let ns_window = window.ns_window().unwrap() as id;
+                unsafe {
+                    let red = 250.0 / 255.0;
+                    let green = 250.0 / 255.0;
+                    let blue = 250.0 / 255.0;
+                    let alpha = 1.0;
+                    let bg_color =
+                        NSColor::colorWithRed_green_blue_alpha_(nil, red, green, blue, alpha);
+
+                    ns_window.setBackgroundColor_(bg_color);
+                }
             }
+
             Ok(())
         })
+        .plugin(tauri_plugin_fs::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

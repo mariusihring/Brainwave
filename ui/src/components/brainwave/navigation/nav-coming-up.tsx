@@ -24,6 +24,7 @@ const EVENT_QUERY = graphql(`
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const times = [
+  "08:00",
   "09:00",
   "10:00",
   "11:00",
