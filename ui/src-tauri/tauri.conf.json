@@ -35,7 +35,9 @@
     "updater": {
       "active": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhCQzFBRDFEN0UyNDI3N0MKUldSOEp5UitIYTNCaTJGblMyMnR4dlhzV1dYZDNISmZyanRtYTZiSmxzT2pkN3hyc00vN0RrbFEK",
-      "endpoints": ["http://test.de/updater/brainwave"]
+      "endpoints": [
+        "http://test.de/updater/brainwave"
+      ]
     }
   }
 }

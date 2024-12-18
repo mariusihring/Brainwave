@@ -1,11 +1,19 @@
+#[cfg(target_os = "macos")]
 use tauri::{TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+
+use tauri::{WebviewUrl, WebviewWindowBuilder};
 mod window;
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            #[cfg(target_os = "macos")]
             let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
                 .hidden_title(true)
                 .min_inner_size(1300.0, 1000.0);
+            #[cfg(target_os = "windows")]
+            let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+                .title("Brainwave")
+                .min_inner_size(1100.0, 800.0);
 
             // set transparent title bar only when building for macOS
             #[cfg(target_os = "macos")]
