@@ -56,7 +56,7 @@ export const useNavStore = create<NavState & NavActions>()(
 				},
 				{
 					title: "University",
-					url: "#",
+					url: "/university",
 					iconName: "BookOpen",
 					isGroup: true,
 					isActive: false,
@@ -81,22 +81,22 @@ export const useNavStore = create<NavState & NavActions>()(
 				},
 				{
 					title: "Notes",
-					url: "#",
+					url: "/notes",
 					iconName: "Pen",
 					isGroup: true,
 					isActive: false,
 					items: [
 						{
 							title: "Markdown",
-							url: "#",
+							url: "/notes/markdown",
 						},
 						{
 							title: "Latex",
-							url: "#",
+							url: "/notes/latex",
 						},
 						{
 							title: "Flashcards",
-							url: "#",
+							url: "/notes/flashcards",
 						},
 					],
 				},
