@@ -17,17 +17,59 @@ import {
 import { logout } from "@/lib/auth/functions.ts";
 import { useUser } from "@/lib/stores/user";
 import {
-	BadgeCheck,
 	Bell,
 	ChevronsUpDown,
-	CreditCard,
 	LogOut,
+	Settings,
 	Sparkles,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { check, Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from '@tauri-apps/plugin-process';
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
 	const { user } = useUser();
+	const [contentLength, setContentLength] = useState(0);
+	const [downloaded, setDownloaded] = useState(0);
+	let updateAvailable: Update | null = null;
+	async function update() {
+	if (updateAvailable) {
+			await updateAvailable.downloadAndInstall((event) => {
+				switch (event.event) {
+					case "Started":
+						setContentLength(event.data.contentLength as number);
+						console.log(
+							`started downloading ${event.data.contentLength} bytes`,
+						);
+						break;
+					case "Progress":
+						setDownloaded(event.data.chunkLength);
+						console.log(`downloaded ${downloaded} from ${contentLength}`);
+						break;
+					case "Finished":
+						console.log("download finished");
+						break;
+				}
+			});
+
+			console.log("update installed");
+			await relaunch();
+		}
+	}
+	useEffect(() => {
+		async function check_update() {
+		const update = await check();
+		if (update) {
+		console.log(
+			`found update ${update.version} from ${update.date} with notes ${update.body}`
+		  );
+		updateAvailable = update
+		}
+		}
+		check_update()
+	}, [updateAvailable]);
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -71,25 +113,26 @@ export function NavUser() {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
+						{updateAvailable && (
+							<>
+								<DropdownMenuGroup>
+									<DropdownMenuItem>
+										<Sparkles />
+										Update available!
+										<Button>Download</Button>
+									</DropdownMenuItem>
+								</DropdownMenuGroup>
+								<DropdownMenuSeparator />
+							</>
+						)}
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								Upgrade to Pro
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								Account
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<CreditCard />
-								Billing
-							</DropdownMenuItem>
 							<DropdownMenuItem>
 								<Bell />
 								Notifications
+							</DropdownMenuItem>
+							<DropdownMenuItem>
+								<Settings />
+								Settings
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />

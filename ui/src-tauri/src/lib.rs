@@ -5,6 +5,8 @@ use tauri::{WebviewUrl, WebviewWindowBuilder};
 mod window;
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             #[cfg(target_os = "macos")]
             let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
