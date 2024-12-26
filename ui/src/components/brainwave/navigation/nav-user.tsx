@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,17 +16,11 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/lib/auth/functions.ts";
 import { useUser } from "@/lib/stores/user";
-import {
-	Bell,
-	ChevronsUpDown,
-	LogOut,
-	Settings,
-	Sparkles,
-} from "lucide-react";
+import { Bell, ChevronsUpDown, LogOut, Settings, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { check, Update } from "@tauri-apps/plugin-updater";
-import { relaunch } from '@tauri-apps/plugin-process';
+import { check, type Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
@@ -35,7 +29,7 @@ export function NavUser() {
 	const [downloaded, setDownloaded] = useState(0);
 	let updateAvailable: Update | null = null;
 	async function update() {
-	if (updateAvailable) {
+		if (updateAvailable) {
 			await updateAvailable.downloadAndInstall((event) => {
 				switch (event.event) {
 					case "Started":
@@ -60,15 +54,15 @@ export function NavUser() {
 	}
 	useEffect(() => {
 		async function check_update() {
-		const update = await check();
-		if (update) {
-		console.log(
-			`found update ${update.version} from ${update.date} with notes ${update.body}`
-		  );
-		updateAvailable = update
+			const update = await check();
+			if (update) {
+				console.log(
+					`found update ${update.version} from ${update.date} with notes ${update.body}`,
+				);
+				updateAvailable = update;
+			}
 		}
-		}
-		check_update()
+		check_update();
 	}, [updateAvailable]);
 	return (
 		<SidebarMenu>
@@ -113,7 +107,7 @@ export function NavUser() {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						{updateAvailable && (
+						{true && (
 							<>
 								<DropdownMenuGroup>
 									<DropdownMenuItem>

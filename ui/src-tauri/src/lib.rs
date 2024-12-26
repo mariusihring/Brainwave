@@ -1,6 +1,6 @@
 #[cfg(target_os = "macos")]
 use tauri::{TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
-
+#[cfg(target_os = "windows")]
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 mod window;
 pub fn run() {

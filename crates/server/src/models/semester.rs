@@ -1,20 +1,28 @@
-use super::_entities::{course, module, semester::Model};
+use super::_entities::{course, module, semester::Model, user};
 use async_graphql::*;
 use chrono::NaiveDate;
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
 #[ComplexObject]
 impl Model {
-    async fn courses( &self,
-        ctx: &Context<'_>,
-        ) -> Vec<course::Model> {
-            vec![]
-        }
+    async fn modules(&self, ctx: &Context<'_>) -> Vec<module::Model> {
+        let user = ctx.data::<user::Model>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        async fn modules( &self,
-            ctx: &Context<'_>,
-            ) -> Vec<module::Model> {
-                vec![]
-            }
+        match module::Entity::find()
+            .filter(
+                module::Column::UserId
+                    .eq(user.id)
+                    .and(module::Column::StartSemester.eq(self.id))
+                    .or(module::Column::EndSemester.eq(self.id)),
+            )
+            .all(db)
+            .await
+        {
+            Ok(c) => c,
+            Err(_) => vec![],
+        }
+    }
 }
 
 #[derive(InputObject)]

@@ -1,5 +1,6 @@
+use super::_entities::{course, module::Model, user};
 use async_graphql::*;
-use super::_entities::{course, module::Model};
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
 #[derive(InputObject)]
 pub struct NewModule {
@@ -12,7 +13,21 @@ pub struct NewModule {
 
 #[ComplexObject]
 impl Model {
-    async fn courses(&self, ctx: &Context<'_>) -> Option<Vec<course::Model>> {
-        Some(vec![])
+    async fn courses(&self, ctx: &Context<'_>) -> Vec<course::Model> {
+        let user = ctx.data::<user::Model>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
+
+        match course::Entity::find()
+            .filter(
+                course::Column::UserId
+                    .eq(user.id)
+                    .and(course::Column::ModuleId.eq(self.id)),
+            )
+            .all(db)
+            .await
+        {
+            Ok(c) => c,
+            Err(_) => vec![],
+        }
     }
 }

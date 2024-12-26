@@ -32,6 +32,7 @@ type Module {
 	startSemester: UUID!
 	endSemester: UUID
 	userId: UUID!
+	courses: [Course!]!
 }
 
 type Mutation {
@@ -136,7 +137,6 @@ type Semester {
 	userId: UUID!
 	importedAppointments: Boolean!
 	totalEcTs: Int!
-	courses: [Course!]!
 	modules: [Module!]!
 }
 
