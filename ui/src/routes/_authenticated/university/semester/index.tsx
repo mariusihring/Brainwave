@@ -7,7 +7,9 @@ import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
 import type { Semester } from "@/graphql/graphql.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { PlusCircleIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/university/semester/")({
 	component: () => <SemesterIndex />,
@@ -74,7 +76,12 @@ function SemesterIndex() {
 		<div className="w-full">
 			<div className="flex w-full justify-between">
 				<h1 className="text-3xl font-bold mb-8">Semester Overview</h1>
-				<CreateSemesterDialog />
+				<Link to="/semester_stepper">
+					<Button variant="outline" className="w-[200px]">
+						<PlusCircleIcon className="mr-2 h-4 w-4" />
+						Create Semester
+					</Button>
+				</Link>
 			</div>
 
 			<CurrentSemesterView semester={currentSemester} />

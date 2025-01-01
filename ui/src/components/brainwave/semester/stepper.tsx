@@ -11,6 +11,8 @@ import { SEMESTER_QUERY } from "@/routes/_authenticated/university/semester";
 import { execute } from "@/execute";
 import { useEffect } from "react";
 import type { Semester } from "@/graphql/types";
+import { ExitFullScreenIcon, ExitIcon } from "@radix-ui/react-icons";
+import { Link } from "@tanstack/react-router";
 
 export default function SemesterStepper() {
 	const formData = useSemesterStepper();
@@ -46,7 +48,12 @@ export default function SemesterStepper() {
 		<div className="min-h-screen bg-gray-100 p-4 flex">
 			<Card className="flex-1 m-4">
 				<CardHeader>
-					<CardTitle>Semester Planner</CardTitle>
+					<CardTitle className="flex w-full justify-between h-auto font-3xl">
+						Semester Planner
+						<Link to="/university/semester">
+							<ExitIcon className="font-bold" />
+						</Link>
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="mb-8 mx-auto">
