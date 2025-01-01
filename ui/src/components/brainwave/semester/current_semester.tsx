@@ -6,7 +6,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card.tsx";
 import { Progress } from "@/components/ui/progress.tsx";
-import type { Semester } from "@/graphql/graphql.ts";
+import type { Course, Semester } from "@/graphql/graphql.ts";
 import {
 	calculateProgress,
 	getDifficultyColor,
@@ -21,7 +21,9 @@ import {
 
 export default function CurrentSemesterView({
 	semester,
-}: { semester: Semester | null }) {
+}: {
+	semester: Semester | null;
+}) {
 	if (!semester) {
 		return (
 			<Card className="w-full mb-8">
@@ -38,6 +40,8 @@ export default function CurrentSemesterView({
 		);
 	}
 	const progress = calculateProgress(semester.startDate, semester.endDate);
+	const courses: Course[] = semester.modules.flatMap((mod) => mod.courses);
+	//TODO: add exams, examsCount, calculateDiffictulty, set Deadlines
 
 	return (
 		<Card className="w-full mb-8">
@@ -70,13 +74,13 @@ export default function CurrentSemesterView({
 						<div className="flex items-center">
 							<GraduationCapIcon className="mr-2 h-5 w-5 opacity-70" />
 							<span className="text-muted-foreground">
-								{semester.totalEcts} ECTS
+								{semester.totalEcTs} ECTS
 							</span>
 						</div>
 						<div className="flex items-center">
 							<BookOpenIcon className="mr-2 h-5 w-5 opacity-70" />
 							<span className="text-muted-foreground">
-								{semester.courses.length} Courses
+								{courses.length} Courses
 							</span>
 						</div>
 						<div className="flex items-center">
@@ -104,11 +108,15 @@ export default function CurrentSemesterView({
 						<div className="space-y-2">
 							<span className="font-medium">Courses</span>
 							<ul className="space-y-2">
-								{semester.courses.map((course, index) => (
-									<li key={index} className="flex justify-between items-center">
+								{courses.map((course, index) => (
+									<li
+										//@biome-ignore-line
+										key={`${course}_${index}`}
+										className="flex justify-between items-center"
+									>
 										<span>{course.name}</span>
 										<span className="text-muted-foreground">
-											{course.ects || 0} ECTS
+											Grade: {course.grade || "None"}
 										</span>
 									</li>
 								))}

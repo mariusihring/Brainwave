@@ -1,7 +1,13 @@
-use crate::models::{_entities::{course::Model as Course, user}, course::NewCourse};
+use crate::models::{
+    _entities::{course, course::Model as CourseModel, user},
+    course::NewCourse,
+};
 use async_graphql::{Context, Object};
 
-use sea_orm::DatabaseConnection;
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
+    TransactionTrait,
+};
 
 use uuid::Uuid;
 
@@ -13,44 +19,80 @@ impl CourseMutation {
         &self,
         ctx: &Context<'_>,
         input: NewCourse,
-    ) -> Result<Course, async_graphql::Error> {
+    ) -> Result<CourseModel, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<user::Model>()?;
         let id = Uuid::new_v4();
+        let new = course::ActiveModel {
+            id: Set(id),
+            name: Set(input.name),
+            grade: Set(input.grade),
+            teacher: Set(input.teacher),
+            academic_department: Set(input.academic_department),
+            user_id: Set(user.id),
+            ..Default::default()
+        };
 
-        Ok(Course {
-            id,
-            name: "test".into(),
-            grade: None,
-            teacher: None,
-            academic_department: None,
-            module_id: id,
-            user_id: user.id,
-        })
+        new.insert(db)
+            .await
+            .map_err(|e| async_graphql::Error::from(e))
     }
 
     pub async fn create_multiple_courses(
         &self,
         ctx: &Context<'_>,
-        input: Vec<String>,
-    ) -> Result<Vec<Course>, async_graphql::Error> {
+        input: Vec<NewCourse>,
+    ) -> Result<Vec<CourseModel>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<user::Model>()?;
-        let mut response = Vec::new();
-        for course_name in input {
-            let id = Uuid::new_v4();
 
-            let course = Course {
-                id,
-                name: course_name.clone(),
-                grade: None,
-                teacher: None,
-                academic_department: None,
-                module_id: id,
-                user_id: user.id,
-            };
-            response.push(course);
+        let courses: Vec<course::ActiveModel> = input
+            .into_iter()
+            .map(|c| course::ActiveModel {
+                id: Set(Uuid::new_v4()),
+                name: Set(c.name),
+                grade: Set(c.grade),
+                teacher: Set(c.teacher),
+                academic_department: Set(c.academic_department),
+                user_id: Set(user.id),
+                module_id: Set(None),
+            })
+            .collect();
+
+        let course_ids: Vec<Uuid> = courses.iter().map(|c| c.id.clone().unwrap()).collect();
+
+        course::Entity::insert_many(courses)
+            .exec(db)
+            .await
+            .map_err(|e| async_graphql::Error::new(e.to_string()))?;
+
+        let result = course::Entity::find()
+            .filter(course::Column::Id.is_in(course_ids))
+            .all(db)
+            .await
+            .map_err(|e| async_graphql::Error::new(e.to_string()))?;
+
+        Ok(result)
+    }
+
+    pub async fn update_course(
+        &self,
+        ctx: &Context<'_>,
+        input: NewCourse,
+    ) -> Result<Vec<CourseModel>, async_graphql::Error> {
+        let db = ctx.data::<DatabaseConnection>()?;
+        let mut result = Vec::new();
+        let course = course::Entity::find_by_id(Uuid::parse_str(&input.id.unwrap()).unwrap())
+            .one(db)
+            .await?;
+        let mut course: course::ActiveModel = course.unwrap().into();
+        if input.module_id.is_some() {
+            course.module_id = Set(Some(Uuid::parse_str(&input.module_id.unwrap()).unwrap()));
         }
-        Ok(response)
+        course.academic_department = Set(input.academic_department.clone());
+        course.teacher = Set(input.teacher.clone());
+        course.grade = Set(input.grade);
+        result.push(course.update(db).await?);
+        Ok(result)
     }
 }

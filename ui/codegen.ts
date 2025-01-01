@@ -17,7 +17,7 @@ const config: CodegenConfig = {
 				onlyOperationTypes: false,
 			},
 		},
-		"./schema.graphql": {
+		"../schema.graphqls": {
 			plugins: ["schema-ast"],
 			config: {
 				includeDirectives: true,

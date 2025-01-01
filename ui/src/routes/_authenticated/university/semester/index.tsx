@@ -35,13 +35,13 @@ export const SEMESTER_QUERY = graphql(`
         grade
         startSemester
         endSemester
-      }
-      courses {
-        id
-        name
-        grade
-        teacher
-        academicDepartment
+        courses {
+          id
+          name
+          grade
+          teacher
+          academicDepartment
+        }
       }
       startDate
     }

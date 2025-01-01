@@ -9,7 +9,7 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     pub name: String,
-    pub module_id: Uuid,
+    pub module_id: Option<Uuid>,
     pub user_id: Uuid,
     #[sea_orm(column_type = "Float", nullable)]
     pub grade: Option<f32>,

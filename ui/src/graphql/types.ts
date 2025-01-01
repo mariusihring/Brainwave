@@ -71,7 +71,7 @@ export type Course = {
   academicDepartment?: Maybe<Scalars['String']['output']>;
   grade?: Maybe<Scalars['Float']['output']>;
   id: Scalars['UUID']['output'];
-  moduleId: Scalars['UUID']['output'];
+  moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
   userId: Scalars['UUID']['output'];
@@ -79,6 +79,7 @@ export type Course = {
 
 export type Module = {
   __typename?: 'Module';
+  courses: Array<Course>;
   endSemester?: Maybe<Scalars['UUID']['output']>;
   etCs: Scalars['Int']['output'];
   grade?: Maybe<Scalars['Float']['output']>;
@@ -96,6 +97,7 @@ export type Mutation = {
   createSemester: Semester;
   createTodo: Todo;
   processSemesterCalendar: Array<RecurringAppointment>;
+  updateCourse: Array<Course>;
   updateTodo: Todo;
   upsertCalendarLink: Settings;
 };
@@ -112,7 +114,7 @@ export type MutationCreateModuleArgs = {
 
 
 export type MutationCreateMultipleCoursesArgs = {
-  input: Array<Scalars['String']['input']>;
+  input: Array<NewCourse>;
 };
 
 
@@ -131,6 +133,11 @@ export type MutationProcessSemesterCalendarArgs = {
 };
 
 
+export type MutationUpdateCourseArgs = {
+  input: NewCourse;
+};
+
+
 export type MutationUpdateTodoArgs = {
   id: Scalars['String']['input'];
   input: UpdateTodo;
@@ -144,6 +151,8 @@ export type MutationUpsertCalendarLinkArgs = {
 export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  moduleId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   teacher?: InputMaybe<Scalars['String']['input']>;
 };
@@ -221,7 +230,6 @@ export type RecurringAppointment = {
 
 export type Semester = {
   __typename?: 'Semester';
-  courses: Array<Course>;
   endDate: Scalars['NaiveDate']['output'];
   id: Scalars['UUID']['output'];
   importedAppointments: Scalars['Boolean']['output'];

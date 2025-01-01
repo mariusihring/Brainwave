@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/table";
 import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
-import type { RecurringAppointment } from "@/graphql/graphql";
+import type {
+	Course,
+	NewCourse,
+	RecurringAppointment,
+} from "@/graphql/graphql";
 import { useSemesterStepper } from "@/lib/stores/semester_stepper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
@@ -25,17 +29,6 @@ const CALENDAR_LINK_QUERY = graphql(`
   }
 `);
 
-const COURSE_QUERY = graphql(`
-  query getCourses {
-    courses {
-      id
-      name
-      grade
-      teacher
-      academicDepartment
-    }
-  }
-`);
 const SAVE_CALENDAR_LINK_MUTATION = graphql(`
   mutation SaveCalendarLink($link: String!) {
     upsertCalendarLink(calendarLink: $link) {
@@ -56,12 +49,13 @@ const PROCESS_CALENDAR_MUTATION = graphql(`
   }
 `);
 
-const CREATE_COURSE_MUTATION = graphql(`
-  mutation createCourses($input: [String!]!) {
+const CREATE_COURSES_MUTATION = graphql(`
+  mutation CreateMultipleCourses($input: [NewCourse!]!) {
     createMultipleCourses(input: $input) {
+      id
       academicDepartment
       grade
-      id
+      moduleId
       name
       teacher
     }
@@ -197,36 +191,52 @@ function CoursesTable() {
 	>([]);
 	const createCourseMutation = useMutation({
 		mutationKey: ["newCourse"],
-		mutationFn: (courses: string[]) =>
-			execute(CREATE_COURSE_MUTATION, { input: courses }),
+		mutationFn: (courses: NewCourse[]) =>
+			execute(CREATE_COURSES_MUTATION, { input: courses }),
 	});
 
 	const handleAppointmentSelect = (appointment: RecurringAppointment) => {
 		setSelectedAppointments((prevSelected) => {
 			if (prevSelected.includes(appointment)) {
 				return prevSelected.filter((app) => app !== appointment);
-			} else {
-				return [...prevSelected, appointment];
 			}
+			return [...prevSelected, appointment];
 		});
 	};
 
 	const handleCreateCourses = () => {
 		toast.promise(
 			createCourseMutation.mutateAsync(
-				selectedAppointments.map((app) => app.name),
+				selectedAppointments.map((app) => {
+					const course: NewCourse = {
+						id: null,
+						name: app.name,
+						grade: null,
+						teacher: null,
+						academicDepartment: null,
+						moduleId: null,
+					};
+					return course;
+				}),
 			),
 			{
 				loading: "Loading",
 				success: (data) => {
-					formData.addAllCourses(data.createMultipleCourses);
+					formData.addAllCourses(data.createMultipleCourses as Course[]);
 					formData.nextStep();
 					return "Created";
 				},
-				error: "Error",
+				error: (e) => {
+					console.log(e);
+					return "Error";
+				},
 			},
 		);
 	};
+
+	useEffect(() => {
+		console.log(formData);
+	}, [formData]);
 
 	return (
 		<div>

@@ -64,7 +64,6 @@ export function EditableCourseTable({ onUpdate }: EditableCourseTableProps) {
 					<TableHead>Department</TableHead>
 					<TableHead>Teacher</TableHead>
 					<TableHead>Credits</TableHead>
-					<TableHead>Description</TableHead>
 					<TableHead>Actions</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -115,31 +114,20 @@ export function EditableCourseTable({ onUpdate }: EditableCourseTableProps) {
 							{course.isEditing ? (
 								<Input
 									type="number"
-									value={course.credits}
+									value={course.grade}
 									onChange={(e) =>
 										handleChange(
 											course.id,
-											"credits",
+											"grade",
 											parseInt(e.target.value, 10),
 										)
 									}
 								/>
 							) : (
-								course.credits
+								course.grade
 							)}
 						</TableCell>
-						<TableCell>
-							{course.isEditing ? (
-								<Input
-									value={course.description}
-									onChange={(e) =>
-										handleChange(course.id, "description", e.target.value)
-									}
-								/>
-							) : (
-								course.description
-							)}
-						</TableCell>
+
 						<TableCell>
 							{course.isEditing ? (
 								<Button onClick={() => handleSave(course.id)}>Save</Button>

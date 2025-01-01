@@ -19,9 +19,9 @@ const documents = {
     "\n  mutation SaveCalendarLink($link: String!) {\n    upsertCalendarLink(calendarLink: $link) {\n      id\n    }\n  }\n": types.SaveCalendarLinkDocument,
     "\n  query EventsQuery {\n    appointments {\n      id\n      title\n      startTime\n      endTime\n    }\n  }\n": types.EventsQueryDocument,
     "\n    mutation createSemester($input: NewSemester!) {\n        createSemester(input: $input) {\n            id\n        }\n    }\n": types.CreateSemesterDocument,
-    "\n  query getCourses {\n    courses {\n      id\n      name\n      grade\n      teacher\n      academicDepartment\n    }\n  }\n": types.GetCoursesDocument,
     "\n  mutation ProcessCalendar($input: String!) {\n    processSemesterCalendar(semesterId: $input) {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n": types.ProcessCalendarDocument,
-    "\n  mutation createCourses($input: [String!]!) {\n    createMultipleCourses(input: $input) {\n      academicDepartment\n      grade\n      id\n      name\n      teacher\n    }\n  }\n": types.CreateCoursesDocument,
+    "\n  mutation CreateMultipleCourses($input: [NewCourse!]!) {\n    createMultipleCourses(input: $input) {\n      id\n      academicDepartment\n      grade\n      moduleId\n      name\n      teacher\n    }\n  }\n": types.CreateMultipleCoursesDocument,
+    "\n  mutation UpdateCourse($input: NewCourse!) {\n    updateCourse(input: $input) {\n      id\n      academicDepartment\n      grade\n      moduleId\n      name\n      teacher\n    }\n  }\n": types.UpdateCourseDocument,
     "\n  mutation createSemesterMutation($input: NewSemester!) {\n    createSemester(input: $input) {\n      id\n      semester\n    }\n  }\n": types.CreateSemesterMutationDocument,
     "\n  mutation CreateModule($input: NewModule!) {\n    createModule(input: $input) {\n      id\n      etCs\n      name\n      startSemester\n      endSemester\n      grade\n    }\n  }\n": types.CreateModuleDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
@@ -29,7 +29,7 @@ const documents = {
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            \n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
     "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
     "\n  query ModuleIndexQuery {\n   modules {\n  id\n  userId\n name\netCs\nstartSemester\nendSemester\ngrade\n}\n}\n": types.ModuleIndexQueryDocument,
-    "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n      }\n      courses {\n        id\n        name\n        grade\n        teacher\n        academicDepartment\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
+    "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
 };
 
 /**
@@ -51,15 +51,15 @@ export function graphql(source: "\n    mutation createSemester($input: NewSemest
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCourses {\n    courses {\n      id\n      name\n      grade\n      teacher\n      academicDepartment\n    }\n  }\n"): typeof import('./graphql').GetCoursesDocument;
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n  mutation ProcessCalendar($input: String!) {\n    processSemesterCalendar(semesterId: $input) {\n      name\n      weekday\n      startTime\n      endTime\n      location\n    }\n  }\n"): typeof import('./graphql').ProcessCalendarDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createCourses($input: [String!]!) {\n    createMultipleCourses(input: $input) {\n      academicDepartment\n      grade\n      id\n      name\n      teacher\n    }\n  }\n"): typeof import('./graphql').CreateCoursesDocument;
+export function graphql(source: "\n  mutation CreateMultipleCourses($input: [NewCourse!]!) {\n    createMultipleCourses(input: $input) {\n      id\n      academicDepartment\n      grade\n      moduleId\n      name\n      teacher\n    }\n  }\n"): typeof import('./graphql').CreateMultipleCoursesDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateCourse($input: NewCourse!) {\n    updateCourse(input: $input) {\n      id\n      academicDepartment\n      grade\n      moduleId\n      name\n      teacher\n    }\n  }\n"): typeof import('./graphql').UpdateCourseDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -91,7 +91,7 @@ export function graphql(source: "\n  query ModuleIndexQuery {\n   modules {\n  i
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n      }\n      courses {\n        id\n        name\n        grade\n        teacher\n        academicDepartment\n      }\n      startDate\n    }\n  }\n"): typeof import('./graphql').GetAllSemesterDocument;
+export function graphql(source: "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n      }\n      startDate\n    }\n  }\n"): typeof import('./graphql').GetAllSemesterDocument;
 
 
 export function graphql(source: string) {

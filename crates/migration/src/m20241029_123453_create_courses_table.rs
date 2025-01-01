@@ -18,7 +18,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid(Course::Id).default(Uuid::new_v4().to_string()))
                     .col(string(Course::Name).not_null())
-                    .col(uuid(Course::ModuleId).not_null())
+                    .col(uuid_null(Course::ModuleId))
                     .col(uuid(Course::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()

@@ -1,29 +1,46 @@
-import { useSemesterStepper } from "@/lib/stores/semester_stepper";
-import React, { useState } from "react";
-import {
-	DragDropContext,
-	Droppable,
-	Draggable,
-	type DropResult,
-} from "@hello-pangea/dnd";
 import {
 	Card,
 	CardContent,
+	CardDescription,
 	CardHeader,
 	CardTitle,
-	CardDescription,
 } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { EditableCourseTable } from "./editable-course-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { graphql } from "@/graphql";
 import type { Course, Module } from "@/graphql/graphql";
+import { useSemesterStepper } from "@/lib/stores/semester_stepper";
+import {
+	DragDropContext,
+	Draggable,
+	type DropResult,
+	Droppable,
+} from "@hello-pangea/dnd";
+import { useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { EditableCourseTable } from "./editable-course-table";
+import { execute } from "@/execute";
+import type { NewCourse } from "@/graphql/types";
+import { Button } from "@/components/ui/button";
 
+const UPDATE_COURSE_MUTATION = graphql(`
+  mutation UpdateCourse($input: NewCourse!) {
+    updateCourse(input: $input) {
+      id
+      academicDepartment
+      grade
+      moduleId
+      name
+      teacher
+    }
+  }
+`);
 interface ExtendedModule extends Module {
 	description?: string;
 	courses: Course[];
@@ -32,54 +49,21 @@ interface ExtendedModule extends Module {
 interface EditableCourse extends Course {
 	isEditing: boolean;
 }
-
-const initialCourses: Course[] = [
-	{
-		id: "0677e050-ab79-4db8-83e9-ee2f10c06d97",
-		name: "Wahl- und Zusatzfächer",
-		academicDepartment: "General Studies",
-		grade: null,
-		teacher: null,
-		moduleId: "",
-		userId: "default-user-id",
-	},
-	{
-		id: "e5ad2ca7-e673-4393-ab68-79d321552da4",
-		name: "ASWE",
-		academicDepartment: "Computer Science",
-		grade: null,
-		teacher: "Dr. Schmidt",
-		moduleId: "",
-		userId: "default-user-id",
-	},
-];
-
-const initialModules: ExtendedModule[] = [
-	{
-		id: "7ea13d37-ef1b-44f3-af2a-4365d14b2dc6",
-		etCs: 4,
-		name: "Computer Systems",
-		description: "Advanced topics in computer systems and architecture",
-		startSemester: "some-semester-id",
-		userId: "default-user-id",
-		courses: [],
-		grade: null,
-	},
-	{
-		id: "8ea13d37-ef1b-44f3-af2a-4365d14b2dc7",
-		etCs: 6,
-		name: "Software Development",
-		description: "Modern software engineering practices and methodologies",
-		startSemester: "some-semester-id",
-		userId: "default-user-id",
-		courses: [],
-		grade: null,
-	},
-];
-
 export default function ModuleAssignmentMinimal() {
-	const { courses: coursesFromStore, modules: modulesFromStore } =
-		useSemesterStepper();
+	const updateCourseMutation = useMutation({
+		mutationKey: [`update_course_${new Date().getUTCMinutes()}`],
+		mutationFn: (input: NewCourse) =>
+			execute(UPDATE_COURSE_MUTATION, { input }),
+	});
+
+	const {
+		activeStep,
+		steps,
+		lastStep,
+		nextStep,
+		courses: coursesFromStore,
+		modules: modulesFromStore,
+	} = useSemesterStepper();
 	const [courses, setCourses] = useState<Course[]>(coursesFromStore);
 	const [modules, setModules] = useState<ExtendedModule[]>(
 		modulesFromStore.map((mod) => ({ ...mod, courses: [] })),
@@ -126,6 +110,11 @@ export default function ModuleAssignmentMinimal() {
 			);
 			if (destinationModule) {
 				destinationModule.courses.splice(destinationIndex, 0, movedItem);
+				updateCourseMutation.mutateAsync({
+					...movedItem,
+					id: movedItem.id,
+					moduleId: destinationModule.id,
+				});
 			}
 		}
 
@@ -147,8 +136,17 @@ export default function ModuleAssignmentMinimal() {
 				course.id === updatedCourse.id ? updatedCourse : course,
 			),
 		);
+		const course = courses.find((c) => c.id === updatedCourse.id) as Course;
+		const updated_course: NewCourse = {
+			id: updatedCourse.id,
+			name: updatedCourse.name,
+			teacher: updatedCourse.teacher,
+			academicDepartment: updatedCourse.academicDepartment,
+			grade: updatedCourse.grade,
+		};
+		updateCourseMutation.mutateAsync(updated_course);
 	};
-
+	console.log(courses);
 	return (
 		<TooltipProvider>
 			<div className="container mx-auto py-10">
@@ -325,6 +323,14 @@ export default function ModuleAssignmentMinimal() {
 						</Card>
 					</TabsContent>
 				</Tabs>
+				<div className="mt-8 flex justify-between">
+					<Button onClick={lastStep} disabled={activeStep === 0}>
+						Back
+					</Button>
+					<Button onClick={nextStep}>
+						{activeStep === steps.length - 1 ? "Finish" : "Next"}
+					</Button>
+				</div>
 			</div>
 		</TooltipProvider>
 	);
