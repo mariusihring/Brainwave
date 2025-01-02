@@ -21,6 +21,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { check, type Update } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
+// import { ThemeToggle } from "../theme/theme_toggle";
+import { useTheme } from "next-themes";
+import { ModeToggle } from "../theme/theme_toggle";
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
@@ -120,6 +123,9 @@ export function NavUser() {
 							</>
 						)}
 						<DropdownMenuGroup>
+<DropdownMenuItem>
+								<ModeToggle />
+							</DropdownMenuItem>
 							<DropdownMenuItem>
 								<Bell />
 								Notifications
@@ -140,3 +146,4 @@ export function NavUser() {
 		</SidebarMenu>
 	);
 }
+

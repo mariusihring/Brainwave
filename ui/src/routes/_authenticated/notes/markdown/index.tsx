@@ -16,6 +16,7 @@ import { all, createLowlight } from "lowlight";
 import { DOMSerializer } from "prosemirror-model";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/notes/markdown/")({
 	component: () => <MarkdownEditor />,
@@ -209,8 +210,24 @@ function MarkdownEditor() {
 		},
 		editorProps: {
 			attributes: {
-				class:
-					"prose dark:prose-invert prose-slate max-w-none focus:outline-none min-h-[500px] px-4 py-2 prose-pre:bg-muted prose-pre:rounded-lg prose-pre:p-4 prose-code:bg-muted prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:text-sm prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary prose-blockquote:text-foreground/80 prose-strong:text-foreground prose-em:text-foreground [&_.hljs-keyword]:text-pink-500 [&_.hljs-string]:text-green-400 [&_.hljs-number]:text-blue-400 [&_.hljs-function]:text-blue-500 [&_.hljs-title]:text-blue-500 [&_.hljs-attr]:text-purple-500 [&_.hljs-comment]:text-gray-500 [&_.hljs-operator]:text-rose-500 [&_.hljs-punctuation]:text-gray-400 [&_.hljs-property]:text-purple-400 [&_.hljs-class]:text-yellow-500 dark:[&_.hljs-keyword]:text-pink-400 dark:[&_.hljs-string]:text-green-300 dark:[&_.hljs-number]:text-blue-300 dark:[&_.hljs-function]:text-blue-400 dark:[&_.hljs-title]:text-blue-400 dark:[&_.hljs-attr]:text-purple-400 dark:[&_.hljs-comment]:text-gray-400 dark:[&_.hljs-operator]:text-rose-400 dark:[&_.hljs-punctuation]:text-gray-300 dark:[&_.hljs-property]:text-purple-300 dark:[&_.hljs-class]:text-yellow-400",
+				class: cn(
+					"text-black",
+					"prose dark:prose-invert prose-slate max-w-none focus:outline-none min-h-[500px] px-4 py-2",
+					"prose-pre:bg-muted prose-pre:rounded-lg prose-pre:p-4",
+					"prose-code:bg-muted prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:text-sm",
+					"prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary",
+					"prose-blockquote:text-foreground/80 prose-strong:text-foreground prose-em:text-foreground",
+					// Further enhanced syntax highlighting for better light mode contrast
+					"[&_.hljs-keyword]:text-pink-800 dark:[&_.hljs-keyword]:text-pink-400",
+					"[&_.hljs-string]:text-emerald-700 dark:[&_.hljs-string]:text-green-300",
+					"[&_.hljs-number]:text-indigo-700 dark:[&_.hljs-number]:text-blue-300",
+					"[&_.hljs-function]:text-indigo-900 dark:[&_.hljs-function]:text-blue-400",
+					"[&_.hljs-title]:text-indigo-900 dark:[&_.hljs-title]:text-blue-400",
+					"[&_.hljs-attr]:text-purple-800 dark:[&_.hljs-attr]:text-purple-400",
+					"[&_.hljs-operator]:text-rose-800 dark:[&_.hljs-operator]:text-rose-400",
+					"[&_.hljs-property]:text-purple-800 dark:[&_.hljs-property]:text-purple-300",
+					"[&_.hljs-class]:text-amber-800 dark:[&_.hljs-class]:text-yellow-400"
+				),
 			},
 		},
 	});
