@@ -15,12 +15,7 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedTestImport } from './routes/_authenticated/test'
-import { Route as AuthenticatedSwappyImport } from './routes/_authenticated/swappy'
 import { Route as AuthenticatedSemesterstepperImport } from './routes/_authenticated/semester_stepper'
-import { Route as AuthenticatedNotesImport } from './routes/_authenticated/notes'
-import { Route as AuthenticatedNotebooksImport } from './routes/_authenticated/notebooks'
-import { Route as AuthenticatedFlashcardsImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedCalendarImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedUniversityIndexImport } from './routes/_authenticated/university/index'
 import { Route as AuthenticatedNotesIndexImport } from './routes/_authenticated/notes/index'
@@ -60,42 +55,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const AuthenticatedTestRoute = AuthenticatedTestImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedSwappyRoute = AuthenticatedSwappyImport.update({
-  id: '/swappy',
-  path: '/swappy',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
 const AuthenticatedSemesterstepperRoute =
   AuthenticatedSemesterstepperImport.update({
     id: '/semester_stepper',
     path: '/semester_stepper',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-
-const AuthenticatedNotesRoute = AuthenticatedNotesImport.update({
-  id: '/notes',
-  path: '/notes',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedNotebooksRoute = AuthenticatedNotebooksImport.update({
-  id: '/notebooks',
-  path: '/notebooks',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedFlashcardsRoute = AuthenticatedFlashcardsImport.update({
-  id: '/flashcards',
-  path: '/flashcards',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 
 const AuthenticatedCalendarRoute = AuthenticatedCalendarImport.update({
   id: '/calendar',
@@ -111,9 +76,9 @@ const AuthenticatedUniversityIndexRoute =
   } as any)
 
 const AuthenticatedNotesIndexRoute = AuthenticatedNotesIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedNotesRoute,
+  id: '/notes/',
+  path: '/notes/',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedUniversityModulesRoute =
@@ -146,23 +111,23 @@ const AuthenticatedUniversityCoursesIndexRoute =
 
 const AuthenticatedNotesMarkdownIndexRoute =
   AuthenticatedNotesMarkdownIndexImport.update({
-    id: '/markdown/',
-    path: '/markdown/',
-    getParentRoute: () => AuthenticatedNotesRoute,
+    id: '/notes/markdown/',
+    path: '/notes/markdown/',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 const AuthenticatedNotesLatexIndexRoute =
   AuthenticatedNotesLatexIndexImport.update({
-    id: '/latex/',
-    path: '/latex/',
-    getParentRoute: () => AuthenticatedNotesRoute,
+    id: '/notes/latex/',
+    path: '/notes/latex/',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 const AuthenticatedNotesFlashcardsIndexRoute =
   AuthenticatedNotesFlashcardsIndexImport.update({
-    id: '/flashcards/',
-    path: '/flashcards/',
-    getParentRoute: () => AuthenticatedNotesRoute,
+    id: '/notes/flashcards/',
+    path: '/notes/flashcards/',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 const AuthenticatedUniversityTodosTodoRoute =
@@ -218,46 +183,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCalendarImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/flashcards': {
-      id: '/_authenticated/flashcards'
-      path: '/flashcards'
-      fullPath: '/flashcards'
-      preLoaderRoute: typeof AuthenticatedFlashcardsImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/notebooks': {
-      id: '/_authenticated/notebooks'
-      path: '/notebooks'
-      fullPath: '/notebooks'
-      preLoaderRoute: typeof AuthenticatedNotebooksImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/notes': {
-      id: '/_authenticated/notes'
-      path: '/notes'
-      fullPath: '/notes'
-      preLoaderRoute: typeof AuthenticatedNotesImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/semester_stepper': {
       id: '/_authenticated/semester_stepper'
       path: '/semester_stepper'
       fullPath: '/semester_stepper'
       preLoaderRoute: typeof AuthenticatedSemesterstepperImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/swappy': {
-      id: '/_authenticated/swappy'
-      path: '/swappy'
-      fullPath: '/swappy'
-      preLoaderRoute: typeof AuthenticatedSwappyImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/test': {
-      id: '/_authenticated/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof AuthenticatedTestImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/': {
@@ -276,10 +206,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/notes/': {
       id: '/_authenticated/notes/'
-      path: '/'
-      fullPath: '/notes/'
+      path: '/notes'
+      fullPath: '/notes'
       preLoaderRoute: typeof AuthenticatedNotesIndexImport
-      parentRoute: typeof AuthenticatedNotesImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/university/': {
       id: '/_authenticated/university/'
@@ -311,24 +241,24 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/notes/flashcards/': {
       id: '/_authenticated/notes/flashcards/'
-      path: '/flashcards'
+      path: '/notes/flashcards'
       fullPath: '/notes/flashcards'
       preLoaderRoute: typeof AuthenticatedNotesFlashcardsIndexImport
-      parentRoute: typeof AuthenticatedNotesImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/notes/latex/': {
       id: '/_authenticated/notes/latex/'
-      path: '/latex'
+      path: '/notes/latex'
       fullPath: '/notes/latex'
       preLoaderRoute: typeof AuthenticatedNotesLatexIndexImport
-      parentRoute: typeof AuthenticatedNotesImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/notes/markdown/': {
       id: '/_authenticated/notes/markdown/'
-      path: '/markdown'
+      path: '/notes/markdown'
       fullPath: '/notes/markdown'
       preLoaderRoute: typeof AuthenticatedNotesMarkdownIndexImport
-      parentRoute: typeof AuthenticatedNotesImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/university/courses/': {
       id: '/_authenticated/university/courses/'
@@ -356,38 +286,19 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface AuthenticatedNotesRouteChildren {
-  AuthenticatedNotesIndexRoute: typeof AuthenticatedNotesIndexRoute
-  AuthenticatedNotesFlashcardsIndexRoute: typeof AuthenticatedNotesFlashcardsIndexRoute
-  AuthenticatedNotesLatexIndexRoute: typeof AuthenticatedNotesLatexIndexRoute
-  AuthenticatedNotesMarkdownIndexRoute: typeof AuthenticatedNotesMarkdownIndexRoute
-}
-
-const AuthenticatedNotesRouteChildren: AuthenticatedNotesRouteChildren = {
-  AuthenticatedNotesIndexRoute: AuthenticatedNotesIndexRoute,
-  AuthenticatedNotesFlashcardsIndexRoute:
-    AuthenticatedNotesFlashcardsIndexRoute,
-  AuthenticatedNotesLatexIndexRoute: AuthenticatedNotesLatexIndexRoute,
-  AuthenticatedNotesMarkdownIndexRoute: AuthenticatedNotesMarkdownIndexRoute,
-}
-
-const AuthenticatedNotesRouteWithChildren =
-  AuthenticatedNotesRoute._addFileChildren(AuthenticatedNotesRouteChildren)
-
 interface AuthenticatedRouteChildren {
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
-  AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
-  AuthenticatedNotebooksRoute: typeof AuthenticatedNotebooksRoute
-  AuthenticatedNotesRoute: typeof AuthenticatedNotesRouteWithChildren
   AuthenticatedSemesterstepperRoute: typeof AuthenticatedSemesterstepperRoute
-  AuthenticatedSwappyRoute: typeof AuthenticatedSwappyRoute
-  AuthenticatedTestRoute: typeof AuthenticatedTestRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedUniversityModulesRoute: typeof AuthenticatedUniversityModulesRoute
+  AuthenticatedNotesIndexRoute: typeof AuthenticatedNotesIndexRoute
   AuthenticatedUniversityIndexRoute: typeof AuthenticatedUniversityIndexRoute
   AuthenticatedUniversityCoursesCoursesRoute: typeof AuthenticatedUniversityCoursesCoursesRoute
   AuthenticatedUniversitySemesterSemesterRoute: typeof AuthenticatedUniversitySemesterSemesterRoute
   AuthenticatedUniversityTodosTodoRoute: typeof AuthenticatedUniversityTodosTodoRoute
+  AuthenticatedNotesFlashcardsIndexRoute: typeof AuthenticatedNotesFlashcardsIndexRoute
+  AuthenticatedNotesLatexIndexRoute: typeof AuthenticatedNotesLatexIndexRoute
+  AuthenticatedNotesMarkdownIndexRoute: typeof AuthenticatedNotesMarkdownIndexRoute
   AuthenticatedUniversityCoursesIndexRoute: typeof AuthenticatedUniversityCoursesIndexRoute
   AuthenticatedUniversitySemesterIndexRoute: typeof AuthenticatedUniversitySemesterIndexRoute
   AuthenticatedUniversityTodosIndexRoute: typeof AuthenticatedUniversityTodosIndexRoute
@@ -395,20 +306,20 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
-  AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
-  AuthenticatedNotebooksRoute: AuthenticatedNotebooksRoute,
-  AuthenticatedNotesRoute: AuthenticatedNotesRouteWithChildren,
   AuthenticatedSemesterstepperRoute: AuthenticatedSemesterstepperRoute,
-  AuthenticatedSwappyRoute: AuthenticatedSwappyRoute,
-  AuthenticatedTestRoute: AuthenticatedTestRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedUniversityModulesRoute: AuthenticatedUniversityModulesRoute,
+  AuthenticatedNotesIndexRoute: AuthenticatedNotesIndexRoute,
   AuthenticatedUniversityIndexRoute: AuthenticatedUniversityIndexRoute,
   AuthenticatedUniversityCoursesCoursesRoute:
     AuthenticatedUniversityCoursesCoursesRoute,
   AuthenticatedUniversitySemesterSemesterRoute:
     AuthenticatedUniversitySemesterSemesterRoute,
   AuthenticatedUniversityTodosTodoRoute: AuthenticatedUniversityTodosTodoRoute,
+  AuthenticatedNotesFlashcardsIndexRoute:
+    AuthenticatedNotesFlashcardsIndexRoute,
+  AuthenticatedNotesLatexIndexRoute: AuthenticatedNotesLatexIndexRoute,
+  AuthenticatedNotesMarkdownIndexRoute: AuthenticatedNotesMarkdownIndexRoute,
   AuthenticatedUniversityCoursesIndexRoute:
     AuthenticatedUniversityCoursesIndexRoute,
   AuthenticatedUniversitySemesterIndexRoute:
@@ -426,15 +337,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/calendar': typeof AuthenticatedCalendarRoute
-  '/flashcards': typeof AuthenticatedFlashcardsRoute
-  '/notebooks': typeof AuthenticatedNotebooksRoute
-  '/notes': typeof AuthenticatedNotesRouteWithChildren
   '/semester_stepper': typeof AuthenticatedSemesterstepperRoute
-  '/swappy': typeof AuthenticatedSwappyRoute
-  '/test': typeof AuthenticatedTestRoute
   '/': typeof AuthenticatedIndexRoute
   '/university/modules': typeof AuthenticatedUniversityModulesRoute
-  '/notes/': typeof AuthenticatedNotesIndexRoute
+  '/notes': typeof AuthenticatedNotesIndexRoute
   '/university': typeof AuthenticatedUniversityIndexRoute
   '/university/courses/$courses': typeof AuthenticatedUniversityCoursesCoursesRoute
   '/university/semester/$semester': typeof AuthenticatedUniversitySemesterSemesterRoute
@@ -451,11 +357,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/calendar': typeof AuthenticatedCalendarRoute
-  '/flashcards': typeof AuthenticatedFlashcardsRoute
-  '/notebooks': typeof AuthenticatedNotebooksRoute
   '/semester_stepper': typeof AuthenticatedSemesterstepperRoute
-  '/swappy': typeof AuthenticatedSwappyRoute
-  '/test': typeof AuthenticatedTestRoute
   '/': typeof AuthenticatedIndexRoute
   '/university/modules': typeof AuthenticatedUniversityModulesRoute
   '/notes': typeof AuthenticatedNotesIndexRoute
@@ -477,12 +379,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
-  '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
-  '/_authenticated/notebooks': typeof AuthenticatedNotebooksRoute
-  '/_authenticated/notes': typeof AuthenticatedNotesRouteWithChildren
   '/_authenticated/semester_stepper': typeof AuthenticatedSemesterstepperRoute
-  '/_authenticated/swappy': typeof AuthenticatedSwappyRoute
-  '/_authenticated/test': typeof AuthenticatedTestRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/university/modules': typeof AuthenticatedUniversityModulesRoute
   '/_authenticated/notes/': typeof AuthenticatedNotesIndexRoute
@@ -505,15 +402,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/calendar'
-    | '/flashcards'
-    | '/notebooks'
-    | '/notes'
     | '/semester_stepper'
-    | '/swappy'
-    | '/test'
     | '/'
     | '/university/modules'
-    | '/notes/'
+    | '/notes'
     | '/university'
     | '/university/courses/$courses'
     | '/university/semester/$semester'
@@ -529,11 +421,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/calendar'
-    | '/flashcards'
-    | '/notebooks'
     | '/semester_stepper'
-    | '/swappy'
-    | '/test'
     | '/'
     | '/university/modules'
     | '/notes'
@@ -553,12 +441,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/calendar'
-    | '/_authenticated/flashcards'
-    | '/_authenticated/notebooks'
-    | '/_authenticated/notes'
     | '/_authenticated/semester_stepper'
-    | '/_authenticated/swappy'
-    | '/_authenticated/test'
     | '/_authenticated/'
     | '/_authenticated/university/modules'
     | '/_authenticated/notes/'
@@ -606,18 +489,17 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/calendar",
-        "/_authenticated/flashcards",
-        "/_authenticated/notebooks",
-        "/_authenticated/notes",
         "/_authenticated/semester_stepper",
-        "/_authenticated/swappy",
-        "/_authenticated/test",
         "/_authenticated/",
         "/_authenticated/university/modules",
+        "/_authenticated/notes/",
         "/_authenticated/university/",
         "/_authenticated/university/courses/$courses",
         "/_authenticated/university/semester/$semester",
         "/_authenticated/university/todos/$todo",
+        "/_authenticated/notes/flashcards/",
+        "/_authenticated/notes/latex/",
+        "/_authenticated/notes/markdown/",
         "/_authenticated/university/courses/",
         "/_authenticated/university/semester/",
         "/_authenticated/university/todos/"
@@ -633,34 +515,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/calendar.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/flashcards": {
-      "filePath": "_authenticated/flashcards.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/notebooks": {
-      "filePath": "_authenticated/notebooks.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/notes": {
-      "filePath": "_authenticated/notes.tsx",
-      "parent": "/_authenticated",
-      "children": [
-        "/_authenticated/notes/",
-        "/_authenticated/notes/flashcards/",
-        "/_authenticated/notes/latex/",
-        "/_authenticated/notes/markdown/"
-      ]
-    },
     "/_authenticated/semester_stepper": {
       "filePath": "_authenticated/semester_stepper.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/swappy": {
-      "filePath": "_authenticated/swappy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/test": {
-      "filePath": "_authenticated/test.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/": {
@@ -673,7 +529,7 @@ export const routeTree = rootRoute
     },
     "/_authenticated/notes/": {
       "filePath": "_authenticated/notes/index.tsx",
-      "parent": "/_authenticated/notes"
+      "parent": "/_authenticated"
     },
     "/_authenticated/university/": {
       "filePath": "_authenticated/university/index.tsx",
@@ -693,15 +549,15 @@ export const routeTree = rootRoute
     },
     "/_authenticated/notes/flashcards/": {
       "filePath": "_authenticated/notes/flashcards/index.tsx",
-      "parent": "/_authenticated/notes"
+      "parent": "/_authenticated"
     },
     "/_authenticated/notes/latex/": {
       "filePath": "_authenticated/notes/latex/index.tsx",
-      "parent": "/_authenticated/notes"
+      "parent": "/_authenticated"
     },
     "/_authenticated/notes/markdown/": {
       "filePath": "_authenticated/notes/markdown/index.tsx",
-      "parent": "/_authenticated/notes"
+      "parent": "/_authenticated"
     },
     "/_authenticated/university/courses/": {
       "filePath": "_authenticated/university/courses/index.tsx",
