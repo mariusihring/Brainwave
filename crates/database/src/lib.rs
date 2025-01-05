@@ -1,10 +1,15 @@
+use std::env;
+
 use sea_orm::ConnectOptions;
 use sea_orm::{Database, DatabaseConnection, DbErr};
 
 use migration::{Migrator, MigratorTrait};
 
-pub async fn init(path: &str) -> Result<DatabaseConnection, DbErr> {
-    let mut opt = ConnectOptions::new("postgresql://mariusihring:password@localhost:5432/Brainwave");
+pub async fn init() -> Result<DatabaseConnection, DbErr> {
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set in .env file");
+
+    let mut opt = ConnectOptions::new(database_url);
     opt.sqlx_logging(false)
         .sqlx_logging_level(log::LevelFilter::Info);
 

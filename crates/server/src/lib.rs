@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-
+use dotenv::dotenv;
 use async_graphql::{EmptySubscription, Schema};
 use axum::{
     http::Method,
@@ -22,7 +22,6 @@ mod state;
 
 use crate::{
     auth::validate_session,
-    dir::database_path,
     graphql::{Mutation, Query},
     routers::{
         auth::{
@@ -36,6 +35,7 @@ use crate::{
 };
 
 pub async fn run_server() {
+    dotenv().ok();
     setup_logging();
     let state = setup_app_state().await;
     let app = build_router(state.clone());
@@ -54,7 +54,7 @@ fn setup_logging() {
 }
 
 async fn setup_app_state() -> AppState {
-    let db = database::init(&database_path().await.unwrap())
+    let db = database::init()
         .await
         .expect("failed to connect to db");
 
@@ -142,21 +142,5 @@ async fn shutdown(state: AppState) {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
-
-    use crate::models::_entities::user::Entity as User;
-    use database::init;
-    use sea_orm::EntityTrait;
-    use uuid::Uuid;
-
-    #[tokio::test]
-    async fn it_works() {
-        let db = init("./../../migration/test.db").await.unwrap();
-        let user: Option<crate::models::_entities::user::Model> =
-            User::find_by_id(Uuid::from_str("e899acf3-284d-4713-82f8-dbdb1b91c042").unwrap())
-                .one(&db)
-                .await
-                .unwrap();
-        println!("{:?}", user);
-    }
+    
 }
