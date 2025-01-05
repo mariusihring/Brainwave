@@ -29,7 +29,7 @@ import { execute } from "@/execute";
 import type { NewCourse } from "@/graphql/types";
 import { Button } from "@/components/ui/button";
 
-const UPDATE_COURSE_MUTATION = graphql(`
+export const UPDATE_COURSE_MUTATION = graphql(`
   mutation UpdateCourse($input: NewCourse!) {
     updateCourse(input: $input) {
       id

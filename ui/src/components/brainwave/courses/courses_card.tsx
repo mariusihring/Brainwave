@@ -2,7 +2,7 @@ import type { Courses } from "@/__generated__/graphql";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
 	Card,
-	CardContent,
+	CardContent, CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card.tsx";
@@ -10,17 +10,38 @@ import { getDifficultyColor } from "@/lib/semester/functions.ts";
 import {
 	AwardIcon,
 	BookOpenIcon,
-	CalendarIcon,
+	CalendarIcon, Edit,
 	GraduationCapIcon,
 	PenToolIcon,
 	StarIcon,
 } from "lucide-react";
-import {Course} from "@/graphql/types.ts";
+import {Course, type Module, NewCourse} from "@/graphql/types.ts";
+import {useMutation} from "@tanstack/react-query";
+import {execute} from "@/execute.ts";
+import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {useState} from "react";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
+import {toast} from "sonner";
+import CourseForm from "@/components/brainwave/courses/form.tsx";
 
 function addToFavorites(course: Course) {}
 
 export default function CoursesCard({ course }: { course: Course }) {
+	const updateMutation = useMutation({
+		mutationKey: ['courses_index'],
+		mutationFn: (updatedCourse: NewCourse) => execute(UPDATE_COURSE_MUTATION, {input: updatedCourse}),
+	})
+	const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+	const handleUpdate = (updatedCourse: Course) => {
+		updateMutation.mutateAsync(updatedCourse);
+		setEditingCourse(null);
+		toast.success("Course updated", {
+			description: `${updatedCourse.name} has been updated succesfully`,
+		});
+	};
 	return (
+		<>
 		<Card className="w-full">
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
@@ -57,6 +78,29 @@ export default function CoursesCard({ course }: { course: Course }) {
 					</div>
 				</div>
 			</CardContent>
+			<CardFooter className="w-full flex items-end justify-end">
+				<Button
+					variant="outline"
+					size="icon"
+					onClick={() => setEditingCourse(course)}
+				>
+					<Edit className="h-4 w-4" />
+				</Button>
+			</CardFooter>
 		</Card>
+			<Dialog
+				open={!!editingCourse}
+				onOpenChange={() => setEditingCourse(null)}
+			>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Edit Module</DialogTitle>
+					</DialogHeader>
+					{editingCourse && (
+						<CourseForm course={editingCourse} onSubmit={handleUpdate} />
+					)}
+				</DialogContent>
+			</Dialog>
+		</>
 	);
 }

@@ -119,7 +119,7 @@ type Query {
 	modules: [Module!]!
 	calendarLink: String
 	appointments: [Appointment!]!
-	course(id: String!): Course!
+	course(id: String!): Course
 	courses: [Course!]!
 }
 

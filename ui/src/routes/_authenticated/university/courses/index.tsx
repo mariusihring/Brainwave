@@ -1,9 +1,11 @@
 import CoursesCard from "@/components/brainwave/courses/courses_card.tsx";
 import {FavoriteCourses} from "@/components/brainwave/courses/favorites.tsx";
 import {execute} from "@/execute.ts";
-import {queryOptions, useQuery} from "@tanstack/react-query";
+import {queryOptions, useMutation, useQuery} from "@tanstack/react-query";
 import {createFileRoute} from "@tanstack/react-router";
 import {graphql} from "@/graphql";
+import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
+import {NewCourse} from "@/graphql/types.ts";
 
 export const Route = createFileRoute("/_authenticated/university/courses/")({
     component: () => <Coursesindex/>,
@@ -34,6 +36,8 @@ function Coursesindex() {
         queryFn: () => execute(COURSE_INDEX_QUERY),
         initialData: Route.useLoaderData()
     })
+
+
     console.log(courses)
     return (
         <div className="w-full">
