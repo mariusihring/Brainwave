@@ -57,4 +57,5 @@ pub enum Course {
     Grade,
     Teacher,
     AcademicDepartment,
+    IsFavorite
 }
