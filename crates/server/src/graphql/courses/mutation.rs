@@ -79,9 +79,9 @@ impl CourseMutation {
         &self,
         ctx: &Context<'_>,
         input: NewCourse,
-    ) -> Result<Vec<CourseModel>, async_graphql::Error> {
+    ) -> Result<CourseModel, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let mut result = Vec::new();
+       
         let course = course::Entity::find_by_id(Uuid::parse_str(&input.id.unwrap()).unwrap())
             .one(db)
             .await?;
@@ -89,10 +89,11 @@ impl CourseMutation {
         if input.module_id.is_some() {
             course.module_id = Set(Some(Uuid::parse_str(&input.module_id.unwrap()).unwrap()));
         }
+        course.name = Set(input.name);
         course.academic_department = Set(input.academic_department.clone());
         course.teacher = Set(input.teacher.clone());
         course.grade = Set(input.grade);
-        result.push(course.update(db).await?);
-        Ok(result)
+        
+        course.update(db).await.map_err(|e| async_graphql::Error::from(e))
     }
 }

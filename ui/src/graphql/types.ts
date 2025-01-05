@@ -97,7 +97,7 @@ export type Mutation = {
   createSemester: Semester;
   createTodo: Todo;
   processSemesterCalendar: Array<RecurringAppointment>;
-  updateCourse: Array<Course>;
+  updateCourse: Course;
   updateTodo: Todo;
   upsertCalendarLink: Settings;
 };
@@ -183,7 +183,7 @@ export type Query = {
   __typename?: 'Query';
   appointments: Array<Appointment>;
   calendarLink?: Maybe<Scalars['String']['output']>;
-  course: Course;
+  course?: Maybe<Course>;
   courses: Array<Course>;
   module?: Maybe<Module>;
   modules: Array<Module>;

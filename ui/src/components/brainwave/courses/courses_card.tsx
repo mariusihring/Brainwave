@@ -1,21 +1,17 @@
-import type { Courses } from "@/__generated__/graphql";
-import { Badge } from "@/components/ui/badge.tsx";
 import {
 	Card,
 	CardContent, CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card.tsx";
-import { getDifficultyColor } from "@/lib/semester/functions.ts";
 import {
-	AwardIcon,
 	BookOpenIcon,
 	CalendarIcon, Edit,
 	GraduationCapIcon,
 	PenToolIcon,
 	StarIcon,
 } from "lucide-react";
-import {Course, type Module, NewCourse} from "@/graphql/types.ts";
+import {Course, NewCourse} from "@/graphql/types.ts";
 import {useMutation} from "@tanstack/react-query";
 import {execute} from "@/execute.ts";
 import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
@@ -25,7 +21,7 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/
 import {toast} from "sonner";
 import CourseForm from "@/components/brainwave/courses/form.tsx";
 
-function addToFavorites(course: Course) {}
+function addToFavorites(_course: Course) {}
 
 export default function CoursesCard({ course }: { course: Course }) {
 	const updateMutation = useMutation({
@@ -34,6 +30,7 @@ export default function CoursesCard({ course }: { course: Course }) {
 	})
 	const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 	const handleUpdate = (updatedCourse: Course) => {
+		console.log(updatedCourse)
 		updateMutation.mutateAsync(updatedCourse);
 		setEditingCourse(null);
 		toast.success("Course updated", {
@@ -48,9 +45,10 @@ export default function CoursesCard({ course }: { course: Course }) {
 					<span>{course.name}</span>
 					<StarIcon
 						className="mr-2 h-5 w-5 opacity-70"
-						onClick={
+						onClick={ () =>  
 							//add to favorites
 							addToFavorites(course)
+						
 						}
 					/>
 				</CardTitle>

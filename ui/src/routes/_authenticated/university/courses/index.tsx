@@ -1,11 +1,9 @@
 import CoursesCard from "@/components/brainwave/courses/courses_card.tsx";
 import {FavoriteCourses} from "@/components/brainwave/courses/favorites.tsx";
 import {execute} from "@/execute.ts";
-import {queryOptions, useMutation, useQuery} from "@tanstack/react-query";
+import {queryOptions,  useQuery} from "@tanstack/react-query";
 import {createFileRoute} from "@tanstack/react-router";
 import {graphql} from "@/graphql";
-import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
-import {NewCourse} from "@/graphql/types.ts";
 
 export const Route = createFileRoute("/_authenticated/university/courses/")({
     component: () => <Coursesindex/>,
@@ -47,6 +45,7 @@ function Coursesindex() {
             <FavoriteCourses/>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map(course => (
+                    // @ts-ignore
                     <CoursesCard course={course}/>
                 )
                 )}

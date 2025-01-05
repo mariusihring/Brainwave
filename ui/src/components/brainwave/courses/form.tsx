@@ -1,16 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import type {Course, Module} from "@/graphql/types";
-import { useSemesterStepper } from "@/lib/stores/semester_stepper";
-import { useEffect, useState } from "react";
+import type {Course} from "@/graphql/types";
+import {  useState } from "react";
 
 type CourseFormProps = {
     course?: Course;
@@ -22,14 +14,15 @@ export default function CourseForm({ course, onSubmit }: CourseFormProps) {
             name: "",
         },
     );
-    const handleChange = (name: string, value: string | number) => {
+    const handleChange = (name: string, value: unknown) => {
         setInitialData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit({
-            ...course,
+            ...initialData,
+            grade: initialData.grade as number
         } as Course);
     };
     return (
@@ -49,7 +42,7 @@ export default function CourseForm({ course, onSubmit }: CourseFormProps) {
                     id="grade"
                     type="number"
                     value={initialData.grade as number}
-                    onChange={(e) => handleChange("grade", e.target.value)}
+                    onChange={(e) => handleChange("grade", Number(e.target.value))}
                 />
             </div>
             <div>

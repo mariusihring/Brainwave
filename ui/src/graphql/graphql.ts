@@ -99,7 +99,7 @@ export type Mutation = {
   createSemester: Semester;
   createTodo: Todo;
   processSemesterCalendar: Array<RecurringAppointment>;
-  updateCourse: Array<Course>;
+  updateCourse: Course;
   updateTodo: Todo;
   upsertCalendarLink: Settings;
 };
@@ -185,7 +185,7 @@ export type Query = {
   __typename?: 'Query';
   appointments: Array<Appointment>;
   calendarLink?: Maybe<Scalars['String']['output']>;
-  course: Course;
+  course?: Maybe<Course>;
   courses: Array<Course>;
   module?: Maybe<Module>;
   modules: Array<Module>;
@@ -325,7 +325,7 @@ export type UpdateCourseMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: Array<{ __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null }> };
+export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null } };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
@@ -656,7 +656,7 @@ export type Mutation = {
   createSemester: Semester;
   createTodo: Todo;
   processSemesterCalendar: Array<RecurringAppointment>;
-  updateCourse: Array<Course>;
+  updateCourse: Course;
   updateTodo: Todo;
   upsertCalendarLink: Settings;
 };
@@ -742,7 +742,7 @@ export type Query = {
   __typename?: 'Query';
   appointments: Array<Appointment>;
   calendarLink?: Maybe<Scalars['String']['output']>;
-  course: Course;
+  course?: Maybe<Course>;
   courses: Array<Course>;
   module?: Maybe<Module>;
   modules: Array<Module>;
@@ -882,7 +882,7 @@ export type UpdateCourseMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: Array<{ __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null }> };
+export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null } };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
