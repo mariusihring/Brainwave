@@ -32,7 +32,7 @@ const USER_TABLE_NAME: &str = "user";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserBody {
-    pub username: String,
+    pub id: String,
 }
 
 pub async fn get_user(
@@ -40,7 +40,7 @@ pub async fn get_user(
     Json(payload): Json<GetUserBody>,
 ) -> Result<(StatusCode, Json<Option<DatabaseUser>>), (StatusCode, String)> {
     let db_user = user::Entity::find()
-        .filter(user::Column::Username.eq(payload.username))
+        .filter(user::Column::Id.eq(Uuid::parse_str(payload.id.as_str()).unwrap()))
         .one(&state.db)
         .await
         .map_err(|e| (StatusCode::NOT_FOUND, format!("Database error: {}", e)))?
@@ -61,6 +61,7 @@ pub async fn create_user(
     Json(payload): Json<CreateUserBody>,
 ) -> Result<(StatusCode, Json<Option<DatabaseUser>>), (StatusCode, String)> {
     let new_user = user::ActiveModel {
+        id: Set(Uuid::parse_str(&payload.id).unwrap()),
         username: Set(payload.username.clone()),
         password_hash: Set(payload.hash.clone()),
         first_name: Set(String::from("test")),
@@ -214,30 +215,49 @@ pub async fn get_user_sessions(
     Ok((StatusCode::OK, Json(sessions)))
 }
 
+#[derive(Debug, Serialize)]
+pub struct LuciaSession {
+    pub id: String,
+    #[serde(rename = "expiresAt")]
+    pub expires_at: DateTime<Utc>,
+    pub fresh: bool,
+    #[serde(rename = "userId")]
+    pub user_id: String,
+}
+
 pub async fn set_session(
     State(state): State<AppState>,
     Json(session): Json<DatabaseSession>,
-) -> Result<StatusCode, (StatusCode, String)> {
+) -> Result<(StatusCode, Json<LuciaSession>), (StatusCode, String)> {
     let expires_at_naive: NaiveDateTime = session.expires_at.naive_utc();
-
+    println!("{:#?}", session);
     let new_session = session::ActiveModel {
         id: Set(Uuid::parse_str(session.id.clone().as_str()).unwrap()),
         user_id: Set(Uuid::parse_str(session.user_id.clone().as_str()).unwrap()),
-
         expires_at: Set(expires_at_naive),
         // Assuming attributes are stored as JSON or similar; adjust as needed
     };
+
     session::Entity::insert(new_session)
         .exec(&state.db)
         .await
         .map_err(|e| {
+            println!("{:#?}", e);
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 format!("Failed to set session: {}", e),
             )
         })?;
 
-    Ok(StatusCode::CREATED)
+    // Return the session in Lucia's expected format
+    let lucia_session = LuciaSession {
+        id: session.id,
+        expires_at: session.expires_at,
+        fresh: true,
+        user_id: session.user_id,
+    };
+
+    Ok((StatusCode::CREATED, Json(lucia_session)))
 }
 
 #[derive(Debug, Serialize, Deserialize)]
