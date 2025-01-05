@@ -351,7 +351,7 @@ export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: 
 export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any }> };
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType }> };
 
 export type UpdateTodoStatusMutationMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -365,6 +365,11 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
+
+export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -482,6 +487,7 @@ export const TodoIndexQueryDocument = new TypedDocumentString(`
     title
     dueOn
     userId
+    type
   }
 }
     `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;
@@ -507,6 +513,18 @@ export const AppointmentQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AppointmentQueryQuery, AppointmentQueryQueryVariables>;
+export const Course_IndexDocument = new TypedDocumentString(`
+    query course_index {
+  courses {
+    id
+    name
+    moduleId
+    grade
+    teacher
+    academicDepartment
+  }
+}
+    `) as unknown as TypedDocumentString<Course_IndexQuery, Course_IndexQueryVariables>;
 export const ModuleIndexQueryDocument = new TypedDocumentString(`
     query ModuleIndexQuery {
   modules {
@@ -890,7 +908,7 @@ export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: 
 export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any }> };
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType }> };
 
 export type UpdateTodoStatusMutationMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -904,6 +922,11 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
+
+export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

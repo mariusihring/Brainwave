@@ -24,9 +24,10 @@ const documents = {
     "\n  mutation createSemesterMutation($input: NewSemester!) {\n    createSemester(input: $input) {\n      id\n      semester\n    }\n  }\n": types.CreateSemesterMutationDocument,
     "\n  mutation CreateModule($input: NewModule!) {\n    createModule(input: $input) {\n      id\n      etCs\n      name\n      startSemester\n      endSemester\n      grade\n    }\n  }\n": types.CreateModuleDocument,
     "\n    mutation createTodoMutation($input: NewTodo!) {\n        createTodo(input: $input) {\n            id\n        }\n    }\n": types.CreateTodoMutationDocument,
-    "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n\n        }\n    }\n": types.TodoIndexQueryDocument,
+    "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            type\n        }\n    }\n": types.TodoIndexQueryDocument,
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            \n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
     "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
+    "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n        }\n    }\n": types.Course_IndexDocument,
     "\n  query ModuleIndexQuery {\n   modules {\n  id\n  userId\n name\netCs\nstartSemester\nendSemester\ngrade\n}\n}\n": types.ModuleIndexQueryDocument,
     "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
 };
@@ -70,7 +71,7 @@ export function graphql(source: "\n    mutation createTodoMutation($input: NewTo
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n\n        }\n    }\n"): typeof import('./graphql').TodoIndexQueryDocument;
+export function graphql(source: "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            type\n        }\n    }\n"): typeof import('./graphql').TodoIndexQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -79,6 +80,10 @@ export function graphql(source: "\n    mutation UpdateTodoStatusMutation($id: St
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n"): typeof import('./graphql').AppointmentQueryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n        }\n    }\n"): typeof import('./graphql').Course_IndexDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

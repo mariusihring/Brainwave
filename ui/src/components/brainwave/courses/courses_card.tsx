@@ -15,20 +15,21 @@ import {
 	PenToolIcon,
 	StarIcon,
 } from "lucide-react";
+import {Course} from "@/graphql/types.ts";
 
-function addToFavorites(course: Courses) {}
+function addToFavorites(course: Course) {}
 
-export default function CoursesCard({ courses }: { courses: Courses }) {
+export default function CoursesCard({ course }: { course: Course }) {
 	return (
 		<Card className="w-full">
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
-					<span>Name</span>
+					<span>{course.name}</span>
 					<StarIcon
 						className="mr-2 h-5 w-5 opacity-70"
 						onClick={
 							//add to favorites
-							addToFavorites(courses)
+							addToFavorites(course)
 						}
 					/>
 				</CardTitle>
@@ -44,7 +45,7 @@ export default function CoursesCard({ courses }: { courses: Courses }) {
 					</div>
 					<div className="flex items-center">
 						<GraduationCapIcon className="mr-2 h-4 w-4 opacity-70" />
-						<span className="text-sm text-muted-foreground">ECTS</span>
+						<span className="text-sm text-muted-foreground">Grade: {course.grade}</span>
 					</div>
 					<div className="flex items-center">
 						<BookOpenIcon className="mr-2 h-4 w-4 opacity-70" />

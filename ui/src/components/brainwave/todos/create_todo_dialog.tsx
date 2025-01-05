@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { execute } from "@/execute.ts";
 import { graphql } from "@/graphql";
-import { type NewTodo } from "@/graphql/graphql.ts";
+import {type NewTodo, TodoType} from "@/graphql/graphql.ts";
 import { formatToNaiveDateTime } from "@/lib/date";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -44,6 +44,7 @@ export default function CreateTodoDialog() {
 					courseId: todo.courseId,
 					dueOn: todo.dueOn,
 					title: todo.title as string,
+					type: todo.type as string
 				},
 			}),
 		onSuccess: () => {
@@ -122,7 +123,7 @@ export default function CreateTodoDialog() {
 						</Label>
 						<Select
 							onValueChange={(v) =>
-								setTodo({ ...todo, todoType: v as TodoType })
+								setTodo({ ...todo, type: v as TodoType })
 							}
 						>
 							<SelectTrigger className="col-span-3">
@@ -130,11 +131,11 @@ export default function CreateTodoDialog() {
 							</SelectTrigger>
 							<SelectContent>
 								<SelectGroup>
-									<SelectItem value={TodoType.General}>General</SelectItem>
-									<SelectItem value={TodoType.Assignment}>
+									<SelectItem value="GENERAL">General</SelectItem>
+									<SelectItem value="ASSIGNMENT">
 										Assignment
 									</SelectItem>
-									<SelectItem value={TodoType.Exam}>Exam</SelectItem>
+									<SelectItem value="EXAM">Exam</SelectItem>
 								</SelectGroup>
 							</SelectContent>
 						</Select>
