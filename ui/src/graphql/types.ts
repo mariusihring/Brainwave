@@ -71,6 +71,7 @@ export type Course = {
   academicDepartment?: Maybe<Scalars['String']['output']>;
   grade?: Maybe<Scalars['Float']['output']>;
   id: Scalars['UUID']['output'];
+  isFavorite: Scalars['Boolean']['output'];
   moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
@@ -152,6 +153,7 @@ export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   moduleId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   teacher?: InputMaybe<Scalars['String']['input']>;

@@ -12,7 +12,7 @@ import {
 	StarIcon,
 } from "lucide-react";
 import {Course, NewCourse} from "@/graphql/types.ts";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient, QueryClient} from "@tanstack/react-query";
 import {execute} from "@/execute.ts";
 import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
 import {Button} from "@/components/ui/button.tsx";
@@ -21,12 +21,19 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/
 import {toast} from "sonner";
 import CourseForm from "@/components/brainwave/courses/form.tsx";
 
-function addToFavorites(_course: Course) {}
 
 export default function CoursesCard({ course }: { course: Course }) {
+	const queryClient = useQueryClient()
 	const updateMutation = useMutation({
 		mutationKey: ['courses_index'],
 		mutationFn: (updatedCourse: NewCourse) => execute(UPDATE_COURSE_MUTATION, {input: updatedCourse}),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['courses_index'],
+				exact: true,
+				refetchType: 'all'
+			})
+		}
 	})
 	const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 	const handleUpdate = (updatedCourse: Course) => {
@@ -37,6 +44,10 @@ export default function CoursesCard({ course }: { course: Course }) {
 			description: `${updatedCourse.name} has been updated succesfully`,
 		});
 	};
+	const addToFavorites = (course: Course) => {
+		course.isFavorite = true
+		updateMutation.mutateAsync(course)
+	}
 	return (
 		<>
 		<Card className="w-full">
@@ -44,12 +55,9 @@ export default function CoursesCard({ course }: { course: Course }) {
 				<CardTitle className="flex items-center justify-between">
 					<span>{course.name}</span>
 					<StarIcon
-						className="mr-2 h-5 w-5 opacity-70"
-						onClick={ () =>  
-							//add to favorites
-							addToFavorites(course)
-						
-						}
+						className="mr-2 h-5 w-5 opacity-70 hover:opacity-100 cursor-pointer transition-opacity"
+						fill={course.isFavorite ? "currentColor" : "none"}
+						onClick={() => addToFavorites(course)}
 					/>
 				</CardTitle>
 			</CardHeader>

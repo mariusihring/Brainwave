@@ -73,6 +73,7 @@ export type Course = {
   academicDepartment?: Maybe<Scalars['String']['output']>;
   grade?: Maybe<Scalars['Float']['output']>;
   id: Scalars['UUID']['output'];
+  isFavorite: Scalars['Boolean']['output'];
   moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
@@ -154,6 +155,7 @@ export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   moduleId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   teacher?: InputMaybe<Scalars['String']['input']>;
@@ -325,7 +327,7 @@ export type UpdateCourseMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null } };
+export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
@@ -369,7 +371,7 @@ export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<
 export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -450,6 +452,7 @@ export const UpdateCourseDocument = new TypedDocumentString(`
     moduleId
     name
     teacher
+    isFavorite
   }
 }
     `) as unknown as TypedDocumentString<UpdateCourseMutation, UpdateCourseMutationVariables>;
@@ -522,6 +525,7 @@ export const Course_IndexDocument = new TypedDocumentString(`
     grade
     teacher
     academicDepartment
+    isFavorite
   }
 }
     `) as unknown as TypedDocumentString<Course_IndexQuery, Course_IndexQueryVariables>;
@@ -630,6 +634,7 @@ export type Course = {
   academicDepartment?: Maybe<Scalars['String']['output']>;
   grade?: Maybe<Scalars['Float']['output']>;
   id: Scalars['UUID']['output'];
+  isFavorite: Scalars['Boolean']['output'];
   moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
@@ -711,6 +716,7 @@ export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   moduleId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   teacher?: InputMaybe<Scalars['String']['input']>;
@@ -882,7 +888,7 @@ export type UpdateCourseMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null } };
+export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
@@ -926,7 +932,7 @@ export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<
 export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null }> };
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

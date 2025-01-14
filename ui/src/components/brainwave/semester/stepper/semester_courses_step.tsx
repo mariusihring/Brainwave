@@ -30,16 +30,17 @@ import type { NewCourse } from "@/graphql/types";
 import { Button } from "@/components/ui/button";
 
 export const UPDATE_COURSE_MUTATION = graphql(`
-  mutation UpdateCourse($input: NewCourse!) {
-    updateCourse(input: $input) {
-      id
-      academicDepartment
-      grade
-      moduleId
-      name
-      teacher
+    mutation UpdateCourse($input: NewCourse!) {
+        updateCourse(input: $input) {
+            id
+            academicDepartment
+            grade
+            moduleId
+            name
+            teacher
+            isFavorite
+        }
     }
-  }
 `);
 interface ExtendedModule extends Module {
 	description?: string;
