@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import bcrypt from "bcryptjs";
 import Cookies from "js-cookie";
-import { type DatabaseUser, generateIdFromEntropySize } from "lucia";
+import { type DatabaseUser, generateIdFromEntropySize, Session } from "lucia";
 import api_client from "../axios_client";
 
 export async function login(username: string, password: string) {
@@ -38,34 +38,43 @@ export async function login(username: string, password: string) {
 	});
 }
 export async function signup(username: string, password: string) {
-	// const passwordHash = await bcrypt.hash(password, 10);
-	const userId = generateIdFromEntropySize(10);
+	const userId = uuidv4();
 	try {
-		await api_client.post("/auth/create_user", {
+		// First, create the user
+		const user = await api_client.post("/auth/create_user", {
 			id: userId,
 			username: username,
 			hash: password,
 		});
 
+		if (user.status === 200) {
+			console.log(user)
+
+
+		// Create session once user is confirmed to exist
 		const session = await auth.createSession(
-			userId,
+			 user.data.id,
 			{},
 			{
 				sessionId: uuidv4(),
-			},
+			}
 		);
+
 		const sessionCookie = auth.createSessionCookie(session.id);
 		//@ts-ignore
 		const maxAgeDays = sessionCookie.attributes.maxAge / (24 * 60 * 60);
 		Cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: "/",
-			secure: false, // if using HTTPS
-			sameSite: "lax",
+			secure: true,
+			sameSite: "strict",
 			expires: maxAgeDays,
 		});
-	} catch (e) {
-		return Promise.reject("Username allready used");
 	}
+	} catch (e) {
+		console.log(e);
+		return Promise.reject("Username already used");
+	}
+
 }
 export async function logout() {
 	Cookies.remove("auth_session");
@@ -73,9 +82,5 @@ export async function logout() {
 }
 
 function uuidv4() {
-	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-		const r = (Math.random() * 16) | 0;
-		const v = c === "x" ? r : (r & 0x3) | 0x8;
-		return v.toString(16);
-	});
+	return crypto.randomUUID();
 }

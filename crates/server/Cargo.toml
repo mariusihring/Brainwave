@@ -28,3 +28,4 @@ reqwest = { workspace = true }
 regex = { workspace = true }
 scraper = { workspace = true }
 url = { workspace = true }
+dotenv = {workspace = true}

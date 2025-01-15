@@ -5,7 +5,7 @@ use sea_orm::prelude::*;
 use sea_orm::sqlx::Column;
 use sea_orm::{EnumIter, Iterable};
 use sea_orm_migration::prelude::{sea_query::extension::postgres::Type, *};
-use sea_orm_migration::{prelude::*, schema::*};
+use sea_orm_migration::{ schema::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -52,13 +52,15 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Todos_User")
                             .from(Todo::Table, Todo::UserId)
-                            .to(User::Table, User::Id),
+                            .to(User::Table, User::Id)
+                            .on_delete(sea_query::foreign_key::ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Todos_Course")
                             .from(Todo::Table, Todo::CourseId)
-                            .to(Course::Table, Course::Id),
+                            .to(Course::Table, Course::Id)
+                            .on_delete(sea_query::foreign_key::ForeignKeyAction::Cascade),
                     )
                     .col(enumeration(Todo::Type, TodoType::Enum, TodoType::iter()))
                     .col(enumeration(
