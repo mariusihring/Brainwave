@@ -250,7 +250,12 @@ function CoursesTable() {
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead className="w-[50px]">Select</TableHead>
+						<TableHead className="w-[50px]">
+							<Checkbox
+							checked={checkAll}
+							onCheckedChange={() => checkAllAppointemnts(appointments)}
+						/>
+						</TableHead>
 						<TableHead>Name</TableHead>
 						<TableHead>Weekday</TableHead>
 						<TableHead>Time</TableHead>
@@ -274,15 +279,6 @@ function CoursesTable() {
 							<TableCell>{appointment.location}</TableCell>
 						</TableRow>
 					))}
-					<TableRow>
-						<TableCell>
-							<Checkbox
-								checked={checkAll}
-								onCheckedChange={() => checkAllAppointemnts(appointments)}
-							/>
-						</TableCell>
-						<TableCell>Select all</TableCell>
-					</TableRow>
 				</TableBody>
 			</Table>
 			<div className="flex justify-end mt-2">
