@@ -189,6 +189,7 @@ function CoursesTable() {
 	const [selectedAppointments, setSelectedAppointments] = useState<
 		RecurringAppointment[]
 	>([]);
+	const [checkAll, setCheckall] = useState<Boolean>(false);
 	const createCourseMutation = useMutation({
 		mutationKey: ["newCourse"],
 		mutationFn: (courses: NewCourse[]) =>
@@ -215,6 +216,7 @@ function CoursesTable() {
 						teacher: null,
 						academicDepartment: null,
 						moduleId: null,
+						isFavorite: null
 					};
 					return course;
 				}),
@@ -236,7 +238,12 @@ function CoursesTable() {
 
 	useEffect(() => {
 		console.log(formData);
-	}, [formData]);
+	}, [formData])
+
+	const checkAllAppointemnts = (appointments: RecurringAppointment[]) => {
+		setCheckall(!checkAll)
+		checkAll ? setSelectedAppointments([]) : appointments.every(app => selectedAppointments.push(app))
+	}
 
 	return (
 		<div>
@@ -267,6 +274,15 @@ function CoursesTable() {
 							<TableCell>{appointment.location}</TableCell>
 						</TableRow>
 					))}
+					<TableRow>
+						<TableCell>
+							<Checkbox
+								checked={checkAll}
+								onCheckedChange={() => checkAllAppointemnts(appointments)}
+							/>
+						</TableCell>
+						<TableCell>Select all</TableCell>
+					</TableRow>
 				</TableBody>
 			</Table>
 			<div className="flex justify-end mt-2">
