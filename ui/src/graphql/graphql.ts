@@ -99,6 +99,8 @@ export type Mutation = {
   createMultipleCourses: Array<Course>;
   createSemester: Semester;
   createTodo: Todo;
+  deleteCourse: Scalars['Boolean']['output'];
+  deleteSemester: Scalars['Boolean']['output'];
   processSemesterCalendar: Array<RecurringAppointment>;
   updateCourse: Course;
   updateTodo: Todo;
@@ -128,6 +130,16 @@ export type MutationCreateSemesterArgs = {
 
 export type MutationCreateTodoArgs = {
   input: NewTodo;
+};
+
+
+export type MutationDeleteCourseArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type MutationDeleteSemesterArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -329,6 +341,13 @@ export type UpdateCourseMutationVariables = Exact<{
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
 
+export type DelteCourseMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type DelteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
+
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
 }>;
@@ -456,6 +475,11 @@ export const UpdateCourseDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<UpdateCourseMutation, UpdateCourseMutationVariables>;
+export const DelteCourseDocument = new TypedDocumentString(`
+    mutation DelteCourse($id: UUID!) {
+  deleteCourse(id: $id)
+}
+    `) as unknown as TypedDocumentString<DelteCourseMutation, DelteCourseMutationVariables>;
 export const CreateSemesterMutationDocument = new TypedDocumentString(`
     mutation createSemesterMutation($input: NewSemester!) {
   createSemester(input: $input) {
@@ -660,6 +684,8 @@ export type Mutation = {
   createMultipleCourses: Array<Course>;
   createSemester: Semester;
   createTodo: Todo;
+  deleteCourse: Scalars['Boolean']['output'];
+  deleteSemester: Scalars['Boolean']['output'];
   processSemesterCalendar: Array<RecurringAppointment>;
   updateCourse: Course;
   updateTodo: Todo;
@@ -689,6 +715,16 @@ export type MutationCreateSemesterArgs = {
 
 export type MutationCreateTodoArgs = {
   input: NewTodo;
+};
+
+
+export type MutationDeleteCourseArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type MutationDeleteSemesterArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -889,6 +925,13 @@ export type UpdateCourseMutationVariables = Exact<{
 
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
+
+export type DelteCourseMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type DelteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;

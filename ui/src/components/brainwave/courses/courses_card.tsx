@@ -9,24 +9,40 @@ import {
 	CalendarIcon, Edit,
 	GraduationCapIcon,
 	PenToolIcon,
-	StarIcon,
+	StarIcon, TrashIcon, X,
 } from "lucide-react";
 import {Course, NewCourse} from "@/graphql/types.ts";
 import {useMutation, useQueryClient, QueryClient} from "@tanstack/react-query";
 import {execute} from "@/execute.ts";
-import {UPDATE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
+import {
+	DELETE_COURSE_MUTATION,
+	UPDATE_COURSE_MUTATION
+} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useState} from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {toast} from "sonner";
 import CourseForm from "@/components/brainwave/courses/form.tsx";
+import {Simulate} from "react-dom/test-utils";
+import input = Simulate.input;
 
 
 export default function CoursesCard({ course }: { course: Course }) {
 	const queryClient = useQueryClient()
 	const updateMutation = useMutation({
-		mutationKey: ['courses_index'],
+		mutationKey: ['update_courses'],
 		mutationFn: (updatedCourse: NewCourse) => execute(UPDATE_COURSE_MUTATION, {input: updatedCourse}),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['courses_index'],
+				exact: true,
+				refetchType: 'all'
+			})
+		}
+	})
+	const deleteMutation = useMutation({
+		mutationKey: ['delete_courses'],
+		mutationFn: (deleteCourse: Course) => execute(DELETE_COURSE_MUTATION, {id: deleteCourse.id}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: ['courses_index'],
@@ -38,15 +54,29 @@ export default function CoursesCard({ course }: { course: Course }) {
 	const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 	const handleUpdate = (updatedCourse: Course) => {
 		console.log(updatedCourse)
-		updateMutation.mutateAsync(updatedCourse);
+		let mut = updateMutation.mutateAsync(updatedCourse);
 		setEditingCourse(null);
-		toast.success("Course updated", {
-			description: `${updatedCourse.name} has been updated succesfully`,
+		toast.promise(mut, {
+			loading: "loading...",
+			success: (data) => {
+				return `${data.updateCourse.name} has been updated succesfully`
+			},
+			error: (data) => `Error occured while updating ${data.updateCourse.name}}`
 		});
 	};
 	const addToFavorites = (course: Course) => {
 		course.isFavorite = true
 		updateMutation.mutateAsync(course)
+	}
+	const handleDelete = (course: Course) => {
+		const mut = deleteMutation.mutateAsync(course)
+		toast.promise(mut, {
+			loading: "loading...",
+			success: (data) => {
+				return `Course was deleted successfully`
+			},
+			error: "Error occured while deleting course"
+		});
 	}
 	return (
 		<>
@@ -91,6 +121,13 @@ export default function CoursesCard({ course }: { course: Course }) {
 					onClick={() => setEditingCourse(course)}
 				>
 					<Edit className="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					onClick={() => handleDelete(course)}
+				>
+					<TrashIcon className="h-4 w-4" />
 				</Button>
 			</CardFooter>
 		</Card>

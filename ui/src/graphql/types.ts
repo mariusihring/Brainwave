@@ -97,6 +97,8 @@ export type Mutation = {
   createMultipleCourses: Array<Course>;
   createSemester: Semester;
   createTodo: Todo;
+  deleteCourse: Scalars['Boolean']['output'];
+  deleteSemester: Scalars['Boolean']['output'];
   processSemesterCalendar: Array<RecurringAppointment>;
   updateCourse: Course;
   updateTodo: Todo;
@@ -126,6 +128,16 @@ export type MutationCreateSemesterArgs = {
 
 export type MutationCreateTodoArgs = {
   input: NewTodo;
+};
+
+
+export type MutationDeleteCourseArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type MutationDeleteSemesterArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
