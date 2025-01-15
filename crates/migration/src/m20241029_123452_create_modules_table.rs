@@ -27,19 +27,22 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Modules_StartSemester")
                             .from(Module::Table, Module::StartSemester)
-                            .to(Semester::Table, Semester::Id),
+                            .to(Semester::Table, Semester::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_EndSemester")
                             .from(Module::Table, Module::EndSemester)
-                            .to(Semester::Table, Semester::Id),
+                            .to(Semester::Table, Semester::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Modules_User")
                             .from(Module::Table, Module::UserId)
-                            .to(User::Table, User::Id),
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
