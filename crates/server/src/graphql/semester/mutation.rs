@@ -1,8 +1,8 @@
 use crate::{graphql::semester::SemesterMutation, models::semester::NewSemester};
 use crate::models::_entities::{semester, user};
-use async_graphql::{Context, Object};
+use async_graphql::{Context, Error, Object};
 
-use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, Set, SqlErr};
+use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, DeleteResult, EntityTrait, Set, SqlErr};
 
 use uuid::Uuid;
 
@@ -33,5 +33,20 @@ impl SemesterMutation {
         new.insert(db)
             .await
             .map_err(|e| async_graphql::Error::from(e))
+    }
+
+    pub async fn delete_semester(
+        &self,
+        ctx: &Context<'_>,
+        id: Uuid
+    ) -> Result<bool, Error> {
+        let user = ctx.data::<user::Model>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
+        let res = semester::Entity::delete_by_id(id).exec(db)
+            .await;
+        if res.is_err() {
+            println!("{:?}", res);
+            return Ok(false) };
+        Ok(true)
     }
 }

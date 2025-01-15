@@ -2,7 +2,7 @@ use crate::models::{
     _entities::{course, course::Model as CourseModel, user},
     course::NewCourse,
 };
-use async_graphql::{Context, Object};
+use async_graphql::{Context, Error, Object};
 
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
@@ -10,7 +10,7 @@ use sea_orm::{
 };
 
 use uuid::Uuid;
-
+use crate::models::_entities::semester;
 use super::CourseMutation;
 
 #[Object]
@@ -56,6 +56,7 @@ impl CourseMutation {
                 academic_department: Set(c.academic_department),
                 user_id: Set(user.id),
                 module_id: Set(None),
+                is_favorite: Set(false)
             })
             .collect();
 
@@ -93,7 +94,21 @@ impl CourseMutation {
         course.academic_department = Set(input.academic_department.clone());
         course.teacher = Set(input.teacher.clone());
         course.grade = Set(input.grade);
+        course.is_favorite = Set(input.is_favorite.unwrap());
         
         course.update(db).await.map_err(|e| async_graphql::Error::from(e))
+    }
+
+    pub async fn delete_course(
+        &self,
+        ctx: &Context<'_>,
+        id: Uuid
+    ) -> Result<bool, Error> {
+        let user = ctx.data::<user::Model>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
+        let res = course::Entity::delete_by_id(id).exec(db)
+            .await;
+        if res.is_err() { return Ok(false) };
+        Ok(true)
     }
 }

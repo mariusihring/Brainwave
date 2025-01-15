@@ -8,4 +8,5 @@ pub struct NewCourse {
     pub teacher: Option<String>,
     pub academic_department: Option<String>,
     pub module_id: Option<String>,
+    pub is_favorite: Option<bool>
 }

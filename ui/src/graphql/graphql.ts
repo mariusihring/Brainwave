@@ -320,6 +320,13 @@ export type EventsQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type EventsQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, startTime: any, endTime: any }> };
 
+export type DeleteSemesterMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type DeleteSemesterMutation = { __typename?: 'Mutation', deleteSemester: boolean };
+
 export type ProcessCalendarMutationVariables = Exact<{
   input: Scalars['String']['input'];
 }>;
@@ -439,6 +446,11 @@ export const EventsQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<EventsQueryQuery, EventsQueryQueryVariables>;
+export const DeleteSemesterDocument = new TypedDocumentString(`
+    mutation DeleteSemester($id: UUID!) {
+  deleteSemester(id: $id)
+}
+    `) as unknown as TypedDocumentString<DeleteSemesterMutation, DeleteSemesterMutationVariables>;
 export const ProcessCalendarDocument = new TypedDocumentString(`
     mutation ProcessCalendar($input: String!) {
   processSemesterCalendar(semesterId: $input) {
@@ -904,6 +916,13 @@ export type EventsQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type EventsQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, startTime: any, endTime: any }> };
+
+export type DeleteSemesterMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type DeleteSemesterMutation = { __typename?: 'Mutation', deleteSemester: boolean };
 
 export type ProcessCalendarMutationVariables = Exact<{
   input: Scalars['String']['input'];

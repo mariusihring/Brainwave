@@ -19,6 +19,7 @@ type Course {
 	grade: Float
 	teacher: String
 	academicDepartment: String
+	isFavorite: Boolean!
 }
 
 
@@ -39,12 +40,14 @@ type Mutation {
 	createTodo(input: NewTodo!): Todo!
 	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
+	deleteSemester(id: UUID!): Boolean!
 	createModule(input: NewModule!): Module!
 	upsertCalendarLink(calendarLink: String): Settings!
 	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
 	createCourse(input: NewCourse!): Course!
 	createMultipleCourses(input: [NewCourse!]!): [Course!]!
 	updateCourse(input: NewCourse!): Course!
+	deleteCourse(id: UUID!): Boolean!
 }
 
 """
@@ -85,6 +88,7 @@ input NewCourse {
 	teacher: String
 	academicDepartment: String
 	moduleId: String
+	isFavorite: Boolean
 }
 
 input NewModule {
