@@ -1,7 +1,8 @@
 use super::TodoMutation;
 use crate::models::_entities::user::Model as User;
-use crate::models::todo::NewTodo;
+use crate::models::todo::{NewTodo, TodoTypeInput};
 use crate::models::{_entities::todo, todo::UpdateTodo};
+use crate::models::_entities::sea_orm_active_enums::{Todostatus, Todotype};
 use async_graphql::*;
 use sea_orm::{prelude::*, DatabaseConnection, EntityTrait, Set};
 use uuid::Uuid;
@@ -20,7 +21,8 @@ impl TodoMutation {
             course_id: Set(input.course_id.clone()),
             user_id: Set(user.id.clone()),
             notes: Set(input.notes.clone()),
-            ..Default::default()
+            r#type: Set(Into::<Todotype>::into(input.r#type)),
+            status: Set(Todostatus::Inprogress)
         };
 
         let inserted_todo = new_todo

@@ -11,6 +11,7 @@ export const TODO_INDEX_QUERY = graphql(`
             dueOn
             userId
             type
+            status
         }
     }
 `);

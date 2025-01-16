@@ -39,6 +39,7 @@ type CreateTodoDialogProps = {
 export default function CreateTodoDialog({courseId, inCard = false
 }: CreateTodoDialogProps) {
 	const [open, setOpen] = useState(false);
+	
 	const queryClient = useQueryClient();
 	const router = useRouter();
 	const [todo, setTodo] = useState<Partial<NewTodo>>({});
@@ -50,7 +51,8 @@ export default function CreateTodoDialog({courseId, inCard = false
 					courseId: todo.courseId ? todo.courseId : courseId,
 					dueOn: todo.dueOn,
 					title: todo.title as string,
-					notes: todo.notes as string
+					notes: todo.notes as string,
+					type: 'GENERAL',
 				},
 			}),
 		onSuccess: () => {

@@ -193,6 +193,7 @@ export type NewTodo = {
   dueOn: Scalars['NaiveDateTime']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
+  type: TodoTypeInput;
 };
 
 export type Query = {
@@ -281,7 +282,17 @@ export type TodoStatus =
   | 'INPROGRESS'
   | 'PENDING';
 
+export type TodoStatusInput =
+  | 'COMPLETED'
+  | 'IN_PROGRESS'
+  | 'PENDING';
+
 export type TodoType =
+  | 'ASSIGNMENT'
+  | 'EXAM'
+  | 'GENERAL';
+
+export type TodoTypeInput =
   | 'ASSIGNMENT'
   | 'EXAM'
   | 'GENERAL';
@@ -291,7 +302,9 @@ export type UpdateTodo = {
   dueOn: Scalars['NaiveDateTime']['input'];
   id: Scalars['UUID']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
+  status: TodoStatusInput;
   title: Scalars['String']['input'];
+  type: TodoTypeInput;
 };
 
 export type WeekdayEnum =
@@ -379,7 +392,7 @@ export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: 
 export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType }> };
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType, status: TodoStatus }> };
 
 export type UpdateTodoStatusMutationMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -527,6 +540,7 @@ export const TodoIndexQueryDocument = new TypedDocumentString(`
     dueOn
     userId
     type
+    status
   }
 }
     `) as unknown as TypedDocumentString<TodoIndexQueryQuery, TodoIndexQueryQueryVariables>;
@@ -790,6 +804,7 @@ export type NewTodo = {
   dueOn: Scalars['NaiveDateTime']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
+  type: TodoTypeInput;
 };
 
 export type Query = {
@@ -878,7 +893,17 @@ export type TodoStatus =
   | 'INPROGRESS'
   | 'PENDING';
 
+export type TodoStatusInput =
+  | 'COMPLETED'
+  | 'IN_PROGRESS'
+  | 'PENDING';
+
 export type TodoType =
+  | 'ASSIGNMENT'
+  | 'EXAM'
+  | 'GENERAL';
+
+export type TodoTypeInput =
   | 'ASSIGNMENT'
   | 'EXAM'
   | 'GENERAL';
@@ -888,7 +913,9 @@ export type UpdateTodo = {
   dueOn: Scalars['NaiveDateTime']['input'];
   id: Scalars['UUID']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
+  status: TodoStatusInput;
   title: Scalars['String']['input'];
+  type: TodoTypeInput;
 };
 
 export type WeekdayEnum =
@@ -976,7 +1003,7 @@ export type CreateTodoMutationMutation = { __typename?: 'Mutation', createTodo: 
 export type TodoIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType }> };
+export type TodoIndexQueryQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: any, title: string, dueOn: any, userId: any, type: TodoType, status: TodoStatus }> };
 
 export type UpdateTodoStatusMutationMutationVariables = Exact<{
   id: Scalars['String']['input'];

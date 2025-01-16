@@ -40,10 +40,10 @@ export const columns: ColumnDef<Todo>[] = [
 		),
 	},
 	{
-		accessorKey: "todoType",
+		accessorKey: "type",
 		header: "Type",
 		cell: ({ row }) => (
-			<Badge variant="outline">{row.getValue("todoType")}</Badge>
+			<Badge variant="outline">{row.getValue("type")}</Badge>
 		),
 	},
 	{
@@ -76,7 +76,7 @@ export const columns: ColumnDef<Todo>[] = [
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="PENDING">Pending</SelectItem>
-						<SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+						<SelectItem value="INPROGRESS">In Progress</SelectItem>
 						<SelectItem value="COMPLETED">Completed</SelectItem>
 					</SelectContent>
 				</Select>
