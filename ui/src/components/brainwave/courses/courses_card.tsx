@@ -106,7 +106,7 @@ export default function CoursesCard({course}: { course: Course }) {
                         </div>
                         <div className="flex items-center">
                             <GraduationCapIcon className="mr-2 h-4 w-4 opacity-70"/>
-                            <span className="text-sm text-muted-foreground">Grade: {course.grade}</span>
+                            <span className="text-sm text-muted-foreground">Grade: {course.grade ? course.grade : "not set yet"}</span>
                         </div>
                         <div className="flex items-center">
                             <BookOpenIcon className="mr-2 h-4 w-4 opacity-70"/>
