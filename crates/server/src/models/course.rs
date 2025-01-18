@@ -1,6 +1,6 @@
 use async_graphql::*;
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
-use crate::models::_entities::semester::Model;
+use crate::models::_entities::course::Model;
 use super::_entities::{course, todo, user};
 
 #[ComplexObject]
