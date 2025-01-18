@@ -31,7 +31,8 @@ export const Route = createFileRoute("/_authenticated/")({
                  }) => queryClient.ensureQueryData(queryOptions({
     queryKey: ['dashboard_index'],
     queryFn: () => execute(COURSE_INDEX_QUERY)
-  }))
+  })),
+  errorComponent: () => <div>fuck u</div>
 });
 
 const COURSE_INDEX_QUERY = graphql(`
