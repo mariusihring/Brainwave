@@ -1,4 +1,3 @@
-
 use async_graphql::*;
 
 use sea_orm::QueryFilter;
@@ -97,7 +96,7 @@ impl CalendarMutation {
             all_appointments.extend(appointments);
         }
         println!("{:?}", all_appointments);
-        let apps = insert_appointments(&db,  &all_appointments).await?;
+        let apps = insert_appointments(&db, &all_appointments).await?;
 
         update_semester_import_status(&db, &semester.id.to_string()).await?;
 
@@ -120,7 +119,7 @@ async fn insert_appointments(
     }
 
     txn.commit().await?;
-    
+
     println!("end insert appointments");
     Ok(models)
 }

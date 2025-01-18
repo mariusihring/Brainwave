@@ -1,7 +1,7 @@
 use super::_entities::sea_orm_active_enums::Todostatus;
 use super::_entities::sea_orm_active_enums::Todotype;
 use super::_entities::todo::ActiveModel;
-use async_graphql::{InputObject, Enum};
+use async_graphql::{Enum, InputObject};
 use chrono::NaiveDateTime;
 use sea_orm::ActiveValue;
 use sea_orm::ActiveValue::NotSet;
@@ -75,7 +75,6 @@ impl From<NewTodo> for ActiveModel {
             r#type: ActiveValue::Set(input.r#type.into()),
             status: ActiveValue::Set(Todostatus::Pending), // Default status for new todos
             notes: ActiveValue::Set(input.notes),
-           
         }
     }
 }
@@ -90,11 +89,10 @@ impl From<UpdateTodo> for ActiveModel {
             r#type: ActiveValue::Set(input.r#type.into()),
             status: ActiveValue::Set(input.status.into()),
             notes: ActiveValue::Set(input.notes),
-            user_id: NotSet
+            user_id: NotSet,
         }
     }
 }
-
 
 /*
 export type TodoStatus =

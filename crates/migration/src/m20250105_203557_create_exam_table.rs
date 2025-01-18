@@ -2,7 +2,9 @@ use extension::postgres::Type;
 use sea_orm::{prelude::Uuid, EnumIter, Iterable};
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::{m20241029_123444_create_user_table::User, m20241029_123453_create_courses_table::Course};
+use crate::{
+    m20241029_123444_create_user_table::User, m20241029_123453_create_courses_table::Course,
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -11,13 +13,17 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-        .create_type(
-            Type::create()
-                .as_enum(ExamType::Enum)
-                .values([ExamType::Exam,ExamType::HomeAssignment, ExamType::Presentation ])
-                .to_owned(),
-        )
-        .await?;
+            .create_type(
+                Type::create()
+                    .as_enum(ExamType::Enum)
+                    .values([
+                        ExamType::Exam,
+                        ExamType::HomeAssignment,
+                        ExamType::Presentation,
+                    ])
+                    .to_owned(),
+            )
+            .await?;
         manager
             .create_table(
                 Table::create()
@@ -48,7 +54,6 @@ impl MigrationTrait for Migration {
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-
         manager
             .drop_table(Table::drop().table(Exam::Table).to_owned())
             .await
@@ -65,7 +70,6 @@ enum Exam {
     Grade,
     Type,
     Details,
-    
 }
 #[derive(Iden, EnumIter)]
 pub enum ExamType {

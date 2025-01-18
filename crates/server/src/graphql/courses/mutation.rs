@@ -9,9 +9,9 @@ use sea_orm::{
     TransactionTrait,
 };
 
-use uuid::Uuid;
-use crate::models::_entities::semester;
 use super::CourseMutation;
+use crate::models::_entities::semester;
+use uuid::Uuid;
 
 #[Object]
 impl CourseMutation {
@@ -56,7 +56,7 @@ impl CourseMutation {
                 academic_department: Set(c.academic_department),
                 user_id: Set(user.id),
                 module_id: Set(None),
-                is_favorite: Set(false)
+                is_favorite: Set(false),
             })
             .collect();
 
@@ -82,7 +82,7 @@ impl CourseMutation {
         input: NewCourse,
     ) -> Result<CourseModel, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-       
+
         let course = course::Entity::find_by_id(Uuid::parse_str(&input.id.unwrap()).unwrap())
             .one(db)
             .await?;
@@ -95,20 +95,20 @@ impl CourseMutation {
         course.teacher = Set(input.teacher.clone());
         course.grade = Set(input.grade);
         course.is_favorite = Set(input.is_favorite.unwrap());
-        
-        course.update(db).await.map_err(|e| async_graphql::Error::from(e))
+
+        course
+            .update(db)
+            .await
+            .map_err(|e| async_graphql::Error::from(e))
     }
 
-    pub async fn delete_course(
-        &self,
-        ctx: &Context<'_>,
-        id: Uuid
-    ) -> Result<bool, Error> {
+    pub async fn delete_course(&self, ctx: &Context<'_>, id: Uuid) -> Result<bool, Error> {
         let user = ctx.data::<user::Model>().unwrap();
         let db = ctx.data::<DatabaseConnection>().unwrap();
-        let res = course::Entity::delete_by_id(id).exec(db)
-            .await;
-        if res.is_err() { return Ok(false) };
+        let res = course::Entity::delete_by_id(id).exec(db).await;
+        if res.is_err() {
+            return Ok(false);
+        };
         Ok(true)
     }
 }

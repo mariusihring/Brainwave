@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_authenticated/")({
 });
 
 const COURSE_INDEX_QUERY = graphql(`
-  query course_index {
+  query dashboard_index {
     courses {
       id
       name

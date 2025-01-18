@@ -23,13 +23,15 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Notebooks_Course")
                             .from(Notebook::Table, Notebook::CourseId)
-                            .to(Course::Table, Course::Id).on_delete(ForeignKeyAction::Cascade),
+                            .to(Course::Table, Course::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Notebooks_User")
                             .from(Notebook::Table, Notebook::UserId)
-                            .to(User::Table, User::Id).on_delete(ForeignKeyAction::Cascade),
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )

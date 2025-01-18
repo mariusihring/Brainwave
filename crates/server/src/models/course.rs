@@ -1,7 +1,8 @@
-use async_graphql::*;
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
-use crate::models::_entities::course::Model;
 use super::_entities::{course, todo, user};
+use crate::models::_entities::course::Model;
+use async_graphql::*;
+use chrono::Utc;
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder};
 
 #[ComplexObject]
 impl Model {
@@ -14,7 +15,9 @@ impl Model {
                 todo::Column::UserId
                     .eq(user.id)
                     .and(todo::Column::CourseId.eq(self.id))
+                    .and(todo::Column::DueOn.gt(Utc::now())),
             )
+            .order_by_asc(todo::Column::DueOn)
             .all(db)
             .await
         {
@@ -32,5 +35,5 @@ pub struct NewCourse {
     pub teacher: Option<String>,
     pub academic_department: Option<String>,
     pub module_id: Option<String>,
-    pub is_favorite: Option<bool>
+    pub is_favorite: Option<bool>,
 }

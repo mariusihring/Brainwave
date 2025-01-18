@@ -1,12 +1,12 @@
 use super::TodoMutation;
+use crate::models::_entities::sea_orm_active_enums::{Todostatus, Todotype};
 use crate::models::_entities::user::Model as User;
+use crate::models::_entities::{course, user};
 use crate::models::todo::{NewTodo, TodoTypeInput};
 use crate::models::{_entities::todo, todo::UpdateTodo};
-use crate::models::_entities::sea_orm_active_enums::{Todostatus, Todotype};
 use async_graphql::*;
 use sea_orm::{prelude::*, DatabaseConnection, EntityTrait, Set};
 use uuid::Uuid;
-use crate::models::_entities::{course, user};
 
 #[Object]
 impl TodoMutation {
@@ -23,7 +23,7 @@ impl TodoMutation {
             user_id: Set(user.id.clone()),
             notes: Set(input.notes.clone()),
             r#type: Set(Into::<Todotype>::into(input.r#type)),
-            status: Set(Todostatus::Inprogress)
+            status: Set(Todostatus::Inprogress),
         };
 
         let inserted_todo = new_todo

@@ -77,6 +77,7 @@ export type Course = {
   moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
+  todos: Array<Todo>;
   userId: Scalars['UUID']['output'];
 };
 
@@ -407,10 +408,15 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
 
+export type Dashboard_IndexQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Dashboard_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
+
 export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean, todos: Array<{ __typename?: 'Todo', title: string, dueOn: any, type: TodoType }> }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -566,6 +572,19 @@ export const AppointmentQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AppointmentQueryQuery, AppointmentQueryQueryVariables>;
+export const Dashboard_IndexDocument = new TypedDocumentString(`
+    query dashboard_index {
+  courses {
+    id
+    name
+    moduleId
+    grade
+    teacher
+    academicDepartment
+    isFavorite
+  }
+}
+    `) as unknown as TypedDocumentString<Dashboard_IndexQuery, Dashboard_IndexQueryVariables>;
 export const Course_IndexDocument = new TypedDocumentString(`
     query course_index {
   courses {
@@ -576,6 +595,11 @@ export const Course_IndexDocument = new TypedDocumentString(`
     teacher
     academicDepartment
     isFavorite
+    todos {
+      title
+      dueOn
+      type
+    }
   }
 }
     `) as unknown as TypedDocumentString<Course_IndexQuery, Course_IndexQueryVariables>;
@@ -688,6 +712,7 @@ export type Course = {
   moduleId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   teacher?: Maybe<Scalars['String']['output']>;
+  todos: Array<Todo>;
   userId: Scalars['UUID']['output'];
 };
 
@@ -1018,10 +1043,15 @@ export type AppointmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AppointmentQueryQuery = { __typename?: 'Query', appointments: Array<{ __typename?: 'Appointment', id: any, title: string, date: any, endTime: any, startTime: any, location?: string | null }> };
 
+export type Dashboard_IndexQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Dashboard_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
+
 export type Course_IndexQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean }> };
+export type Course_IndexQuery = { __typename?: 'Query', courses: Array<{ __typename?: 'Course', id: any, name: string, moduleId?: any | null, grade?: number | null, teacher?: string | null, academicDepartment?: string | null, isFavorite: boolean, todos: Array<{ __typename?: 'Todo', title: string, dueOn: any, type: TodoType }> }> };
 
 export type ModuleIndexQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

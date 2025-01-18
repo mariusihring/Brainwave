@@ -99,7 +99,7 @@ export default function CoursesCard({course}: { course: Course }) {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center ">
                                 <CalendarIcon className="mr-2 h-4 w-4 opacity-70"/>
-                                <span className="text-sm text-muted-foreground">Todo: </span>
+                                <span className="text-sm text-muted-foreground">{course.todos[0] ? `${new Date(course.todos[0].dueOn).toLocaleDateString()} : ${course.todos[0].title}` : "No upcoming todos"}</span>`
                             </div>
                             <div className={`w-3 h-3 rounded-full bg-red`}/>
                             <CreateTodoDialog courseId={course.id} inCard={true}/>

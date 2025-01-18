@@ -23,7 +23,8 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Session_User")
                             .from(Session::Table, Session::UserId)
-                            .to(User::Table, User::Id).on_delete(ForeignKeyAction::Cascade)
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )

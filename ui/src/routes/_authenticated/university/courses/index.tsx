@@ -27,6 +27,11 @@ const COURSE_INDEX_QUERY = graphql(`
             teacher
             academicDepartment
             isFavorite
+            todos {
+                title
+                dueOn
+                type
+            }
         }
     }
 `)

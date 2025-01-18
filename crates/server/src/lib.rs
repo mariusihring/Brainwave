@@ -1,6 +1,3 @@
-use std::fs::File;
-use std::io::Write;
-use dotenv::dotenv;
 use async_graphql::{EmptySubscription, Schema};
 use axum::{
     http::Method,
@@ -8,7 +5,10 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use dotenv::dotenv;
 use log::LevelFilter;
+use std::fs::File;
+use std::io::Write;
 use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
@@ -54,9 +54,7 @@ fn setup_logging() {
 }
 
 async fn setup_app_state() -> AppState {
-    let db = database::init()
-        .await
-        .expect("failed to connect to db");
+    let db = database::init().await.expect("failed to connect to db");
 
     let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
         .extension(async_graphql::extensions::Logger)
@@ -141,6 +139,4 @@ async fn shutdown(state: AppState) {
 }
 
 #[cfg(test)]
-mod tests {
-    
-}
+mod tests {}

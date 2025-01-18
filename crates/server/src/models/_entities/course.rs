@@ -16,7 +16,7 @@ pub struct Model {
     pub grade: Option<f32>,
     pub teacher: Option<String>,
     pub academic_department: Option<String>,
-    pub is_favorite: bool
+    pub is_favorite: bool,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

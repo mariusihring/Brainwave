@@ -29,8 +29,8 @@ const documents = {
     "\n    query TodoIndexQuery{\n        todos {\n            id\n            title\n            dueOn\n            userId\n            type\n            status\n        }\n    }\n": types.TodoIndexQueryDocument,
     "\n    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {\n        updateTodo(id: $id, input: $input) {\n            id\n            title\n            dueOn\n            userId\n            \n        }\n    }\n": types.UpdateTodoStatusMutationDocument,
     "\n  query AppointmentQuery {\n    appointments {\n      id\n      title\n      date\n      endTime\n      startTime\n      location\n    }\n  }\n": types.AppointmentQueryDocument,
-    "\n  query course_index {\n    courses {\n      id\n      name\n      moduleId\n      grade\n      teacher\n      academicDepartment\n      isFavorite\n    }\n  }\n": types.Course_IndexDocument,
-    "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n            isFavorite\n        }\n    }\n": types.Course_IndexDocument,
+    "\n  query dashboard_index {\n    courses {\n      id\n      name\n      moduleId\n      grade\n      teacher\n      academicDepartment\n      isFavorite\n    }\n  }\n": types.Dashboard_IndexDocument,
+    "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n            isFavorite\n            todos {\n                title\n                dueOn\n                type\n            }\n        }\n    }\n": types.Course_IndexDocument,
     "\n  query ModuleIndexQuery {\n   modules {\n  id\n  userId\n name\netCs\nstartSemester\nendSemester\ngrade\n}\n}\n": types.ModuleIndexQueryDocument,
     "\n  query getAllSemester {\n    semesters {\n      id\n      semester\n      endDate\n      totalEcTs\n      modules {\n        id\n        name\n        etCs\n        grade\n        startSemester\n        endSemester\n        courses {\n          id\n          name\n          grade\n          teacher\n          academicDepartment\n        }\n      }\n      startDate\n    }\n  }\n": types.GetAllSemesterDocument,
 };
@@ -94,11 +94,11 @@ export function graphql(source: "\n  query AppointmentQuery {\n    appointments 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query course_index {\n    courses {\n      id\n      name\n      moduleId\n      grade\n      teacher\n      academicDepartment\n      isFavorite\n    }\n  }\n"): typeof import('./graphql').Course_IndexDocument;
+export function graphql(source: "\n  query dashboard_index {\n    courses {\n      id\n      name\n      moduleId\n      grade\n      teacher\n      academicDepartment\n      isFavorite\n    }\n  }\n"): typeof import('./graphql').Dashboard_IndexDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n            isFavorite\n        }\n    }\n"): typeof import('./graphql').Course_IndexDocument;
+export function graphql(source: "\n    query course_index {\n        courses {\n            id\n            name\n            moduleId\n            grade\n            teacher\n            academicDepartment\n            isFavorite\n            todos {\n                title\n                dueOn\n                type\n            }\n        }\n    }\n"): typeof import('./graphql').Course_IndexDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
