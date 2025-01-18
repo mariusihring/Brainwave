@@ -44,7 +44,7 @@ export const UPDATE_COURSE_MUTATION = graphql(`
 `);
 
 export const DELETE_COURSE_MUTATION = graphql(`
-	mutation DelteCourse($id: UUID!) {
+	mutation DeleteCourse($id: UUID!) {
 		deleteCourse(id: $id)
 	}
 `)

@@ -20,14 +20,42 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/lib/stores/user";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import {queryOptions, useQuery} from "@tanstack/react-query";
+import {execute} from "@/execute.ts";
+import {graphql} from "@/graphql";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: () => <Dashboard />,
+  loader: async ({
+                   context: {queryClient}
+                 }) => queryClient.ensureQueryData(queryOptions({
+    queryKey: ['dashboard_index'],
+    queryFn: () => execute(COURSE_INDEX_QUERY)
+  }))
 });
+
+const COURSE_INDEX_QUERY = graphql(`
+  query course_index {
+    courses {
+      id
+      name
+      moduleId
+      grade
+      teacher
+      academicDepartment
+      isFavorite
+    }
+  }
+`)
 
 function Dashboard() {
   const { user } = useUser();
   const { t } = useTranslation(["global"]);
+  const {data: {courses}} = useQuery({
+    queryKey: ['dashboard_index'],
+    queryFn: () => execute(COURSE_INDEX_QUERY),
+    initialData: Route.useLoaderData()
+  })
 
   return (
     <div className="flex flex-col space-y-6 w-full h-full">
@@ -77,29 +105,25 @@ function Dashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow className="bg-accent">
-                        <TableCell>
-                          <div className="font-medium">
-                            Introduction to Computer Science
-                          </div>
-                          <div className="hidden text-sm text-muted-foreground sm:inline">
-                            CS101
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Dr. Jane Doe
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Progress value={85} aria-label="85% completed" />
-                        </TableCell>
-                        <TableCell className="text-right">A-</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Calculus I</div>
-                          <div className="hidden text-sm text-muted-foreground sm:inline" />
-                        </TableCell>
-                      </TableRow>
+                      {courses.map((course, index) => (
+                          <TableRow className={index % 2 == 0 ? "bg-accent": ""}>
+                            <TableCell>
+                              <div className="font-medium">
+                                {course.name}
+                              </div>
+                              <div className="hidden text-sm text-muted-foreground sm:inline">
+                                {course.academicDepartment}
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              {course.teacher}
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <Progress value={85} aria-label="85% completed" />
+                            </TableCell>
+                            <TableCell className="text-right">{course.grade}</TableCell>
+                          </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </CardContent>

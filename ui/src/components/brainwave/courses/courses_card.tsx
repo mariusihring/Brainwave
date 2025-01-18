@@ -28,7 +28,6 @@ import input = Simulate.input;
 import {graphql} from "@/graphql";
 import CreateTodoDialog from "@/components/brainwave/todos/create_todo_dialog.tsx";
 
-
 export default function CoursesCard({course}: { course: Course }) {
     const queryClient = useQueryClient()
     const updateMutation = useMutation({
@@ -100,7 +99,7 @@ export default function CoursesCard({course}: { course: Course }) {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center ">
                                 <CalendarIcon className="mr-2 h-4 w-4 opacity-70"/>
-                                <span className="text-sm text-muted-foreground">next TODO</span>
+                                <span className="text-sm text-muted-foreground">Todo: </span>
                             </div>
                             <div className={`w-3 h-3 rounded-full bg-red`}/>
                             <CreateTodoDialog courseId={course.id} inCard={true}/>
@@ -149,7 +148,6 @@ export default function CoursesCard({course}: { course: Course }) {
                     )}
                 </DialogContent>
             </Dialog>
-            <CreateTodoDialog courseId={course.id}/>
         </>
     );
 }

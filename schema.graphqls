@@ -23,8 +23,6 @@ type Course {
 }
 
 
-
-
 type Module {
 	id: UUID!
 	name: String!

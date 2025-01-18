@@ -361,12 +361,12 @@ export type UpdateCourseMutationVariables = Exact<{
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
 
-export type DelteCourseMutationVariables = Exact<{
+export type DeleteCourseMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type DelteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
+export type DeleteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;
@@ -500,11 +500,11 @@ export const UpdateCourseDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<UpdateCourseMutation, UpdateCourseMutationVariables>;
-export const DelteCourseDocument = new TypedDocumentString(`
-    mutation DelteCourse($id: UUID!) {
+export const DeleteCourseDocument = new TypedDocumentString(`
+    mutation DeleteCourse($id: UUID!) {
   deleteCourse(id: $id)
 }
-    `) as unknown as TypedDocumentString<DelteCourseMutation, DelteCourseMutationVariables>;
+    `) as unknown as TypedDocumentString<DeleteCourseMutation, DeleteCourseMutationVariables>;
 export const CreateSemesterMutationDocument = new TypedDocumentString(`
     mutation createSemesterMutation($input: NewSemester!) {
   createSemester(input: $input) {
@@ -972,12 +972,12 @@ export type UpdateCourseMutationVariables = Exact<{
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse: { __typename?: 'Course', id: any, academicDepartment?: string | null, grade?: number | null, moduleId?: any | null, name: string, teacher?: string | null, isFavorite: boolean } };
 
-export type DelteCourseMutationVariables = Exact<{
+export type DeleteCourseMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type DelteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
+export type DeleteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
 
 export type CreateSemesterMutationMutationVariables = Exact<{
   input: NewSemester;

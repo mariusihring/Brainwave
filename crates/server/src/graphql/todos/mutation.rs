@@ -6,6 +6,7 @@ use crate::models::_entities::sea_orm_active_enums::{Todostatus, Todotype};
 use async_graphql::*;
 use sea_orm::{prelude::*, DatabaseConnection, EntityTrait, Set};
 use uuid::Uuid;
+use crate::models::_entities::{course, user};
 
 #[Object]
 impl TodoMutation {
@@ -80,4 +81,17 @@ impl TodoMutation {
             status: updated_todo.status,
         })
     }
+    //
+    // pub async fn delete_todo(
+    //     &self,
+    //     ctx: &Context<'_>,
+    //     id: Uuid
+    // ) -> std::result::Result<bool, Error> {
+    //     let user = ctx.data::<user::Model>().unwrap();
+    //     let db = ctx.data::<DatabaseConnection>().unwrap();
+    //     let res = todo::Entity::delete_by_id(id).exec(db)
+    //         .await;
+    //     if res.is_err() { return Ok(false) };
+    //     Ok(true)
+    // }
 }

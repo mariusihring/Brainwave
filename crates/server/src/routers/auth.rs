@@ -32,7 +32,7 @@ const USER_TABLE_NAME: &str = "user";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserBody {
-    pub id: String,
+    pub username: String,
 }
 
 pub async fn get_user(
@@ -40,7 +40,7 @@ pub async fn get_user(
     Json(payload): Json<GetUserBody>,
 ) -> Result<(StatusCode, Json<Option<DatabaseUser>>), (StatusCode, String)> {
     let db_user = user::Entity::find()
-        .filter(user::Column::Id.eq(Uuid::parse_str(payload.id.as_str()).unwrap()))
+        .filter(user::Column::Username.eq(payload.username))
         .one(&state.db)
         .await
         .map_err(|e| (StatusCode::NOT_FOUND, format!("Database error: {}", e)))?
