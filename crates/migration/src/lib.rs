@@ -17,7 +17,7 @@ mod m20241029_123641_create_session_table;
 mod m20241029_210413_add_settings_table;
 mod m20241029_210743_add_appointments_table;
 mod m20250105_202506_update_course_is_favorite;
-
+mod m20250105_203557_create_exam_table;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -41,6 +41,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20241029_210413_add_settings_table::Migration),
             Box::new(m20241029_210743_add_appointments_table::Migration),
             Box::new(m20250105_202506_update_course_is_favorite::Migration),
+            Box::new(m20250105_203557_create_exam_table::Migration)
         ]
     }
 }
