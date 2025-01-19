@@ -23,6 +23,28 @@ type Course {
 	todos: [Todo!]!
 }
 
+type Exam {
+	id: UUID!
+	date: NaiveDate!
+	courseId: UUID
+	userId: UUID!
+	type: ExamType!
+	grade: Float
+	details: String
+}
+
+enum ExamType {
+	EXAM
+	HOMEASSIGNMENT
+	PRESENTATION
+}
+
+enum ExamTypeInput {
+	EXAM
+	HOMEASSIGNMENT
+	PRESENTATION
+}
+
 
 
 
@@ -49,6 +71,9 @@ type Mutation {
 	createMultipleCourses(input: [NewCourse!]!): [Course!]!
 	updateCourse(input: NewCourse!): Course!
 	deleteCourse(id: UUID!): Boolean!
+	createExam(input: NewExam!): Exam!
+	updateExam(input: NewExam!): Exam!
+	deleteExam(id: UUID!): Boolean!
 }
 
 """
@@ -92,6 +117,15 @@ input NewCourse {
 	isFavorite: Boolean
 }
 
+input NewExam {
+	id: String
+	date: NaiveDate!
+	grade: Float
+	type: ExamTypeInput!
+	courseId: UUID
+	details: String
+}
+
 input NewModule {
 	name: String!
 	ects: Int!
@@ -127,6 +161,8 @@ type Query {
 	appointments: [Appointment!]!
 	course(id: String!): Course
 	courses: [Course!]!
+	exam(id: String!): Exam
+	exams: [Exam!]!
 }
 
 type RecurringAppointment {

@@ -14,6 +14,7 @@ use crate::graphql::semester::{SemesterMutation, SemesterQuery};
 use async_graphql::*;
 use courses::{CourseMutation, CourseQuery};
 use todos::{TodoMutation, TodoQuery};
+use crate::graphql::exams::{ExamMutation, ExamQuery};
 
 #[derive(MergedObject, Default)]
 pub struct Query(
@@ -22,6 +23,7 @@ pub struct Query(
     ModuleQuery,
     CalendarQuery,
     CourseQuery,
+    ExamQuery
 );
 
 #[derive(MergedSubscription, Default)]
@@ -34,4 +36,5 @@ pub struct Mutation(
     ModuleMutation,
     CalendarMutation,
     CourseMutation,
+    ExamMutation
 );

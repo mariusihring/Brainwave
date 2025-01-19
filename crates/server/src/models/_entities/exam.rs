@@ -5,11 +5,12 @@ use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql :: SimpleObject)]
 #[sea_orm(table_name = "exam")]
+#[graphql(name = "Exam")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     pub date: Date,
-    pub course_id: Uuid,
+    pub course_id: Option<Uuid>,
     pub user_id: Uuid,
     pub r#type: Examtype,
     #[sea_orm(column_type = "Float", nullable)]

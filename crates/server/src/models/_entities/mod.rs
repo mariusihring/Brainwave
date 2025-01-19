@@ -19,3 +19,4 @@ pub mod taggable;
 pub mod todo;
 pub mod todo_reference;
 pub mod user;
+pub mod exam;
