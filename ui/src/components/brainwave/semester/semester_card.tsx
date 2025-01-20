@@ -2,7 +2,7 @@ import type { Semester } from "@/__generated__/graphql";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
   Card,
-  CardContent,
+  CardContent, CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
@@ -12,11 +12,47 @@ import {
   BookOpenIcon,
   CalendarIcon,
   GraduationCapIcon,
-  PenToolIcon,
+  PenToolIcon, TrashIcon,
 } from "lucide-react";
+import {Button} from "@/components/ui/button.tsx";
+import {Course} from "@/graphql/types.ts";
+import {toast} from "sonner";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {execute} from "@/execute.ts";
+import {DELETE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
+import {graphql} from "@/graphql";
 
 export default function SemesterCard({ semester }: { semester: Semester }) {
   const courses = semester.modules.flatMap((module) => module.courses);
+  const queryClient = useQueryClient()
+
+  const DELETE_SEMESTER_MUTATION = graphql(`
+    mutation DeleteSemester($id: UUID!) {
+      deleteSemester(id: $id)
+    }
+  `)
+
+  const deleteMutation = useMutation({
+    mutationKey: ['delete_semester'],
+    mutationFn: (deleteSemester: Semester) => execute(DELETE_SEMESTER_MUTATION, {id: deleteSemester.id}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['semesters'],
+        exact: true,
+        refetchType: 'all'
+      })
+    }
+  })
+  const handleDelete = (semester: Semester) => {
+    const mut = deleteMutation.mutateAsync(semester)
+    toast.promise(mut, {
+      loading: "loading...",
+      success: (data) => {
+        return `Semester was deleted successfully`
+      },
+      error: "Error occured while deleting semester"
+    });
+  }
   return (
     <Card className="w-full">
       <CardHeader>
@@ -69,6 +105,15 @@ export default function SemesterCard({ semester }: { semester: Semester }) {
           )}
         </div>
       </CardContent>
+      <CardFooter className="w-full flex items-end justify-end">
+        <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handleDelete(semester)}
+        >
+          <TrashIcon className="h-4 w-4" />
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

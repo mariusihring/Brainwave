@@ -19,7 +19,7 @@ import {
 	setHours,
 	setMinutes,
 } from "date-fns";
-import type { Appointment } from "@/graphql/types";
+import type { Appointment } from "@/graphql/graphql";
 
 const CALENDAR_APPOINTMENTS = graphql(`
   query AppointmentQuery {
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/_authenticated/calendar")({
 
 function CalendarIndex() {
 	const {
-		data: { appointments = [] },
+		data: { appointments = [] } = {},
 	} = useQuery({
 		queryKey: ["calendar_appointments"],
 		queryFn: () => execute(CALENDAR_APPOINTMENTS),
@@ -79,10 +79,15 @@ function CalendarIndex() {
 	};
 
 	const getAppointmentsForDay = (day: Date) => {
-		return localAppointments.filter((appointment) => {
-			const appointmentStart = parseISO(appointment.startTime);
+		const x =  localAppointments.filter((appointment) => {
+
+			const d = parseISO(appointment.startTime);
+			console.log(d + " vs " + day)
+			const appointmentStart = d
 			return isSameDay(appointmentStart, day);
 		});
+		console.log(x)
+		return x
 	};
 
 	const isAllDayAppointment = (appointment: Appointment) => {
@@ -210,8 +215,9 @@ function CalendarIndex() {
 	};
 
 	useEffect(() => {
-		console.log("Local Appointments Updated: ", localAppointments);
-	}, [localAppointments]);
+		console.log("Fetched appointments:", appointments);
+		setLocalAppointments(appointments);
+	}, [appointments]);
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
@@ -283,8 +289,10 @@ function CalendarIndex() {
 														></div>
 													)}
 												{getAppointmentsForDay(day)
-													.filter((app) => !isAllDayAppointment(app))
-													.map((appointment, index) => (
+													.filter((app) => !isAllDayAppointment(app as Appointment))
+													.map((appointment, index) => {
+														console.log("rendering app")
+														return (
 														<Draggable
 															key={appointment.id}
 															draggableId={appointment.id}
@@ -295,7 +303,7 @@ function CalendarIndex() {
 																	ref={provided.innerRef}
 																	{...provided.draggableProps}
 																	{...provided.dragHandleProps}
-																	className={`absolute left-1 right-1 bg-amber-100 text-amber-800 rounded-sm px-2 py-1 text-xs truncate text-wrap shadow-sm cursor-pointer ${snapshot.isDragging ? "z-20" : ""}`}
+																	className={`absolute left-1 right-1 bg-amber-100 text-amber-800 rounded-sm px-2 py-1 text-xs truncate text-wrap shadow-sm cursor-pointer z-10 ${snapshot.isDragging ? "z-20" : ""}`}
 																	style={{
 																		...getAppointmentStyle(appointment),
 																		...provided.draggableProps.style,
@@ -321,8 +329,8 @@ function CalendarIndex() {
 																	</div>
 																</div>
 															)}
-														</Draggable>
-													))}
+														</Draggable>)})
+													}
 												{provided.placeholder}
 											</div>
 										)}

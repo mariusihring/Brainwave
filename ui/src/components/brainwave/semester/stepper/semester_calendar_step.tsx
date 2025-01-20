@@ -189,6 +189,7 @@ function CoursesTable() {
 	const [selectedAppointments, setSelectedAppointments] = useState<
 		RecurringAppointment[]
 	>([]);
+	const [checkAll, setCheckall] = useState<Boolean>(false);
 	const createCourseMutation = useMutation({
 		mutationKey: ["newCourse"],
 		mutationFn: (courses: NewCourse[]) =>
@@ -215,6 +216,7 @@ function CoursesTable() {
 						teacher: null,
 						academicDepartment: null,
 						moduleId: null,
+						isFavorite: null
 					};
 					return course;
 				}),
@@ -236,14 +238,24 @@ function CoursesTable() {
 
 	useEffect(() => {
 		console.log(formData);
-	}, [formData]);
+	}, [formData])
+
+	const checkAllAppointemnts = (appointments: RecurringAppointment[]) => {
+		setCheckall(!checkAll)
+		checkAll ? setSelectedAppointments([]) : appointments.every(app => selectedAppointments.push(app))
+	}
 
 	return (
 		<div>
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead className="w-[50px]">Select</TableHead>
+						<TableHead className="w-[50px]">
+							<Checkbox
+							checked={checkAll}
+							onCheckedChange={() => checkAllAppointemnts(appointments)}
+						/>
+						</TableHead>
 						<TableHead>Name</TableHead>
 						<TableHead>Weekday</TableHead>
 						<TableHead>Time</TableHead>

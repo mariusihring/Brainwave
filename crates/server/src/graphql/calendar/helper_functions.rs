@@ -1,4 +1,4 @@
-use chrono::{Datelike, Duration, NaiveDate, NaiveTime, Weekday};
+use chrono::{Datelike, Duration, NaiveDate, NaiveTime, Weekday, Local};
 use log::{debug, warn};
 use regex::Regex;
 use reqwest::Client;
@@ -8,10 +8,13 @@ use std::collections::HashMap;
 use url::Url;
 use uuid::Uuid;
 
-use crate::models::{_entities::{
-    appointment::{self, Model as Appointment},
-    semester, settings,
-}, recurring_appointment::{RecurringAppointment, WeekdayEnum}};
+use crate::models::{
+    _entities::{
+        appointment::{self, Model as Appointment},
+        semester, settings,
+    },
+    recurring_appointment::{RecurringAppointment, WeekdayEnum},
+};
 
 pub fn process_calendar_link(link: &str) -> String {
     let mut url = match Url::parse(link) {
@@ -143,7 +146,7 @@ pub async fn fetch_calendar_from_dhbw(
                             .parse()
                             .unwrap_or_else(|_| get_month_number(date_parts[1]).unwrap_or(1));
 
-                        current_date = NaiveDate::from_ymd_opt(2024, month, day);
+                        current_date = NaiveDate::from_ymd_opt(Local::now().year(), month, day);
                     }
                 }
             }

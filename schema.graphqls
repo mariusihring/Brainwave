@@ -19,6 +19,30 @@ type Course {
 	grade: Float
 	teacher: String
 	academicDepartment: String
+	isFavorite: Boolean!
+	todos: [Todo!]!
+}
+
+type Exam {
+	id: UUID!
+	date: NaiveDate!
+	courseId: UUID
+	userId: UUID!
+	type: ExamType!
+	grade: Float
+	details: String
+}
+
+enum ExamType {
+	EXAM
+	HOMEASSIGNMENT
+	PRESENTATION
+}
+
+enum ExamTypeInput {
+	EXAM
+	HOMEASSIGNMENT
+	PRESENTATION
 }
 
 
@@ -39,12 +63,17 @@ type Mutation {
 	createTodo(input: NewTodo!): Todo!
 	updateTodo(input: UpdateTodo!, id: String!): Todo!
 	createSemester(input: NewSemester!): Semester!
+	deleteSemester(id: UUID!): Boolean!
 	createModule(input: NewModule!): Module!
 	upsertCalendarLink(calendarLink: String): Settings!
 	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
 	createCourse(input: NewCourse!): Course!
 	createMultipleCourses(input: [NewCourse!]!): [Course!]!
-	updateCourse(input: NewCourse!): [Course!]!
+	updateCourse(input: NewCourse!): Course!
+	deleteCourse(id: UUID!): Boolean!
+	createExam(input: NewExam!): Exam!
+	updateExam(input: NewExam!): Exam!
+	deleteExam(id: UUID!): Boolean!
 }
 
 """
@@ -85,6 +114,16 @@ input NewCourse {
 	teacher: String
 	academicDepartment: String
 	moduleId: String
+	isFavorite: Boolean
+}
+
+input NewExam {
+	id: String
+	date: NaiveDate!
+	grade: Float
+	type: ExamTypeInput!
+	courseId: UUID
+	details: String
 }
 
 input NewModule {
@@ -106,6 +145,7 @@ input NewTodo {
 	title: String!
 	dueOn: NaiveDateTime!
 	courseId: UUID
+	type: TodoTypeInput!
 	notes: String
 }
 
@@ -119,8 +159,10 @@ type Query {
 	modules: [Module!]!
 	calendarLink: String
 	appointments: [Appointment!]!
-	course(id: String!): Course!
+	course(id: String!): Course
 	courses: [Course!]!
+	exam(id: String!): Exam
+	exams: [Exam!]!
 }
 
 type RecurringAppointment {
@@ -167,7 +209,19 @@ enum TodoStatus {
 	PENDING
 }
 
+enum TodoStatusInput {
+	PENDING
+	IN_PROGRESS
+	COMPLETED
+}
+
 enum TodoType {
+	ASSIGNMENT
+	EXAM
+	GENERAL
+}
+
+enum TodoTypeInput {
 	ASSIGNMENT
 	EXAM
 	GENERAL
@@ -190,6 +244,8 @@ input UpdateTodo {
 	title: String!
 	dueOn: NaiveDateTime!
 	courseId: UUID
+	type: TodoTypeInput!
+	status: TodoStatusInput!
 	notes: String
 }
 

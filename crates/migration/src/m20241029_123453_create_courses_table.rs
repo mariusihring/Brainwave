@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
                             .name("FK_Courses_Module")
                             .from(Course::Table, Course::ModuleId)
                             .to(Module::Table, Module::Id)
-                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
@@ -59,4 +59,5 @@ pub enum Course {
     Grade,
     Teacher,
     AcademicDepartment,
+    IsFavorite,
 }

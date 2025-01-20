@@ -2,9 +2,10 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql :: SimpleObject)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql::SimpleObject)]
 #[sea_orm(table_name = "course")]
 #[graphql(name = "Course")]
+#[graphql(complex)]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
@@ -15,6 +16,7 @@ pub struct Model {
     pub grade: Option<f32>,
     pub teacher: Option<String>,
     pub academic_department: Option<String>,
+    pub is_favorite: bool,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -10,7 +10,8 @@ export const TODO_INDEX_QUERY = graphql(`
             title
             dueOn
             userId
-
+            type
+            status
         }
     }
 `);

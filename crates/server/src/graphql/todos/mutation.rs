@@ -1,6 +1,8 @@
 use super::TodoMutation;
+use crate::models::_entities::sea_orm_active_enums::{Todostatus, Todotype};
 use crate::models::_entities::user::Model as User;
-use crate::models::todo::NewTodo;
+use crate::models::_entities::{course, user};
+use crate::models::todo::{NewTodo, TodoTypeInput};
 use crate::models::{_entities::todo, todo::UpdateTodo};
 use async_graphql::*;
 use sea_orm::{prelude::*, DatabaseConnection, EntityTrait, Set};
@@ -20,7 +22,8 @@ impl TodoMutation {
             course_id: Set(input.course_id.clone()),
             user_id: Set(user.id.clone()),
             notes: Set(input.notes.clone()),
-            ..Default::default()
+            r#type: Set(Into::<Todotype>::into(input.r#type)),
+            status: Set(Todostatus::Inprogress),
         };
 
         let inserted_todo = new_todo
@@ -78,4 +81,17 @@ impl TodoMutation {
             status: updated_todo.status,
         })
     }
+    //
+    // pub async fn delete_todo(
+    //     &self,
+    //     ctx: &Context<'_>,
+    //     id: Uuid
+    // ) -> std::result::Result<bool, Error> {
+    //     let user = ctx.data::<user::Model>().unwrap();
+    //     let db = ctx.data::<DatabaseConnection>().unwrap();
+    //     let res = todo::Entity::delete_by_id(id).exec(db)
+    //         .await;
+    //     if res.is_err() { return Ok(false) };
+    //     Ok(true)
+    // }
 }

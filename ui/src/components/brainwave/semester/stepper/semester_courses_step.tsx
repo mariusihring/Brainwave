@@ -29,18 +29,26 @@ import { execute } from "@/execute";
 import type { NewCourse } from "@/graphql/types";
 import { Button } from "@/components/ui/button";
 
-const UPDATE_COURSE_MUTATION = graphql(`
-  mutation UpdateCourse($input: NewCourse!) {
-    updateCourse(input: $input) {
-      id
-      academicDepartment
-      grade
-      moduleId
-      name
-      teacher
+export const UPDATE_COURSE_MUTATION = graphql(`
+    mutation UpdateCourse($input: NewCourse!) {
+        updateCourse(input: $input) {
+            id
+            academicDepartment
+            grade
+            moduleId
+            name
+            teacher
+            isFavorite
+        }
     }
-  }
 `);
+
+export const DELETE_COURSE_MUTATION = graphql(`
+	mutation DeleteCourse($id: UUID!) {
+		deleteCourse(id: $id)
+	}
+`)
+
 interface ExtendedModule extends Module {
 	description?: string;
 	courses: Course[];

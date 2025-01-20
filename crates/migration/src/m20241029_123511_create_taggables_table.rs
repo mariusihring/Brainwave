@@ -23,13 +23,15 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_Taggables_User")
                             .from(Taggable::Table, Taggable::UserId)
-                            .to(User::Table, User::Id).on_delete(ForeignKeyAction::Cascade),
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_Taggables_Tags")
                             .from(Taggable::Table, Taggable::TagId)
-                            .to(Tag::Table, Tag::Id).on_delete(ForeignKeyAction::Cascade),
+                            .to(Tag::Table, Tag::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )

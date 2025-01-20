@@ -25,3 +25,15 @@ pub enum Todotype {
     #[sea_orm(string_value = "general")]
     General,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Copy, Enum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "examtype")]
+#[graphql(name = "ExamType")]
+pub enum Examtype {
+    #[sea_orm(string_value = "exam")]
+    Exam,
+    #[sea_orm(string_value = "homeassignment")]
+    Homeassignment,
+    #[sea_orm(string_value = "presentation")]
+    Presentation,
+}

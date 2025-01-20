@@ -4,7 +4,6 @@ use async_graphql::{ComplexObject, Context, Object};
 use sea_orm::DatabaseConnection;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 
-
 #[Object]
 impl SemesterQuery {
     pub async fn semester(

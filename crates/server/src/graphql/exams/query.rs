@@ -1,36 +1,36 @@
 use crate::{
-    graphql::courses::CourseQuery,
-    models::_entities::{course, course::Model as Course, user},
+    graphql::exams::ExamQuery,
+    models::_entities::{exam, exam::Model as Exam, user},
 };
 use async_graphql::{Context, Object};
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 use uuid::Uuid;
 
 #[Object]
-impl CourseQuery {
-    pub async fn course(
+impl ExamQuery {
+    pub async fn exam(
         &self,
         ctx: &Context<'_>,
         id: String,
-    ) -> Result<Option<Course>, async_graphql::Error> {
+    ) -> Result<Option<Exam>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<user::Model>()?;
 
-        course::Entity::find()
+        exam::Entity::find()
             .filter(
-                course::Column::UserId
+                exam::Column::UserId
                     .eq(user.id)
-                    .and(course::Column::Id.eq(id)),
+                    .and(exam::Column::Id.eq(id)),
             )
             .one(db)
             .await
             .map_err(|e| async_graphql::Error::from(e))
     }
-    pub async fn courses(&self, ctx: &Context<'_>) -> Result<Vec<Course>, async_graphql::Error> {
+    pub async fn exams(&self, ctx: &Context<'_>) -> Result<Vec<Exam>, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
         let user = ctx.data::<user::Model>()?;
-        course::Entity::find()
-            .filter(course::Column::UserId.eq(user.id))
+        exam::Entity::find()
+            .filter(exam::Column::UserId.eq(user.id))
             .all(db)
             .await
             .map_err(|e| async_graphql::Error::from(e))

@@ -2,16 +2,16 @@ use crate::models::{
     _entities::{course, course::Model as CourseModel, user},
     course::NewCourse,
 };
-use async_graphql::{Context, Object};
+use async_graphql::{Context, Error, Object};
 
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
     TransactionTrait,
 };
 
-use uuid::Uuid;
-
 use super::CourseMutation;
+use crate::models::_entities::semester;
+use uuid::Uuid;
 
 #[Object]
 impl CourseMutation {
@@ -56,6 +56,7 @@ impl CourseMutation {
                 academic_department: Set(c.academic_department),
                 user_id: Set(user.id),
                 module_id: Set(None),
+                is_favorite: Set(false),
             })
             .collect();
 
@@ -79,9 +80,9 @@ impl CourseMutation {
         &self,
         ctx: &Context<'_>,
         input: NewCourse,
-    ) -> Result<Vec<CourseModel>, async_graphql::Error> {
+    ) -> Result<CourseModel, async_graphql::Error> {
         let db = ctx.data::<DatabaseConnection>()?;
-        let mut result = Vec::new();
+
         let course = course::Entity::find_by_id(Uuid::parse_str(&input.id.unwrap()).unwrap())
             .one(db)
             .await?;
@@ -89,10 +90,25 @@ impl CourseMutation {
         if input.module_id.is_some() {
             course.module_id = Set(Some(Uuid::parse_str(&input.module_id.unwrap()).unwrap()));
         }
+        course.name = Set(input.name);
         course.academic_department = Set(input.academic_department.clone());
         course.teacher = Set(input.teacher.clone());
         course.grade = Set(input.grade);
-        result.push(course.update(db).await?);
-        Ok(result)
+        course.is_favorite = Set(input.is_favorite.unwrap());
+
+        course
+            .update(db)
+            .await
+            .map_err(|e| async_graphql::Error::from(e))
+    }
+
+    pub async fn delete_course(&self, ctx: &Context<'_>, id: Uuid) -> Result<bool, Error> {
+        let user = ctx.data::<user::Model>().unwrap();
+        let db = ctx.data::<DatabaseConnection>().unwrap();
+        let res = course::Entity::delete_by_id(id).exec(db).await;
+        if res.is_err() {
+            return Ok(false);
+        };
+        Ok(true)
     }
 }

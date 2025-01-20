@@ -23,13 +23,15 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("FK_TodoReference_Todo")
                             .from(TodoReference::Table, TodoReference::TodoId)
-                            .to(Todo::Table, Todo::Id).on_delete(ForeignKeyAction::Cascade)
+                            .to(Todo::Table, Todo::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("FK_TodoReference_User")
                             .from(TodoReference::Table, TodoReference::UserId)
-                            .to(User::Table, User::Id).on_delete(ForeignKeyAction::Cascade)
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
