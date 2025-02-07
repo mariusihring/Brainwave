@@ -4,28 +4,32 @@ import type { UpdateTodoStatusMutationMutationVariables } from "@/graphql/graphq
 import { useMutation } from "@tanstack/react-query";
 
 export const TODO_INDEX_QUERY = graphql(`
-    query TodoIndexQuery{
-        todos {
-            id
-            title
-            dueOn
-            userId
-            type
-            status
-        }
+  query TodoIndexQuery {
+    todos {
+      id
+      title
+      dueOn
+      userId
+      type
+      status
+      courseId
     }
+    courses {
+      id
+      name
+    }
+  }
 `);
 
 export const UPDATE_TODO_STATUS_MUTATION = graphql(`
-    mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {
-        updateTodo(id: $id, input: $input) {
-            id
-            title
-            dueOn
-            userId
-            
-        }
+  mutation UpdateTodoStatusMutation($id: String!, $input: UpdateTodo!) {
+    updateTodo(id: $id, input: $input) {
+      id
+      title
+      dueOn
+      userId
     }
+  }
 `);
 
 export function useUpdateTodoMutation() {

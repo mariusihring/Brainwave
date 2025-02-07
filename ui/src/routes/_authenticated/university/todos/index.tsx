@@ -55,7 +55,7 @@ export const Route = createFileRoute("/_authenticated/university/todos/")({
 
 function TodosIndex() {
 	const {
-		data: { todos },
+		data: { todos, courses },
 	} = useQuery({
 		queryKey: ["index_todos"],
 		queryFn: () => execute(TODO_INDEX_QUERY),
@@ -121,7 +121,7 @@ function TodosIndex() {
 					</Select>
 				</div>
 				<div className="flex gap-2">
-					<CreateTodoDialog />
+					<CreateTodoDialog courses={courses} />
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">

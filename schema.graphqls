@@ -1,79 +1,80 @@
-type Appointment {
-	id: UUID!
-	date: NaiveDate!
-	title: String!
-	startTime: NaiveDateTime!
-	endTime: NaiveDateTime!
-	location: String
-	isCanceled: Boolean!
-	courseId: UUID
-	userId: UUID!
+schema {
+  query: Query
+  mutation: Mutation
 }
 
+type Appointment {
+  courseId: UUID
+  date: NaiveDate!
+  endTime: NaiveDateTime!
+  id: UUID!
+  isCanceled: Boolean!
+  location: String
+  startTime: NaiveDateTime!
+  title: String!
+  userId: UUID!
+}
 
 type Course {
-	id: UUID!
-	name: String!
-	moduleId: UUID
-	userId: UUID!
-	grade: Float
-	teacher: String
-	academicDepartment: String
-	isFavorite: Boolean!
-	todos: [Todo!]!
+  academicDepartment: String
+  grade: Float
+  id: UUID!
+  isFavorite: Boolean!
+  moduleId: UUID
+  name: String!
+  teacher: String
+  todos: [Todo!]!
+  userId: UUID!
 }
 
 type Exam {
-	id: UUID!
-	date: NaiveDate!
-	courseId: UUID
-	userId: UUID!
-	type: ExamType!
-	grade: Float
-	details: String
+  courseId: UUID
+  date: NaiveDate!
+  details: String
+  grade: Float
+  id: UUID!
+  type: ExamType!
+  userId: UUID!
 }
 
 enum ExamType {
-	EXAM
-	HOMEASSIGNMENT
-	PRESENTATION
+  EXAM
+  HOMEASSIGNMENT
+  PRESENTATION
 }
 
 enum ExamTypeInput {
-	EXAM
-	HOMEASSIGNMENT
-	PRESENTATION
+  EXAM
+  HOMEASSIGNMENT
+  PRESENTATION
 }
 
-
-
-
 type Module {
-	id: UUID!
-	name: String!
-	etCs: Int!
-	grade: Float
-	startSemester: UUID!
-	endSemester: UUID
-	userId: UUID!
-	courses: [Course!]!
+  courses: [Course!]!
+  endSemester: UUID
+  etCs: Int!
+  grade: Float
+  id: UUID!
+  name: String!
+  startSemester: UUID!
+  userId: UUID!
 }
 
 type Mutation {
-	createTodo(input: NewTodo!): Todo!
-	updateTodo(input: UpdateTodo!, id: String!): Todo!
-	createSemester(input: NewSemester!): Semester!
-	deleteSemester(id: UUID!): Boolean!
-	createModule(input: NewModule!): Module!
-	upsertCalendarLink(calendarLink: String): Settings!
-	processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
-	createCourse(input: NewCourse!): Course!
-	createMultipleCourses(input: [NewCourse!]!): [Course!]!
-	updateCourse(input: NewCourse!): Course!
-	deleteCourse(id: UUID!): Boolean!
-	createExam(input: NewExam!): Exam!
-	updateExam(input: NewExam!): Exam!
-	deleteExam(id: UUID!): Boolean!
+  createCourse(input: NewCourse!): Course!
+  createExam(input: NewExam!): Exam!
+  createModule(input: NewModule!): Module!
+  createMultipleCourses(input: [NewCourse!]!): [Course!]!
+  createSemester(input: NewSemester!): Semester!
+  createTodo(input: NewTodo!): Todo!
+  deleteCourse(id: UUID!): Boolean!
+  deleteExam(id: UUID!): Boolean!
+  deleteSemester(id: UUID!): Boolean!
+  processSemesterCalendar(semesterId: String!): [RecurringAppointment!]!
+  updateCourse(input: NewCourse!): Course!
+  updateExam(input: NewExam!): Exam!
+  updateTodo(id: String!, input: UpdateTodo!): Todo!
+  upsertCalendarLink(calendarLink: String): Settings!
 }
 
 """
@@ -108,123 +109,122 @@ Format: %H:%M:%S%.f
 scalar NaiveTime
 
 input NewCourse {
-	id: String
-	name: String!
-	grade: Float
-	teacher: String
-	academicDepartment: String
-	moduleId: String
-	isFavorite: Boolean
+  academicDepartment: String
+  grade: Float
+  id: String
+  isFavorite: Boolean
+  moduleId: String
+  name: String!
+  teacher: String
 }
 
 input NewExam {
-	id: String
-	date: NaiveDate!
-	grade: Float
-	type: ExamTypeInput!
-	courseId: UUID
-	details: String
+  courseId: UUID
+  date: NaiveDate!
+  details: String
+  grade: Float
+  id: String
+  type: ExamTypeInput!
 }
 
 input NewModule {
-	name: String!
-	ects: Int!
-	grade: Float
-	startSemester: String!
-	endSemester: String
+  ects: Int!
+  endSemester: String
+  grade: Float
+  name: String!
+  startSemester: String!
 }
 
 input NewSemester {
-	semester: Int!
-	startDate: NaiveDate!
-	endDate: NaiveDate!
-	totalEcts: Int!
+  endDate: NaiveDate!
+  semester: Int!
+  startDate: NaiveDate!
+  totalEcts: Int!
 }
 
 input NewTodo {
-	title: String!
-	dueOn: NaiveDateTime!
-	courseId: UUID
-	type: TodoTypeInput!
-	notes: String
+  courseId: UUID
+  dueOn: NaiveDateTime!
+  notes: String
+  title: String!
+  type: TodoTypeInput!
 }
 
 type Query {
-	todo(id: String!): Todo
-	todos: [Todo!]!
-	todosByDate(date: NaiveDate!): [Todo!]!
-	semester(semester: Int!): Semester
-	semesters: [Semester!]!
-	module(id: String!): Module
-	modules: [Module!]!
-	calendarLink: String
-	appointments: [Appointment!]!
-	course(id: String!): Course
-	courses: [Course!]!
-	exam(id: String!): Exam
-	exams: [Exam!]!
+  appointments: [Appointment!]!
+  calendarLink: String
+  course(id: String!): Course
+  courses: [Course!]!
+  exam(id: String!): Exam
+  exams: [Exam!]!
+  module(id: String!): Module
+  modules: [Module!]!
+  semester(semester: Int!): Semester
+  semesters: [Semester!]!
+  todo(id: String!): Todo
+  todos: [Todo!]!
+  todosByDate(date: NaiveDate!): [Todo!]!
 }
 
 type RecurringAppointment {
-	name: String!
-	weekday: WeekdayEnum!
-	startTime: NaiveTime!
-	endTime: NaiveTime!
-	location: String!
+  endTime: NaiveTime!
+  location: String!
+  name: String!
+  startTime: NaiveTime!
+  weekday: WeekdayEnum!
 }
 
 type Semester {
-	id: UUID!
-	semesterHash: String!
-	semester: Int!
-	startDate: NaiveDate!
-	endDate: NaiveDate!
-	userId: UUID!
-	importedAppointments: Boolean!
-	totalEcTs: Int!
-	modules: [Module!]!
+  endDate: NaiveDate!
+  id: UUID!
+  importedAppointments: Boolean!
+  modules: [Module!]!
+  semester: Int!
+  semesterHash: String!
+  startDate: NaiveDate!
+  totalEcTs: Int!
+  userId: UUID!
 }
 
 type Settings {
-	id: UUID!
-	calendarLink: String
-	userId: UUID!
+  calendarLink: String
+  id: UUID!
+  userId: UUID!
 }
 
-
 type Todo {
-	id: UUID!
-	title: String!
-	dueOn: NaiveDateTime!
-	userId: UUID!
-	courseId: UUID
-	type: TodoType!
-	status: TodoStatus!
-	notes: String
+  courseId: UUID
+  dueOn: NaiveDateTime!
+  id: UUID!
+  notes: String
+  status: TodoStatus!
+  title: String!
+  type: TodoType!
+  userId: UUID!
 }
 
 enum TodoStatus {
-	COMPLETED
-	INPROGRESS
-	PENDING
+  COMPLETED
+  INPROGRESS
+  PENDING
 }
 
 enum TodoStatusInput {
-	PENDING
-	IN_PROGRESS
-	COMPLETED
+  COMPLETED
+  IN_PROGRESS
+  PENDING
 }
 
 enum TodoType {
-	ASSIGNMENT
-	EXAM
-	GENERAL
+  ASSIGNMENT
+  EXAM
+  GENERAL
 }
 
 enum TodoTypeInput {
-	ASSIGNMENT
-	EXAM
-	GENERAL
+  ASSIGNMENT
+  EXAM
+  GENERAL
 }
 
 """
@@ -240,29 +240,21 @@ entities without requiring a central allocating authority.
 scalar UUID
 
 input UpdateTodo {
-	id: UUID!
-	title: String!
-	dueOn: NaiveDateTime!
-	courseId: UUID
-	type: TodoTypeInput!
-	status: TodoStatusInput!
-	notes: String
+  courseId: UUID
+  dueOn: NaiveDateTime!
+  id: UUID!
+  notes: String
+  status: TodoStatusInput!
+  title: String!
+  type: TodoTypeInput!
 }
 
 enum WeekdayEnum {
-	MONDAY
-	TUESDAY
-	WEDNESDAY
-	THURSDAY
-	FRIDAY
-	SATURDAY
-	SUNDAY
-}
-
-directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-directive @specifiedBy(url: String!) on SCALAR
-schema {
-	query: Query
-	mutation: Mutation
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
 }
