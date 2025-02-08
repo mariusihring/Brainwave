@@ -108,6 +108,7 @@ function TodosIndex() {
 								.getColumn("todoType")
 								?.setFilterValue(value === "ALL" ? undefined : value)
 						}
+						disabled
 					>
 						<SelectTrigger className="w-[180px] ml-4">
 							<SelectValue placeholder="Filter by type" />

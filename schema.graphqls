@@ -27,6 +27,13 @@ type Course {
   userId: UUID!
 }
 
+"""
+Implement the DateTime<Utc> scalar
+
+The input/output is a string in RFC3339 format.
+"""
+scalar DateTime
+
 type Exam {
   courseId: UUID
   date: NaiveDate!
@@ -110,6 +117,7 @@ scalar NaiveTime
 
 input NewCourse {
   academicDepartment: String
+  examDay: DateTime
   grade: Float
   id: String
   isFavorite: Boolean

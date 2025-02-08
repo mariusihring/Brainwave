@@ -2,7 +2,9 @@ use super::_entities::{course, todo, user};
 use crate::models::_entities::course::Model;
 use async_graphql::*;
 use chrono::Utc;
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder};
+use sea_orm::{
+    prelude::DateTimeUtc, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder,
+};
 
 #[ComplexObject]
 impl Model {
@@ -10,7 +12,7 @@ impl Model {
         let user = ctx.data::<user::Model>().unwrap();
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        match todo::Entity::find()
+        todo::Entity::find()
             .filter(
                 todo::Column::UserId
                     .eq(user.id)
@@ -20,10 +22,7 @@ impl Model {
             .order_by_asc(todo::Column::DueOn)
             .all(db)
             .await
-        {
-            Ok(c) => c,
-            Err(_) => vec![],
-        }
+            .unwrap_or_default()
     }
 }
 
@@ -36,4 +35,5 @@ pub struct NewCourse {
     pub academic_department: Option<String>,
     pub module_id: Option<String>,
     pub is_favorite: Option<bool>,
+    pub exam_day: Option<DateTimeUtc>,
 }

@@ -19,12 +19,13 @@ import {
 import type { Todo } from "@/graphql/graphql";
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
-import {ArrowUpDown, MoreHorizontal, Trash} from "lucide-react";
-import {graphql} from "@/graphql";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {execute} from "@/execute.ts";
-import {DELETE_COURSE_MUTATION} from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
-import {toast} from "sonner";
+import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
+import { graphql } from "@/graphql";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { execute } from "@/execute.ts";
+import { DELETE_COURSE_MUTATION } from "@/components/brainwave/semester/stepper/semester_courses_step.tsx";
+import { toast } from "sonner";
+import { current } from "immer";
 
 export const columns: ColumnDef<Todo>[] = [
 	{
@@ -47,9 +48,7 @@ export const columns: ColumnDef<Todo>[] = [
 	{
 		accessorKey: "type",
 		header: "Type",
-		cell: ({ row }) => (
-			<Badge variant="outline">{row.getValue("type")}</Badge>
-		),
+		cell: ({ row }) => <Badge variant="outline">{row.getValue("type")}</Badge>,
 	},
 	{
 		accessorKey: "status",
@@ -61,12 +60,16 @@ export const columns: ColumnDef<Todo>[] = [
 				<Select
 					value={row.getValue("status")}
 					onValueChange={(value) => {
+						console.log(current_todo);
 						mutation.mutate({
 							id: current_todo.id,
 							input: {
-								courseId: current_todo.course?.id,
-								dueOn: current_todo.dueOn,
+								id: current_todo.id,
 								title: current_todo.title,
+								due_on: current_todo.dueOn,
+								course_id: current_todo.courseId,
+								type: current_todo.type,
+								notes: current_todo.notes,
 								status: value,
 							},
 						});
@@ -100,7 +103,16 @@ export const columns: ColumnDef<Todo>[] = [
 			const diffTime = dueDate.getTime() - today.getTime();
 			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 			return (
-				<Badge variant="outline" className={diffDays < 2 ? 'outline-red-900 bg-red-200' : 'outline-green-900 bg-green-100'}>{dueDate.toLocaleDateString()}</Badge>
+				<Badge
+					variant="outline"
+					className={
+						diffDays < 2
+							? "outline-red-900 bg-red-200"
+							: "outline-green-900 bg-green-100"
+					}
+				>
+					{dueDate.toLocaleDateString()}
+				</Badge>
 			);
 		},
 	},

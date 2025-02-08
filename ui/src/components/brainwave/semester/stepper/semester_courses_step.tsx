@@ -26,28 +26,28 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { EditableCourseTable } from "./editable-course-table";
 import { execute } from "@/execute";
-import type { NewCourse } from "@/graphql/types";
+import type { NewCourse } from "@/graphql/graphql";
 import { Button } from "@/components/ui/button";
 
 export const UPDATE_COURSE_MUTATION = graphql(`
-    mutation UpdateCourse($input: NewCourse!) {
-        updateCourse(input: $input) {
-            id
-            academicDepartment
-            grade
-            moduleId
-            name
-            teacher
-            isFavorite
-        }
+  mutation UpdateCourse($input: NewCourse!) {
+    updateCourse(input: $input) {
+      id
+      academicDepartment
+      grade
+      moduleId
+      name
+      teacher
+      isFavorite
     }
+  }
 `);
 
 export const DELETE_COURSE_MUTATION = graphql(`
-	mutation DeleteCourse($id: UUID!) {
-		deleteCourse(id: $id)
-	}
-`)
+  mutation DeleteCourse($id: UUID!) {
+    deleteCourse(id: $id)
+  }
+`);
 
 interface ExtendedModule extends Module {
 	description?: string;

@@ -15,6 +15,12 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   /**
+   * Implement the DateTime<Utc> scalar
+   *
+   * The input/output is a string in RFC3339 format.
+   */
+  DateTime: { input: any; output: any; }
+  /**
    * ISO 8601 calendar date without timezone.
    * Format: %Y-%m-%d
    *
@@ -205,6 +211,7 @@ export type MutationUpsertCalendarLinkArgs = {
 
 export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
+  examDay?: InputMaybe<Scalars['DateTime']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
@@ -710,6 +717,12 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   /**
+   * Implement the DateTime<Utc> scalar
+   *
+   * The input/output is a string in RFC3339 format.
+   */
+  DateTime: { input: any; output: any; }
+  /**
    * ISO 8601 calendar date without timezone.
    * Format: %Y-%m-%d
    *
@@ -900,6 +913,7 @@ export type MutationUpsertCalendarLinkArgs = {
 
 export type NewCourse = {
   academicDepartment?: InputMaybe<Scalars['String']['input']>;
+  examDay?: InputMaybe<Scalars['DateTime']['input']>;
   grade?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;

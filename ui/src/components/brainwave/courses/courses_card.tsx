@@ -11,17 +11,11 @@ import {
 	Edit,
 	GraduationCapIcon,
 	PenToolIcon,
-	PlusIcon,
 	StarIcon,
 	TrashIcon,
-	X,
 } from "lucide-react";
-import type { Course, NewCourse } from "@/graphql/types.ts";
-import {
-	useMutation,
-	useQueryClient,
-	QueryClient,
-} from "@tanstack/react-query";
+import type { Course, NewCourse } from "@/graphql/graphql";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { execute } from "@/execute.ts";
 import {
 	DELETE_COURSE_MUTATION,
@@ -37,9 +31,6 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { toast } from "sonner";
 import CourseForm from "@/components/brainwave/courses/form.tsx";
-import { Simulate } from "react-dom/test-utils";
-import input = Simulate.input;
-import { graphql } from "@/graphql";
 import CreateTodoDialog from "@/components/brainwave/todos/create_todo_dialog.tsx";
 
 export default function CoursesCard({ course }: { course: Course }) {
@@ -71,8 +62,17 @@ export default function CoursesCard({ course }: { course: Course }) {
 	const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 	const [todoCourse, setTodoCourse] = useState<Course | null>(null);
 	const handleUpdate = (updatedCourse: Course) => {
-		console.log(updatedCourse);
-		let mut = updateMutation.mutateAsync(updatedCourse);
+		const update: NewCourse = {
+			id: updatedCourse.id,
+			name: updatedCourse.name,
+			grade: updatedCourse.grade,
+			teacher: updatedCourse.teacher,
+			academicDepartment: updatedCourse.academicDepartment,
+			moduleId: updatedCourse.moduleId,
+			isFavorite: updatedCourse.isFavorite,
+			examDay: new Date(),
+		};
+		const mut = updateMutation.mutateAsync(update);
 		setEditingCourse(null);
 		toast.promise(mut, {
 			loading: "loading...",

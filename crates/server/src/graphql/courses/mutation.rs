@@ -4,13 +4,9 @@ use crate::models::{
 };
 use async_graphql::{Context, Error, Object};
 
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
-    TransactionTrait,
-};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 
 use super::CourseMutation;
-use crate::models::_entities::semester;
 use uuid::Uuid;
 
 #[Object]
